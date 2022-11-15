@@ -580,9 +580,8 @@ public static void InitVehicleDataConfig()
 
             if(warning != "")
             {
-                GUI.UIWarningModal.instance.message = "\n" + Translations.Translate("AVO_MOD_AV02") + "\n" + "\n" + warning + "\n";
-                UIView.PushModal(GUI.UIWarningModal.instance);
-                GUI.UIWarningModal.instance.Show(true);
+                GUI.UIWarningModal.message = "\n" + Translations.Translate("AVO_MOD_AV02") + "\n" + "\n" + warning + "\n";
+                GUI.UIWarningModal.ShowWarning();
             }
         }
 

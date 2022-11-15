@@ -17,7 +17,7 @@ namespace AdvancedVehicleOptionsUID.GUI
 
         private static UIWarningModal _instance;
 
-        public static UIWarningModal instance
+        private static UIWarningModal instance
         {
             get
             {
@@ -29,28 +29,30 @@ namespace AdvancedVehicleOptionsUID.GUI
             }
         }
 
-        public string message
+        public static string message
         {
-            get { return m_message; }
+            get { return instance.m_message; }
             set
             {
-                m_message = value;
-                if(m_messageLabel != null)
+                var warning = instance;
+
+                warning.m_message = value;
+                if(warning.m_messageLabel != null)
                 {
-                    m_messageLabel.text = m_message;
-                    m_messageLabel.autoHeight = true;
-                    m_messageLabel.width = width - m_warningIcon.width - 15;
+                    warning.m_messageLabel.text = warning.m_message;
+                    warning.m_messageLabel.autoHeight = true;
+                    warning.m_messageLabel.width = warning.width - warning.m_warningIcon.width - 15;
 
-                    height = 200;
+                    warning.height = 200;
 
-                    if ((m_title.height + 40 + m_messageLabel.height) > (height - 40))
+                    if ((warning.m_title.height + 40 + warning.m_messageLabel.height) > (warning.height - 40))
                     {
-                        height = m_title.height + 40 + m_messageLabel.height;
+                        warning.height = warning.m_title.height + 40 + warning.m_messageLabel.height;
                     }
 
-                    m_warningIcon.relativePosition = new Vector3(5, m_title.height + (height - m_title.height - 40 - m_warningIcon.height) / 2);
-                    m_ok.relativePosition = new Vector3((width - m_ok.width) / 2, height - m_ok.height - 5);
-                    m_messageLabel.relativePosition = new Vector3(m_warningIcon.width + 10, m_title.height + (height - m_title.height - 40 - m_messageLabel.height) / 2);
+                    warning.m_warningIcon.relativePosition = new Vector3(5, warning.m_title.height + (warning.height - warning.m_title.height - 40 - warning.m_warningIcon.height) / 2);
+                    warning.m_ok.relativePosition = new Vector3((warning.width - warning.m_ok.width) / 2, warning.height - warning.m_ok.height - 5);
+                    warning.m_messageLabel.relativePosition = new Vector3(warning.m_warningIcon.width + 10, warning.m_title.height + (warning.height - warning.m_title.height - 40 - warning.m_messageLabel.height) / 2);
                 }
             }
         }
@@ -89,8 +91,7 @@ namespace AdvancedVehicleOptionsUID.GUI
 
             m_ok.eventClick += (c, p) =>
             {
-                UIView.PopModal();
-                Hide();
+                HideWarning();
             };
 
             message = m_message;
@@ -98,46 +99,56 @@ namespace AdvancedVehicleOptionsUID.GUI
             isVisible = true;
         }
 
-        protected override void OnVisibilityChanged()
-        {
-            base.OnVisibilityChanged();
-
-            UIComponent modalEffect = GetUIView().panelsLibraryModalEffect;
-
-            if (isVisible)
-            {
-                Focus();
-                if (modalEffect != null)
-                {
-                    modalEffect.Show(false);
-                    ValueAnimator.Animate("NewThemeModalEffect", delegate(float val)
-                    {
-                        modalEffect.opacity = val;
-                    }, new AnimatedFloat(0f, 1f, 0.7f, EasingType.CubicEaseOut));
-                }
-            }
-            else if (modalEffect != null && !UIView.HasModalInput())
-            {
-                ValueAnimator.Animate("NewThemeModalEffect", delegate(float val)
-                {
-                    modalEffect.opacity = val;
-                }, new AnimatedFloat(1f, 0f, 0.7f, EasingType.CubicEaseOut), delegate
-                {
-                    modalEffect.Hide();
-                });
-            }
-        }
-
         protected override void OnKeyDown(UIKeyEventParameter p)
         {
             if (Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.Return))
             {
                 p.Use();
-                UIView.PopModal();
-                Hide();
+                HideWarning();
             }
 
             base.OnKeyDown(p);
+        }
+
+        public static void ShowWarning()
+        {
+            var warning = instance;
+
+            UIView.PushModal(warning);
+            warning.Show(true);
+            warning.Focus();
+
+            if (UIView.GetAView().panelsLibraryModalEffect is UIComponent modalEffect)
+            {
+                modalEffect.FitTo(null);
+                if (!modalEffect.isVisible || modalEffect.opacity != 1f)
+                {
+                    modalEffect.Show(false);
+                    ValueAnimator.Cancel("ModalEffect67419");
+                    ValueAnimator.Animate("ModalEffect67419", val => modalEffect.opacity = val, new AnimatedFloat(0f, 1f, 0.7f, EasingType.CubicEaseOut));
+                }
+            }
+        }
+        public static void HideWarning()
+        {
+            var warning = instance;
+            if (warning == null || UIView.GetModalComponent() != warning)
+                return;
+
+            UIView.PopModal();
+
+            if (UIView.GetAView().panelsLibraryModalEffect is UIComponent modalEffect)
+            {
+                if (!UIView.HasModalInput())
+                {
+                    ValueAnimator.Cancel("ModalEffect67419");
+                    ValueAnimator.Animate("ModalEffect67419", val => modalEffect.opacity = val, new AnimatedFloat(1f, 0f, 0.7f, EasingType.CubicEaseOut), () => modalEffect.Hide());
+                }
+                else
+                    modalEffect.zOrder = UIView.GetModalComponent().zOrder - 1;
+            }
+
+            warning.Hide();
         }
     }
 }

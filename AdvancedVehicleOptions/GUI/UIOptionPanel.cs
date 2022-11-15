@@ -729,9 +729,8 @@ namespace AdvancedVehicleOptionsUID.GUI
 
                 if (!state && !AdvancedVehicleOptions.CheckServiceValidity(m_options.category))
                 {
-                    GUI.UIWarningModal.instance.message = UIMainPanel.categoryList[(int)m_options.category + 1] + Translations.Translate("AVO_MOD_OP42");
-                    UIView.PushModal(GUI.UIWarningModal.instance);
-                    GUI.UIWarningModal.instance.Show(true);
+                    GUI.UIWarningModal.message = UIMainPanel.categoryList[(int)m_options.category + 1] + Translations.Translate("AVO_MOD_OP42");
+                    GUI.UIWarningModal.ShowWarning();
                 }
             }
             else if (component == m_addBackEngine && m_options.addBackEngine != state)
