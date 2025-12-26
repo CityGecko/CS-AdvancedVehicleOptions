@@ -1,3 +1,23 @@
+# CS-AdvancedVehicleOptions 1.9.12
+Tested & Updated for Hotel&Resorts DLC
+* Fixed - Fix for freezing the game at startup (no longer modal windows, when having a window prompt - especially upon start, when the mod informed user, that a specific service does not have a vehicle assigned)
+* Fixed - Hotkey was not remembered, now it is
+* Change - Importing the configuration will ask now for confirmation
+
+# CS-AdvancedVehicleOptions 1.9.11
+Tested & Updated for Hubs&Transports DLC
+* Fixed - Minor code fix, e.g. trailer information for public transport is now shown correct, all special capacities have now an indicator*
+* Change - Added a notification for vehicles, when it will be required to set the service building vehicle selector to "Random" with linking to the Wiki instructions
+* New Italian translation is now available
+
+# CS-AdvancedVehicleOptions 1.9.10
+Tested & updated for Financial Districts DLC
+* New - New Section for Bank Service / Cash Delivery Van vehicles
+
+# CS-AdvancedVehicleOptions 1.9.9
+Service Release only, no new features, tested & updated for Roads & Vehicles DLC
+* Bug Fix for Modal Windows supplied by MacSergey
+
 # CS-AdvancedVehicleOptions 1.9.8
 * New - Stand Size selection for passenger planes. All passenger planes can now be re-configured to use Small/Medium/Large stands. Be patient, it will take several minutes until the change is applied, as the setting will be active only for new spawned planes. Existing planes in transit will use the already calculated travel path and will ignore the change. At one point in time re-configured planes will dock to the selected stands. Non Airport-DLC users will not see this option. The selection can be reverted anytime to Default value, settings will be stored in the vehicle config.xml and savegame. Note: Service Vehicle Selector (SVS2) will not show the Passenger Planes in the new selected Stand Type sizes.
 * New - Engine/Trailer synchronization for trains. Trains and theirs trailers can now be synchronized when data options are changed on the engine. Data values supported: Speed, Acceleration, Braking, Turning, Springs, Dampers, Lean and Nod. Choose in Mod Options, if AVO shall remember the setting or if it is one-time change only. Engine/trailer sync is done, as long the checkbox in the mainwindow is ticked.
