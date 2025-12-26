@@ -41,7 +41,7 @@ namespace AdvancedVehicleOptionsUID.GUI
                                                          Translations.Translate("AVO_MOD_MP04"), Translations.Translate("AVO_MOD_MP05"), Translations.Translate("AVO_MOD_MP06"), Translations.Translate("AVO_MOD_MP07"),
                                                          Translations.Translate("AVO_MOD_MP08"), Translations.Translate("AVO_MOD_MP09"), Translations.Translate("AVO_MOD_MP10"), Translations.Translate("AVO_MOD_MP11"), 
                                                          Translations.Translate("AVO_MOD_MP12"), Translations.Translate("AVO_MOD_MP13"), Translations.Translate("AVO_MOD_MP14"), Translations.Translate("AVO_MOD_MP15"), 
-                                                         Translations.Translate("AVO_MOD_MP16"), Translations.Translate("AVO_MOD_MP17"), Translations.Translate("AVO_MOD_MP18"), Translations.Translate("AVO_MOD_MP19"),
+                                                         Translations.Translate("AVO_MOD_MP16"), Translations.Translate("AVO_MOD_MP17"), Translations.Translate("AVO_MOD_MP18"), Translations.Translate("AVO_MOD_MP19"), Translations.Translate("AVO_MOD_MP57"),
                                                          Translations.Translate("AVO_MOD_MP20"), Translations.Translate("AVO_MOD_MP21"), Translations.Translate("AVO_MOD_MP22"), Translations.Translate("AVO_MOD_MP23"),
                                                          Translations.Translate("AVO_MOD_MP24"), Translations.Translate("AVO_MOD_MP25"), Translations.Translate("AVO_MOD_MP26"), Translations.Translate("AVO_MOD_MP27"),
                                                          Translations.Translate("AVO_MOD_MP28"), Translations.Translate("AVO_MOD_MP29"), Translations.Translate("AVO_MOD_MP30"), Translations.Translate("AVO_MOD_MP31"),
@@ -51,7 +51,7 @@ namespace AdvancedVehicleOptionsUID.GUI
         public static readonly string[] vehicleIconList = { "IconCitizenVehicle", "IconCitizenBicycleVehicle",
               "IconPolicyForest", "IconPolicyFarming", "IconPolicyOre", "IconPolicyOil", "SubBarIndustryFishing", "IconPolicyNone", "SubBarIndustryUniqueFactory",
               "ToolbarIconPolice", "IconPolicyDoubleSentences", "InfoIconFireSafety", "ToolbarIconFireDepartmentHovered",
-              "ToolbarIconHealthcare", "ToolbarIconHealthcareHovered", "InfoIconGarbage", "InfoIconGarbage", "InfoIconMaintenance", "SubBarPublicTransportPost",
+              "ToolbarIconHealthcare", "ToolbarIconHealthcareHovered", "InfoIconGarbage", "InfoIconGarbage", "InfoIconMaintenance", "SubBarPublicTransportPost", "SubBarPoliceBank",
               "SubBarPublicTransportBus", "SubBarPublicTransportBus", "SubBarPublicTransportTrolleybus", "SubBarPublicTransportTaxi", "SubBarPublicTransportMetro", "SubBarPublicTransportTram", "SubBarPublicTransportMonorail", "SubBarPublicTransportCableCar", 
               "SubBarPublicTransportTrain", "SubBarPublicTransportTrain",
               "IconCargoShip", "SubBarPublicTransportShip",  "IconPolicyPreferFerries", "SubBarPublicTransportPlane", "SubBarPublicTransportPlane", "IconPolicyEducationalBlimps", "SubBarPublicTransportTours",
@@ -109,7 +109,7 @@ namespace AdvancedVehicleOptionsUID.GUI
 
                 m_button.size = new Vector2(43f, 47f);
 			    m_button.name = AVOMod.ModName;
-                m_button.tooltip = "Modify various Vehicle properties";
+                m_button.tooltip = "Modify various vehicle properties";
                 m_button.relativePosition = new Vector3(0, 5);
 			   
                 // GUI Button is pressed in game
@@ -333,9 +333,15 @@ namespace AdvancedVehicleOptionsUID.GUI
 
             m_import.eventClick += (c, t) =>
             {
-                DefaultOptions.RestoreAll();
-                AdvancedVehicleOptions.ImportVehicleDataConfig();
-                optionList = AdvancedVehicleOptions.config.options;
+                ConfirmPanel.ShowModal(Translations.Translate("AVO_MOD_MP52"), Translations.Translate("AVO_MOD_MP58"), (comp, ret) =>
+                {
+                    if (ret != 1)
+                        return;
+
+                    DefaultOptions.RestoreAll();
+                    AdvancedVehicleOptions.ImportVehicleDataConfig();
+                    optionList = AdvancedVehicleOptions.config.options;
+                });
             };
 
             m_export.eventClick += (c, t) => AdvancedVehicleOptions.ExportVehicleDataConfig(true);

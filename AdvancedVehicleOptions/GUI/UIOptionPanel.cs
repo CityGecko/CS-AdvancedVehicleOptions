@@ -46,12 +46,14 @@ namespace AdvancedVehicleOptionsUID.GUI
         private UIButton m_clearParked;
         private PublicTransportDetailPanel _publicTransportDetailPanel;
         private UILabel capacityLabel;
+        private UIButton m_userguidecapacity;
         private UILabel specialcapacityLabel;
         private UIButton m_userguidespecialcapacity;
         private UILabel bustrailerLabel;
         private UICheckBox m_isLargeVehicle;
         private UILabel m_useColorsLabel;
         internal UILabel kmhLabel;
+        private UIButton m_userguidebuilding;
 
         public VehicleOptions m_options = null;
 
@@ -144,7 +146,8 @@ namespace AdvancedVehicleOptionsUID.GUI
             m_capacity.isVisible = options.hasCapacity;
             capacityLabel.isVisible = options.hasCapacity;
             bustrailerLabel.isVisible = false;
-
+            
+            m_userguidecapacity.isVisible = (!options.isPublicTransportGame && options.hasCapacity);
             m_specialcapacity.text = options.specialcapacity.ToString();
             m_specialcapacity.isVisible = options.hasSpecialCapacity;
             specialcapacityLabel.isVisible = options.hasSpecialCapacity;
@@ -157,6 +160,14 @@ namespace AdvancedVehicleOptionsUID.GUI
             m_maxSpeed.color = OldColorTextField;
             m_maxSpeed.textColor = OldColorText;
             m_maxSpeed.tooltip = OldMaxSpeedTooltip;
+
+            //Show User Info Button for Building Setting
+            m_userguidebuilding.isVisible = m_options.prefab.m_class.m_service == ItemClass.Service.PoliceDepartment ||
+                                            m_options.prefab.m_class.m_service == ItemClass.Service.FireDepartment ||
+                                            m_options.prefab.m_class.m_service == ItemClass.Service.HealthCare ||
+                                            m_options.prefab.m_class.m_service == ItemClass.Service.Garbage ||
+                                            m_options.prefab.m_class.m_service == ItemClass.Service.Road ||
+                                            m_options.prefab.m_class.m_service == ItemClass.Service.Water;
 
             //Only display Cargo Capacity or Passenger Capacity - not any other values
             if (options.isNonPaxCargo == true && options.hasCapacity == true && AdvancedVehicleOptions.ShowMoreVehicleOptions == true)
@@ -202,7 +213,7 @@ namespace AdvancedVehicleOptionsUID.GUI
             {
                 m_enabled.Hide();
                 m_userguidespawn.Show();
-                if (!options.hasTrailer)
+                if (options.isTrailer)
                 {
                     bustrailerLabel.Show();
                     m_lineoverview.Hide();
@@ -529,9 +540,26 @@ namespace AdvancedVehicleOptionsUID.GUI
             m_userguidespecialcapacity.Hide();
             m_userguidespecialcapacity.normalBgSprite = "EconomyMoreInfo";
             m_userguidespecialcapacity.hoveredBgSprite = "EconomyMoreInfoHovered";
-            m_userguidespecialcapacity.size = new Vector2(14f, 14f);
+            m_userguidespecialcapacity.size = new Vector2(16f, 16f);
             m_userguidespecialcapacity.tooltip = Translations.Translate("AVO_MOD_OP30");
-            m_userguidespecialcapacity.relativePosition = new Vector3(265, 24);
+            m_userguidespecialcapacity.relativePosition = new Vector3(265, 23);
+
+            m_userguidecapacity = UIUtils.CreateButton(capacityPanel);
+            m_userguidecapacity.Hide();
+            m_userguidecapacity.normalBgSprite = "EconomyMoreInfo";
+            m_userguidecapacity.hoveredBgSprite = "EconomyMoreInfoHovered";
+            m_userguidecapacity.size = new Vector2(16f, 16f);
+            m_userguidecapacity.tooltip = Translations.Translate("AVO_MOD_OP30");
+            m_userguidecapacity.relativePosition = new Vector3(105, 23);
+
+            // Userguide Building Settings Button
+            m_userguidebuilding = UIUtils.CreateButton(panel);
+            m_userguidebuilding.Hide();
+            m_userguidebuilding.normalBgSprite = "InfoIconLevel";
+            m_userguidebuilding.hoveredBgSprite = "InfoIconLevelHovered";
+            m_userguidebuilding.size = new Vector2(22f, 22f);
+            m_userguidebuilding.tooltip = Translations.Translate("AVO_MOD_OP51");
+            m_userguidebuilding.relativePosition = new Vector3(350, 190);
 
             // Transport Line Overview Button	
             m_lineoverview = UIUtils.CreateButton(panel);
@@ -549,9 +577,9 @@ namespace AdvancedVehicleOptionsUID.GUI
             m_userguidespawn.Hide();
             m_userguidespawn.normalBgSprite = "EconomyMoreInfo";
             m_userguidespawn.hoveredBgSprite = "EconomyMoreInfoHovered";
-            m_userguidespawn.size = new Vector2(14f, 14f);
+            m_userguidespawn.size = new Vector2(16f, 16f);
             m_userguidespawn.tooltip = Translations.Translate("AVO_MOD_OP33");
-            m_userguidespawn.relativePosition = new Vector3(355, 195);
+            m_userguidespawn.relativePosition = new Vector3(355, 192);
 
             // Buslabel		
             bustrailerLabel = panel.AddUIComponent<UILabel>();
@@ -697,6 +725,7 @@ namespace AdvancedVehicleOptionsUID.GUI
             m_lineoverview.eventClick += OnlineoverviewClicked;
             m_userguidespawn.eventClick += OnUserGuideSpawnClicked;
             m_userguidespecialcapacity.eventClick += OnUserGuideSpecialCapacityClicked;
+            m_userguidebuilding.eventClick += OnUserGuideBuildingClicked;
         }
 
         protected void OnCheckChanged(UIComponent component, bool state)
@@ -992,6 +1021,11 @@ namespace AdvancedVehicleOptionsUID.GUI
         {
             SimulationManager.instance.SimulationPaused = true;
             Application.OpenURL("https://github.com/CityGecko/CS-AdvancedVehicleOptions/wiki/02.05-Vehicle-Settings");
+        }
+        protected void OnUserGuideBuildingClicked(UIComponent component, UIMouseEventParameter p)
+        {
+            SimulationManager.instance.SimulationPaused = true;
+            Application.OpenURL("https://github.com/CityGecko/CS-AdvancedVehicleOptions/wiki/00-FAQ-&-Troubleshooting#04-city-service-buildings-only-spawn-vanilla-vehicles");
         }
 
         private void SyncTrailerDataToEngine()
