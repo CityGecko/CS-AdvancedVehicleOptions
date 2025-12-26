@@ -1,0 +1,208 @@
+"CODE","it"
+"NAME","Italiano"
+"AVO_DESC","Personalizza i tuoi veicoli (supporta Cities Skylines Hubs&Transports 1.16.1-f2)."
+"TRN_CHOICE","Imposta lingua"
+"TRN_TOOLTIP","Seleziona la lingua da usare per questa mod. Richiederà
+il riavvio del gioco. (predefinito: Usa la lingua di gioco)"
+"TRN_SYS","Usa la lingua del gioco"
+"KEY_KEY","Scorciatoia In-Game"
+"KEY_KEY_TT","Definisci un tasto di scelta rapida per l'interfaccia utente AVO."
+"KEY_PRS","Premi un tasto qualsiasi"
+"AVO_OPT_GEN","Impostazioni Generali"
+"AVO_OPT_GEN_ASAVE","Abilita salvataggio automatico per i dati di configurazione del veicolo"
+"AVO_OPT_GEN_ASAVE_TT","Se abilitata, tutte le modifiche sui veicoli saranno salvate immediatamente
+una volta che la voce dei dati in un campo sarà finalizzata. (predefinito: abilitato)"
+"AVO_OPT_GEN_DEBUG","Abilita registrazione messaggi di debug"
+"AVO_OPT_GEN_DEBUG_TT","Se abilitato, i messaggi di debug delle mod saranno registrati. (predefinito: abilitato)"
+"AVO_OPT_GEN_GUI","Nascondi il pulsante nella barra degli strumenti In-Game"
+"AVO_OPT_GEN_GUI_TT","Nascondi il pulsante UI dalla barra degli strumenti principale. L'interfaccia utente AVO può essere
+accessibile con il tasto Scorciatoia in qualsiasi momento. (predefinito: disabilitato - mostra pulsante UI)"
+"AVO_OPT_GEN_SERVICE","Abilita avviso per nessun servizio disponibile al caricamento della mappa"
+"AVO_OPT_GEN_SERVICE_TT","Un avviso viene mostrato quando si avvia la partita e i servizi della città
+non hanno nessun veicolo assegnato. (predefinito: abilitato)"
+"AVO_OPT_BAL","Gameplay e bilanciamento"
+"AVO_OPT_BAL_UNITS","Mostra Miglia per Ora (mph) invece di Chilometri per Ora (km/h)"
+"AVO_OPT_BAL_UNITS_TT","Cambia la visualizzazione dell'unità di velocità da mph a km/h.
+(predefinito: disabilitato - usa km/h)"
+"AVO_OPT_BAL_EXT","Abilita vari valori per i veicoli non merci e non passeggeri"
+"AVO_OPT_BAL_EXT_TT","Consente di modificare la velocità e la capacità antincendio per la sicurezza antincendio, la 
+capacità del tasso di criminalità per i veicoli di polizia, il tasso di manutenzione e di pompaggio
+per i veicoli di manutenzione. (predefinito: disabilitato)
+
+Può sbilanciare il gameplay previsto. I valori non sono documentati."
+"AVO_OPT_COMP","Compatibilità"
+"AVO_OPT_COMP_MODS","Visualizza gli avvertimenti di compatibilità per le mod"
+"AVO_OPT_COMP_MODS_TT","Se abilitato, le impostazioni che possono essere modificate nei Improved Public Transport (by BloodyPenguin)
+e Transport Lines Manager (di Klyte) saranno mostrate con il colore rosso dell'avviso. I valori dovrebbero
+essere modificati solo in queste modalità. Se disabilitata, la colorazione non verrà mostrata. (predefinito: abilitato)"
+"AVO_OPT_COMP_VCX","Vehicle/Asset Color Expander: Priorità sulla colorazione del veicolo AVO"
+"AVO_OPT_COMP_VCX_TT","Impostazione permanente, se lVehicle Color Expander (by Klyte) è attivo. 
+La gestione del colore è controllata dall'Espansione colore del veicolo. I valori saranno 
+configurati in Vehicle/Asset Color Expander. (predefinito: permanente abilitato)"
+"AVO_OPT_COMP_NBT","Nessun grande camion (No Big Trucks): Classifica i veicoli dell'industria generica come veicoli di grandi dimensioni"
+"AVO_OPT_COMP_NBT_TT","Se abilitata, Delivery Trucks possono essere etichettati come Veicoli di Grandi dimensioni. La spedizione 
+sarà bloccata da No Big Trucks (by MacSergey). (predefinito: abilitato)"
+"AVO_OPT_COMP_TRL","Ultimo aggiornamento dei riferimenti di compatibilità veicolo Trailer:"
+"AVO_OPT_COMP_TRL_TT","Questo campo mostra la data di revisione della lista dei veicoli trailers: Autobus, 
+FiloBus, Pompieri e Polizia, che sono nella realtà 
+rimorchi industriali, ma sono stati riclassificati da AVO."
+"AVO_OPT_SUP","Supporto"
+"AVO_OPT_SUP_WIKI","Apri il Wiki di Advanced Vehicle Options"
+"AVO_OPT_SUP_LOG","Apri la cartella di registro di Cities: Skylines (output_log.txt)"
+"AVO_OPT_SUP_SET","Apri la cartella con i file di configurazione della mod"
+"AVO_OPT_SUP_SET_TT","Controlla questi file per il backup: 
+Mod Settings - AdvancedVehicleOptions_Settings.xml   
+Mod Vehicle Data - AdvancedVehicleOptions_VehicleData.xml"
+"AVO_MOD_CAPA","Capacità: "
+"AVO_MOD_BGUIDESC","Modifica varie proprietà del veicolo"
+"AVO_MOD_AV01","La tua configurazione è stata esportata. Il file di configurazione può essere trovato qui: "
+"AVO_MOD_AV02","I seguenti servizi potrebbero non funzionare correttamente perché nessun veicolo è abilitato per la generazione:"
+"AVO_MOD_VO01","Capacità Antincendio: "
+"AVO_MOD_VO02","Criminalità: "
+"AVO_MOD_VO03","Tasso Di Pompaggio: "
+"AVO_MOD_VO04","Distanza Di Viaggio: "
+"AVO_MOD_VO05","Tasso Di Pesca: "
+"AVO_MOD_VO06","Capacità Non Specificata: "
+"AVO_MOD_VO07","Capienza passeggeri: "
+"AVO_MOD_VO08","Capacità di carico: "
+"AVO_MOD_VO09","Capacità Postale: "
+"AVO_MOD_VO10","Capacità Di Manutenzione: "
+"AVO_MOD_VO11","Capacità di Pazienti: "
+"AVO_MOD_VO12","Capacità di salme: "
+"AVO_MOD_VO13","Tasso di Criminalità: "
+"AVO_MOD_VO14","Capacità Antincendio: "
+"AVO_MOD_VO15","Tasso di Efficenza: "
+"AVO_MOD_VO16","Capacità di Denaro: "
+"AVO_MOD_MP00","Tutti i veicoli"
+"AVO_MOD_MP01","Auto private"
+"AVO_MOD_MP02","Biciclette private"
+"AVO_MOD_MP03","Industria - Forestale"
+"AVO_MOD_MP04","Industria - Agricoltura"
+"AVO_MOD_MP05","Industria - Mineraria"
+"AVO_MOD_MP06","Industria - Petrolifera"
+"AVO_MOD_MP07","Industria - Ittica"
+"AVO_MOD_MP08","Industria - Consegne"
+"AVO_MOD_MP09","Industria - Fabbriche"
+"AVO_MOD_MP10","Polizia"
+"AVO_MOD_MP11","Prigione"
+"AVO_MOD_MP12","Sicurezza Antincendio"
+"AVO_MOD_MP13","Risposta ai Disastri"
+"AVO_MOD_MP14","Salute"
+"AVO_MOD_MP15","Servizi Funebri"
+"AVO_MOD_MP16","Rifiuti"
+"AVO_MOD_MP17","Trasferimento Rifiuti"
+"AVO_MOD_MP18","Manutenzione"
+"AVO_MOD_MP19","Servizio Postale"
+"AVO_MOD_MP20","Bus"
+"AVO_MOD_MP21","Bus Intercity"
+"AVO_MOD_MP22","FiloBus"
+"AVO_MOD_MP23","Taxi"
+"AVO_MOD_MP24","Metro"
+"AVO_MOD_MP25","Tram"
+"AVO_MOD_MP26","Monorotaia"
+"AVO_MOD_MP27","Funivia"
+"AVO_MOD_MP28","Treno - Trasporto"
+"AVO_MOD_MP29","Treno - Passeggeri"
+"AVO_MOD_MP30","Nave - Carico"
+"AVO_MOD_MP31","Nave - Crociera"
+"AVO_MOD_MP32","Nave — Traghetto"
+"AVO_MOD_MP33","Aereo - Trasporto"
+"AVO_MOD_MP34","Aereo - Passeggeri"
+"AVO_MOD_MP35","Traffico Aereo Locale"
+"AVO_MOD_MP36","Turismo + Escursioni"
+"AVO_MOD_MP37","Sito di lancio"
+"AVO_MOD_MP38","Naturale"
+"AVO_MOD_MP39","Seleziona una categoria veicolo da visualizzare - Suggerimento: Usa la rotellina del mouse
+per passare più velocemente tra le categorie."
+"AVO_MOD_MP40","Digitare il nome di un tipo di veicolo"
+"AVO_MOD_MP41","Azioni per la configurazione del veicolo:"
+"AVO_MOD_MP42","Importa"
+"AVO_MOD_MP43","Carica una configurazione del veicolo esistente"
+"AVO_MOD_MP44","Esporta"
+"AVO_MOD_MP45","Salva l'attuale configurazione del veicolo"
+"AVO_MOD_MP46","Resetta Tutto"
+"AVO_MOD_MP47","Ripristina la configurazione completa"
+"AVO_MOD_MP48","Dati del veicolo -
+Salvataggio automatico attivo"
+"AVO_MOD_MP49","Il salvataggio automatico dei dati di configurazione del veicolo è abilitato. Tutte le modifiche
+verranno salvate immediatamente nel file di configurazione esterno."
+"AVO_MOD_MP50","Clicca qui per scorrere i veicoli esistenti di questo tipo.
+Tieni premuto il tasto Maiusc per ingrandire direttamente il veicolo."
+"AVO_MOD_MP51","Clicca qui per rimuovere il veicolo selezionato."
+"AVO_MOD_MP52","Conferma Ripristina Configurazione"
+"AVO_MOD_MP53","Le impostazioni personalizzate per tutti i veicoli verranno resettate. Procedere con il ripristino della configurazione?"
+"AVO_MOD_MP54","Tutte le configurazioni del veicolo e le impostazioni personalizzate sono state reimpostate ai valori predefiniti del gioco."
+"AVO_MOD_MP55","Cerca:"
+"AVO_MOD_MP56","Categoria:"
+"AVO_MOD_MP57","Servizio Bancario"
+"AVO_MOD_OP01","km/h"
+"AVO_MOD_OP02","mph"
+"AVO_MOD_OP03"," Attenzione: Improved Public Transport è attivo e può sovrascrivere questa impostazione."
+"AVO_MOD_OP04"," Attenzione: Transport Lines Manager è attivo e può sovrascrivere questa impostazione."
+"AVO_MOD_OP05","Azioni per: "
+"AVO_MOD_OP06","Velocità massima: "
+"AVO_MOD_OP07","Cambiare la velocità massima del veicolo. Si prega di notare che i veicoli
+non andranno oltre i limiti di velocità della rete che stanno utilizzando."
+"AVO_MOD_OP08","Accelerazione/Freno/Svolta: "
+"AVO_MOD_OP09","Cambia il fattore di accelerazione del veicolo.
+Definisce quanto velocemente accelera l'auto."
+"AVO_MOD_OP10","Cambia il fattore di decelerazione del veicolo.
+Definisce quanto velocemente la vettura frena."
+"AVO_MOD_OP11","Cambia il fattore di svolta del veicolo.
+Definisce quanto curva bene l'auto."
+"AVO_MOD_OP12","Sospensioni/Ammortizzatori"
+"AVO_MOD_OP13","Cambia il fattore Sospension del veicolo.
+Definisce quanto si muovono le sospensioni."
+"AVO_MOD_OP14","Cambia il fattore degli ammortizzatori del veicolo.
+Definisce quanto velocemente la sospensione ritorna allo stato predefinito."
+"AVO_MOD_OP15","Moltiplicatore Rollio/Beccheggio: "
+"AVO_MOD_OP16","Cambia il fattore di moltiplicazione del rollio.
+Definisce quanto il veicolo si appoggia sui lati durante la svolta."
+"AVO_MOD_OP17","Cambia il fattore di moltiplicazione del beccheggio.
+Definisce quanto il veicolo beccheggia in avanti/indietro durante la frenata o l'accelerazione."
+"AVO_MOD_OP18","Abilita le variazioni di colore:"
+"AVO_MOD_OP19","Abilita le variazioni di colore del veicolo.
+Viene scelto un colore casuale tra i quattro seguenti colori."
+"AVO_MOD_OP20","I colori sono gestiti da Vehicle / Asset Color Expander"
+"AVO_MOD_OP21","Permetti a questo veicolo di essere generato"
+"AVO_MOD_OP22","Assicurati di avere almeno un veicolo
+autorizzato a essere generato per questa categoria."
+"AVO_MOD_OP23","Sostituisci l'ultima carrozza con una motrice"
+"AVO_MOD_OP24","Rendi l'ultima carrozza di questo treno in una motrice."
+"AVO_MOD_OP25","Contrassegna come veicolo di grandi dimensioni"
+"AVO_MOD_OP26","Impedisci ai veicoli con rimorchio di consegnare ai piccoli edifici.
+Questa funzione è controllata dalla mod No Big Trucks."
+"AVO_MOD_OP27","Modificare la capacità del veicolo."
+"AVO_MOD_OP28","Capacità Speciale: "
+"AVO_MOD_OP29","Cambia i parametri speciali del veicolo."
+"AVO_MOD_OP30","Se non sai cos'è questo valore:
+Non toccarlo! Clicca per la guida all'utente: Capacità speciale."
+"AVO_MOD_OP31","Gestisci la generazione in Transport Line Overview"
+"AVO_MOD_OP32","Aprire Transport Line Overview 
+e gestisci la generazione del veicolo."
+"AVO_MOD_OP33","Clicca per la guida all'utente: Spawn Control (Controllo generazione)"
+"AVO_MOD_OP34","La generazione dei rimorchi del bus è controllata dal veicolo principale del Bus.
+Le impostazioni devono essere configurate dal pannello Transport Line Overview."
+"AVO_MOD_OP35","Valori predefiniti"
+"AVO_MOD_OP36","Ripristina tutti i valori predefiniti"
+"AVO_MOD_OP37","Azioni globali per: "
+"AVO_MOD_OP38","Rimuovi circolanti"
+"AVO_MOD_OP39","Rimuovere tutti i veicoli circolanti di questo tipo.
+Tenere premuto il tasto Maiusc per rimuovere tutti i tipi."
+"AVO_MOD_OP40","Rimuovi Parcheggiati"
+"AVO_MOD_OP41","Rimuovere tutti i veicoli parcheggiati di questo tipo.
+Tenere premuto il tasto Maiusc per rimuovere tutti i tipi."
+"AVO_MOD_OP42"," potrebbe non funzionare correttamente perché nessun veicolo è autorizzato a essere generato."
+"AVO_MOD_OP43","Dimensioni supporto: "
+"AVO_MOD_OP44","Piccolo"
+"AVO_MOD_OP45","Medio"
+"AVO_MOD_OP46","Grande"
+"AVO_MOD_OP47","Cargo"
+"AVO_MOD_OP48","Sincronizza la motrice
+con il rimorchio"
+"AVO_MOD_OP49","Se abilitata, le proprietà della motrice sono sincronizzate con tutti i rimorchi."
+"AVO_MOD_OP50","La selezione definisce la dimensione della posizione del supporto."
+"AVO_MOD_WM01","Attenzione"
+"AVO_OPT_SYNC","Ricorda le impostazioni di sincronizzazione Motrice/Rimorchio"
+"AVO_OPT_SYNC_TT","Se abilitata, l'impostazione per la sincronizzazione tra Motrice/Rimorchio sarà
+ricordata, altrimenti ogni sincronizzazione sarà valida solo una volta (predefinito: disabilitato)"
