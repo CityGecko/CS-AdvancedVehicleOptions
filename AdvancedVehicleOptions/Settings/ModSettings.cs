@@ -54,8 +54,8 @@ namespace AdvancedVehicleOptionsUID
             }
             set
             {
-                //uuiSavedKey.Key = (KeyCode)value.keyCode;
-                uuiSavedKey.Key = KeyCode.O;
+                uuiSavedKey.Key = (KeyCode)value.keyCode;
+                //uuiSavedKey.Key = KeyCode.O;   The Standard Hot Key
                 uuiSavedKey.Control = value.control;
                 uuiSavedKey.Shift = value.shift;
                 uuiSavedKey.Alt = value.alt;
