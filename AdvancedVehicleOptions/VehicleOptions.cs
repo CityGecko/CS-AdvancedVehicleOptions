@@ -38,6 +38,7 @@ namespace AdvancedVehicleOptionsUID
             WasteTransfer,
             Maintenance,
             TransportPost,
+            TransportBank,
             TransportBus,
             TransportIntercityBus,
             TrolleyBus,
@@ -450,6 +451,10 @@ namespace AdvancedVehicleOptionsUID
                 ai = m_prefab.m_vehicleAI as FishingBoatAI;
                 if (ai != null) return ((FishingBoatAI)ai).m_capacity;
 
+                ai = m_prefab.m_vehicleAI as BankVanAI;
+                if (ai != null) return ((BankVanAI)ai).m_cashCapacity;
+
+
                 return -1;
             }
             set
@@ -550,6 +555,9 @@ namespace AdvancedVehicleOptionsUID
 
                 ai = m_prefab.m_vehicleAI as FishingBoatAI;
                 if (ai != null) { ((FishingBoatAI)ai).m_capacity = value; return; }
+
+                ai = m_prefab.m_vehicleAI as BankVanAI;
+                if (ai != null) { ((BankVanAI)ai).m_cashCapacity = value; return; }
             }
         }
 
@@ -611,8 +619,9 @@ namespace AdvancedVehicleOptionsUID
         // Define all vehicles, which have no passengers or cargo capacities
         public bool isNonPaxCargo
         {
-            get { return prefab.m_class.m_service == ItemClass.Service.FireDepartment
-                                                  || prefab.m_class.m_service == ItemClass.Service.PoliceDepartment
+            get {
+                return prefab.m_class.m_service == ItemClass.Service.FireDepartment
+                                                  || prefab.m_class.m_service == ItemClass.Service.PoliceDepartment && prefab.m_class.m_subService == ItemClass.SubService.None
                                                   || prefab.m_class.m_service == ItemClass.Service.HealthCare
                                                   || prefab.m_class.m_service == ItemClass.Service.Disaster && prefab.m_class.m_level == ItemClass.Level.Level2
                                                   || prefab.m_class.m_service == ItemClass.Service.Water
@@ -652,7 +661,8 @@ namespace AdvancedVehicleOptionsUID
         // Class Intercity Bus, Cargo Train, Cargo Plane, Cargo Ship, Postal Service und Tours to be excluded as not in scope of IPT and TLM
         public bool isNotPublicTransportMod
         {
-            get { return prefab.m_class.m_subService == ItemClass.SubService.PublicTransportBus && prefab.m_class.m_level == ItemClass.Level.Level3
+            get {
+                return prefab.m_class.m_subService == ItemClass.SubService.PublicTransportBus && prefab.m_class.m_level == ItemClass.Level.Level3
                                                      || prefab.m_class.m_subService == ItemClass.SubService.PublicTransportTours
                                                      || prefab.m_class.m_subService == ItemClass.SubService.PublicTransportShip && prefab.m_class.m_level == ItemClass.Level.Level4
                                                      || prefab.m_class.m_subService == ItemClass.SubService.PublicTransportTrain && prefab.m_class.m_level == ItemClass.Level.Level4
@@ -773,7 +783,10 @@ namespace AdvancedVehicleOptionsUID
                     case DisasterResponseVehicleAI _:
                     case DisasterResponseCopterAI _:
                         return Translations.Translate("AVO_MOD_VO15");
-                }
+
+                    case BankVanAI _:
+                        return Translations.Translate("AVO_MOD_VO16");
+                                        }
                 return Translations.Translate("AVO_MOD_CAPA");
             }
         }
@@ -806,6 +819,9 @@ namespace AdvancedVehicleOptionsUID
                     case ItemClass.Service.PoliceDepartment:
                         if (prefab.m_class.m_level == ItemClass.Level.Level4)
                             return Category.Prison;
+                        else
+                        if (prefab.m_class.m_subService == ItemClass.SubService.PoliceDepartmentBank)
+                            return Category.TransportBank;
                         else
                             return Category.Police;
 						

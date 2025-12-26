@@ -19,9 +19,9 @@ namespace AdvancedVehicleOptionsUID
 
     {
     public static string ModName => "Advanced Vehicle Options";
-    //public static string Version => "1.9.8 b7 26042022 1.14.1-f2";
+    //public static string Version => "1.9.12 b3 20052023 1.17.0-f3";
 
-    public static string Version => "1.9.8";
+    public static string Version => "1.9.12";
     public string Name => ModName + " " + Version;
 
     public AVOMod()
@@ -125,7 +125,7 @@ namespace AdvancedVehicleOptionsUID
 
                 Language_DropDown.tooltip = Translations.Translate("TRN_TOOLTIP");
                 Language_DropDown.autoSize = false;
-                Language_DropDown.width = 270f;
+                Language_DropDown.width = 350f;
 
                 // Section for Game Balancing
 
@@ -332,6 +332,13 @@ namespace AdvancedVehicleOptionsUID
         internal static bool OverrideCompatibilityWarnings;
         internal static bool ControlTruckDelivery;
         internal static bool hasAirportDLC;
+        internal static bool hasFinancialDistricsDLC;
+        internal static bool hasIndustrialDLC;
+        internal static bool hasSunsetHarborDLC;
+        internal static bool hasMassTransitDLC;
+        internal static bool hasParkLifeDLC;
+        internal static bool hasAfterDarkDLC;
+
 
         internal static GUI.UIMainPanel m_mainPanel;
 
@@ -354,6 +361,12 @@ namespace AdvancedVehicleOptionsUID
             {
                 //Checking for Stand Type requirement: is AirportDLC installed
                 hasAirportDLC = (ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kAirportDLCAppID));
+                hasFinancialDistricsDLC = (ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kFinancialDistrictsDLCAppID));
+                hasIndustrialDLC = (ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kIndustryDLCAppID));
+                hasSunsetHarborDLC = (ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kUrbanDLCAppID));
+                hasMassTransitDLC = (ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kMotionDLCAppID));
+                hasParkLifeDLC = (ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kParksDLCAppID));
+                hasAfterDarkDLC = (ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kAfterDLCAppID));
 
                 // Loading config
                 AdvancedVehicleOptions.InitVehicleDataConfig();
@@ -566,7 +579,7 @@ public static void InitVehicleDataConfig()
             {
                 Logging.Message("Vehicle Configuration will be exported to Filename: " + m_VehicleSettingsFile);
                 config.Serialize(m_VehicleSettingsFile);
-                ExceptionPanel panel = UIView.library.ShowModal<ExceptionPanel>("ExceptionPanel");
+                ExceptionPanel panel = UIView.library.Show<ExceptionPanel>("ExceptionPanel");
                 panel.SetMessage("Advanced Vehicle Options", Translations.Translate("AVO_MOD_AV01") + m_VehicleSettingsFile, false);
             }
         }
@@ -580,8 +593,11 @@ public static void InitVehicleDataConfig()
 
             if(warning != "")
             {
-                GUI.UIWarningModal.message = "\n" + Translations.Translate("AVO_MOD_AV02") + "\n" + "\n" + warning + "\n";
-                GUI.UIWarningModal.ShowWarning();
+                 //GUI.UIWarningModal.message = "\n" + Translations.Translate("AVO_MOD_AV02") + "\n" + "\n" + warning + "\n";
+                 //GUI.UIWarningModal.ShowWarning();
+
+                ExceptionPanel panel = UIView.library.Show<ExceptionPanel>("ExceptionPanel");
+                panel.SetMessage("Advanced Vehicle Options", "\n" + Translations.Translate("AVO_MOD_AV02") + "\n" + "\n" + warning + "\n", false);
             }
         }
 
@@ -771,7 +787,9 @@ public static void InitVehicleDataConfig()
 				type != typeof(PassengerFerryAI) ||
 				type != typeof(PassengerBlimpAI) ||
 				type != typeof(PostVanAI) ||
-				type != typeof(PassengerHelicopterAI);
+                type != typeof(PassengerHelicopterAI) ||
+                type != typeof(BankVanAI) ;
+
         }
     }
 }
