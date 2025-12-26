@@ -1,6 +1,6 @@
 CODE,en
 NAME,English
-AVO_DESC,Customize your vehicles (supports Cities Skylines Airports 1.14.0-f4).
+AVO_DESC,Customize your vehicles (supports Cities Skylines Airports 1.14.1-f2).
 TRN_CHOICE,Set Language
 TRN_TOOLTIP,"Select the Language to be used for this mod. Will require
 restart of the game. (default: Use Game Language)"
@@ -133,6 +133,7 @@ AVO_MOD_MP53,Customized settings for all vehicles will be reset. Proceed with Co
 AVO_MOD_MP54,All vehicle configuration and customized settings have been reset to the Game Defaults.
 AVO_MOD_MP55,Search :
 AVO_MOD_MP56,Category :
+AVO_MOD_MP57,Bank Service
 AVO_MOD_OP01,km/h
 AVO_MOD_OP02,mph
 AVO_MOD_OP03, Warning: Improved Public Transport is active and may override this setting.
@@ -196,4 +197,11 @@ AVO_MOD_OP44,Small
 AVO_MOD_OP45,Medium
 AVO_MOD_OP46,Large
 AVO_MOD_OP47,Cargo
+"AVO_MOD_OP48","Synchronize Engine
+with Trailer"
+"AVO_MOD_OP49","If enabled, the engine properties are synchronize to all trailers."
+"AVO_MOD_OP50",Selection defines the stand position size.
 AVO_MOD_WM01,Warning
+AVO_OPT_SYNC,Remember Engine/Trailer Synchronization setting
+AVO_OPT_SYNC_TT,"If enabled, the setting for synchronization between Engine/Trailer will be
+remembered, else each synchronization is onetime only. (default: disabled)"

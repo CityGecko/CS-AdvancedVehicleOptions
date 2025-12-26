@@ -1,0 +1,207 @@
+"CODE","nl"
+"NAME","Nederlands"
+"AVO_DESC","Pas je voertuigen aan (ondersteunt Cities Skylines Roads&Vehicles 1.15.1-f4)."
+"TRN_CHOICE","Taal instellen"
+"TRN_TOOLTIP","Selecteer de taal die gebruikt word voor deze mod. Een herstart
+van het spel is vereist (standaard: Gebruik speltaal)"
+"TRN_SYS","Gebruik speltaal"
+"KEY_KEY","Sneltoets in spel"
+"KEY_KEY_TT","Definieer een sneltoets voor de AVO gebruikersinterface."
+"KEY_PRS","Druk op een willekeurige toets"
+"AVO_OPT_GEN","Algemene instellingen"
+"AVO_OPT_GEN_ASAVE","Schakel Automatisch Opslaan in voor Configuratiegegevens van Voertuigen"
+"AVO_OPT_GEN_ASAVE_TT","Indien ingeschakeld zullen alle wijzigingen van voertuigen, direct na het invoeren van gegevens, 
+onmiddellijk worden opgeslagen (standaard: ingeschakeld)"
+"AVO_OPT_GEN_DEBUG","Logboek voor foutopsporing inschakelen"
+"AVO_OPT_GEN_DEBUG_TT","Indien ingeschakeld zullen foutopsoringsberichten van de mod worden gelogd. (standaard: ingeschakeld)"
+"AVO_OPT_GEN_GUI","Verberg de werkbalkknop in het spel"
+"AVO_OPT_GEN_GUI_TT","Verberg de UI knop van de hoofdwerkbalk. De AVO gebruikersinterface kan
+altijd met de sneltoets benaderd worden. (standaard: uitgeschakeld - toon UI knop)"
+"AVO_OPT_GEN_SERVICE","Waarschuwing inschakelen voor geen dienstverlening bij het laden van de kaart"
+"AVO_OPT_GEN_SERVICE_TT","Er wordt een waarschuwing weergegeven wanneer er bij de start van het spel 
+geen voertuigen aan stadsdiensten zijn toegewezen. (standaard: ingeschakeld)"
+"AVO_OPT_BAL","Gameplay en Balancering"
+"AVO_OPT_BAL_UNITS","Mijlen per uur (mph) weergeven in plaats van kilometer per uur (km/h)"
+"AVO_OPT_BAL_UNITS_TT","Verandert de weergave van snelheid van mph naar km/h.
+(standaard: uitgeschakeld - gebruik km/h)"
+"AVO_OPT_BAL_EXT","Schakel verschillende waarden in voor voertuigen zonder vracht of passagiers"
+"AVO_OPT_BAL_EXT_TT","Staat veranderingen toe aan de snelheid en capaciteit van brandbestrijdingsvoertuigen, 
+de capaciteit voor criminaliteit van politievoertuigen en de Onderhouds- en Pompsnelheid 
+voor Onderhoudsvoertuigen. (standaard: uitgeschakeld)."
+"AVO_OPT_COMP","Compatibiliteit"
+"AVO_OPT_COMP_MODS","Compatibiliteitswaarschuwingen voor mods weergeven"
+"AVO_OPT_COMP_MODS_TT","Indien ingeschakeld, zullen instellingen die gewijzigd kunnen worden in Improved Public Transport (door BloodyPenguin)
+en Transport Lines Manager (door Klyte) worden getoond met een rode waarschuwingskleur. De waarden
+mogen enkel in deze mods worden gewijzigd. Indien uitgeschakeld, wordt er geen waarschuwingskleur weergegeven. (Standaard: ingeschakeld)"
+"AVO_OPT_COMP_VCX","Vehicle/Asset Color Expander: Voorrang op AVO-kleuropties"
+"AVO_OPT_COMP_VCX_TT","Permanente instelling wanneer Vehicle/Asset Color Expander (door Klyte) actief is. 
+Kleurbeheer wordt geregeld door Vehicle/Asset Color Expander. De waarden zijn 
+geconfigureerd in Vehicle/Asset Color Expander. (Standaard: permanent geactiveerd)"
+"AVO_OPT_COMP_NBT","No Big Trucks: Classificeer algemene industrie voertuigen als grote voertuigen"
+"AVO_OPT_COMP_NBT_TT","Indien ingeschakeld, kunnen bestelwagens als grote voertuigen worden beschouwd. Verzending 
+zal worden geblokkeerd door No Big Trucks (door MacSergey). (Standaard: ingeschakeld)"
+"AVO_OPT_COMP_TRL","Referenties van voertuigaanhangwagens laatst bijgewerkt:"
+"AVO_OPT_COMP_TRL_TT","Dit veld toont de revisiedatum van de voertuiglijst voor de bus, 
+trolleybus, brandweer- en politietrailers, die in het echt industrie 
+trailers zijn, maar die door AVO opnieuw zijn gecategoriseerd."
+"AVO_OPT_SUP","Ondersteuning"
+"AVO_OPT_SUP_WIKI","De Advanced Vehicle Options Wiki openen"
+"AVO_OPT_SUP_LOG","De log-map van Cities:Skylines openen (output_log.txt)"
+"AVO_OPT_SUP_SET","De map met mod configuratie bestanden openen"
+"AVO_OPT_SUP_SET_TT","Controleer deze bestanden voor back-up:                         
+Mod Instellingen - AdvancedVehicleOptions_Settings.xml   
+Mod Voertuig Data - AdvancedVehicleOptions_VehicleData.xml"
+"AVO_MOD_CAPA","Capaciteit: "
+"AVO_MOD_BGUIDESC","Wijzig verschillende eigenschappen van het voertuig"
+"AVO_MOD_AV01","Uw configuratie is geëxporteerd. Het configuratiebestand bevindt zich hier: "
+"AVO_MOD_AV02","De volgende stadsdiensten zullen niet correct functioneren aangezien er geen voertuigen voor geactiveerd zijn:"
+"AVO_MOD_VO01","Water: "
+"AVO_MOD_VO02","Criminelen: "
+"AVO_MOD_VO03","Pompsnelheid: "
+"AVO_MOD_VO04","Rijafstand: "
+"AVO_MOD_VO05","Vissnelheid: "
+"AVO_MOD_VO06","Onbekende capaciteit: "
+"AVO_MOD_VO07","Passagierscapaciteit: "
+"AVO_MOD_VO08","Capaciteit vracht: "
+"AVO_MOD_VO09","Capaciteit post: "
+"AVO_MOD_VO10","Onderhoudscapaciteit: "
+"AVO_MOD_VO11","Capaciteit patiënten: "
+"AVO_MOD_VO12","Capaciteit lijken: "
+"AVO_MOD_VO13","Misdaadbestrijding: "
+"AVO_MOD_VO14","Brandblussnelheid: "
+"AVO_MOD_VO15","Efficiëntie: "
+"AVO_MOD_MP00","Alle voertuigen"
+"AVO_MOD_MP01","Burger - Auto's"
+"AVO_MOD_MP02","Burger - Fiets"
+"AVO_MOD_MP03","Industrie - Bosbouw"
+"AVO_MOD_MP04","Industrie - Landbouw"
+"AVO_MOD_MP05","Industrie - Erts"
+"AVO_MOD_MP06","Industrie - Olie"
+"AVO_MOD_MP07","Industrie - Visserij"
+"AVO_MOD_MP08","Industrie - Levering"
+"AVO_MOD_MP09","Industrie - Fabrieken"
+"AVO_MOD_MP10","Politie"
+"AVO_MOD_MP11","Gevangenis"
+"AVO_MOD_MP12","Brandveiligheid"
+"AVO_MOD_MP13","Rampenbestrijding"
+"AVO_MOD_MP14","Gezondheidszorg"
+"AVO_MOD_MP15","Uitvaartdienst"
+"AVO_MOD_MP16","Afval"
+"AVO_MOD_MP17","Afval transport"
+"AVO_MOD_MP18","Onderhoud"
+"AVO_MOD_MP19","Postdienst"
+"AVO_MOD_MP20","Bus"
+"AVO_MOD_MP21","Intercity bus"
+"AVO_MOD_MP22","Trolleybus"
+"AVO_MOD_MP23","Taxi"
+"AVO_MOD_MP24","Metro"
+"AVO_MOD_MP25","Tram"
+"AVO_MOD_MP26","Monorail"
+"AVO_MOD_MP27","Kabelbaan"
+"AVO_MOD_MP28","Trein - Vracht"
+"AVO_MOD_MP29","Trein - Passagier"
+"AVO_MOD_MP30","Schip - Vracht"
+"AVO_MOD_MP31","Schip - Cruise"
+"AVO_MOD_MP32","Schip - Veerboot"
+"AVO_MOD_MP33","Vliegtuig - Vracht"
+"AVO_MOD_MP34","Vliegtuig - Passagier"
+"AVO_MOD_MP35","Plaatselijk luchtverkeer"
+"AVO_MOD_MP36","Toerisme + Rondleidingen"
+"AVO_MOD_MP37","Lanceerplatform"
+"AVO_MOD_MP38","Natuurlijk"
+"AVO_MOD_MP39","Selecteer een categorie om weer te geven - Tip: Gebruik
+het muiswiel om sneller tussen categorieën te wisselen."
+"AVO_MOD_MP40","Typ de naam van het voertuig in"
+"AVO_MOD_MP41","Acties voor de voertuigconfiguratie:"
+"AVO_MOD_MP42","Import"
+"AVO_MOD_MP43","Laad een bestaande voertuigconfiguratie"
+"AVO_MOD_MP44","Export"
+"AVO_MOD_MP45","Sla de huidige voertuigconfiguratie op"
+"AVO_MOD_MP46","Reset Alles"
+"AVO_MOD_MP47","Volledige configuratie herstellen"
+"AVO_MOD_MP48","Voertuigdata -
+Autosave actief"
+"AVO_MOD_MP49","Automatisch opslaan van de voertuigconfiguratiegegevens is ingeschakeld.
+Alle wijzigingen worden onmiddellijk in het configuratiebestand opgeslagen."
+"AVO_MOD_MP50","Klik hier om door alle voertuigen van dit type te bladeren.
+Houd de Shift-toets ingedrukt, om direct op het voertuig in te zoomen."
+"AVO_MOD_MP51","Klik hier om het geselecteerde voertuig te verwijderen."
+"AVO_MOD_MP52","Bevestiging vereist"
+"AVO_MOD_MP53","Alle gewijzigde voertuigwaarden worden gereset. Moet de configuratie opnieuw worden ingesteld?"
+"AVO_MOD_MP54","De voertuigconfiguratie en alle gewijzigde waarden werden teruggezet op de standaardinstellingen van het spel."
+"AVO_MOD_MP55","Zoeken:"
+"AVO_MOD_MP56","Categorie:"
+"AVO_MOD_OP01","km/u"
+"AVO_MOD_OP02","mph"
+"AVO_MOD_OP03"," Waarchuwing: Improved Public Transport is actief en kan deze instelling overschrijven."
+"AVO_MOD_OP04"," Waarchuwing: Transport Lines Manager is actief en kan deze instelling overschrijven."
+"AVO_MOD_OP05","Acties voor: "
+"AVO_MOD_OP06","Maximum snelheid: "
+"AVO_MOD_OP07","Wijzig de maximumsnelheid van het voertuig. Let op, dat voertuigen niet
+sneller gaan dan de maximumsnelheid van het netwerk dat ze gebruiken."
+"AVO_MOD_OP08","Versnelling/Remmen/Draaien: "
+"AVO_MOD_OP09","Verander de versnellingsfactor van het voertuig.
+Bepaalt hoe snel de auto versnelt."
+"AVO_MOD_OP10","Verander de remfactor van het voertuig.
+Bepaalt hoe snel de auto remt."
+"AVO_MOD_OP11","Verander de draaifactor van het voertuig.
+Bepaalt hoe goed de auto bochten neemt."
+"AVO_MOD_OP12","Vering/Dempers"
+"AVO_MOD_OP13","Verander de veerfactor van het voertuig.
+Bepaalt hoe sterk de vering reageert."
+"AVO_MOD_OP14","Verander de dempingsfactor van het voertuig.
+Bepaalt hoe snel de ophanging terugkeert naar zijn oorspronkelijke positie."
+"AVO_MOD_OP15","Hellen/Knikken vermenigvuldiger: "
+"AVO_MOD_OP16","Verander de hellingsfactor van het voertuig.
+Bepaalt hoeveel het voertuig overhelt naar de zijkant bij het nemen van een bocht."
+"AVO_MOD_OP17","Verander de knikfactor van het voertuig.
+Bepaalt hoeveel het voertuig voorwaarts/achterwaarts knikt bij het optrekken of afremmen."
+"AVO_MOD_OP18","Kleurvariaties inschakelen:"
+"AVO_MOD_OP19","Schakel de kleurvariaties in.
+Een willekeurige kleur wordt gekozen uit de volgende vier kleuren."
+"AVO_MOD_OP20","Kleuren worden beheerd door Vehicle/Asset Color Expander"
+"AVO_MOD_OP21","Voertuig verschijnt in het spel"
+"AVO_MOD_OP22","Zorg ervoor dat in elke categorie minstens
+één voertuig in het spel kan verschijnen."
+"AVO_MOD_OP23","Vervang de laatste wagon met een locomotief"
+"AVO_MOD_OP24","De laatste wagon van de trein wordt vervangen door een locomotief."
+"AVO_MOD_OP25","Markeer as groot voertuig"
+"AVO_MOD_OP26","Voorkom dat voertuigen met aanhanger aan kleine gebouwen kunnen leveren.
+Dit gedrag wordt gecontroleerd door de No Big Trucks mod."
+"AVO_MOD_OP27","Verander de capaciteit van het voertuig."
+"AVO_MOD_OP28","Speciale capaciteit: "
+"AVO_MOD_OP29","Verander geavanceerde parameters van dit voertuig."
+"AVO_MOD_OP30","Als je niet weet wat dit is: Verander het niet!
+Meer informatie in de gebruikersgids: Speciale Capaciteit."
+"AVO_MOD_OP31","Configureren in Transport Line Overview"
+"AVO_MOD_OP32","Open het overzicht van alle transportlijnen 
+en beheer het verschijnen van voertuigen."
+"AVO_MOD_OP33","Klik hier voor de gebruikersgids: Spawn Control"
+"AVO_MOD_OP34","Busaanhangwagens worden bestuurd door het hoofdvoertuig. De instellingen
+voor bussen moeten worden geconfigureerd in het transportlijnoverzicht."
+"AVO_MOD_OP35","Standaardwaarden"
+"AVO_MOD_OP36","All waarden terugzetten naar standaard"
+"AVO_MOD_OP37","Algemene acties voor: "
+"AVO_MOD_OP38","Verwijder rijdende"
+"AVO_MOD_OP39","Verwijder alle bewegende voertuigen van dit type.
+Houd SHIFT ingedrukt om alle bewegende voertuigen
+te verwijderen, ongeacht het geselecteerde type."
+"AVO_MOD_OP40","Verwijder geparkeerde"
+"AVO_MOD_OP41","Verwijder alle geparkeerde voertuigen van dit type.
+Houd SHIFT ingedrukt om alle geparkeerde voertuigen
+te verwijderen, ongeacht het geselecteerde type."
+"AVO_MOD_OP42"," zal niet correct werken omdat er geen voertuigen mogen verschijnen."
+"AVO_MOD_OP43","Standgrootte: "
+"AVO_MOD_OP44","Klein"
+"AVO_MOD_OP45","Middelgroot"
+"AVO_MOD_OP46","Groot"
+"AVO_MOD_OP47","Vracht"
+"AVO_MOD_OP48","Synchronisatie
+Trekker/aanhangwagen"
+"AVO_MOD_OP49","Indien ingeschakeld zijn de eigenschappen van de trekker
+gesynchroniseerd met alle aanhangwagens."
+"AVO_MOD_OP50","De selectie bepaalt de grootte van de standpositie."
+"AVO_MOD_WM01","Waarschuwing"
+"AVO_OPT_SYNC","Onthoud trekker/aanhanger synchronisatie"
+"AVO_OPT_SYNC_TT","Indien ingeschakeld, wordt de synchronisatie tussen trekker/aanhangwagen
+onthouden, anders is elke synchronisatie uniek. (Standaard: uitgeschakeld)"

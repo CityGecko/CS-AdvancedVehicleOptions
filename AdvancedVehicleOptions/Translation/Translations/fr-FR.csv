@@ -1,0 +1,206 @@
+"CODE","fr"
+"NAME","Français"
+"AVO_DESC","Personnalisez vos véhicules (prend en charge l'extension Cities Skylines Roads&Vehicles 1.15.1-f4)."
+"TRN_CHOICE","Definir la langue utilisée"
+"TRN_TOOLTIP","Sélectionnez la langue à utiliser pour ce mod. Nécessite
+le redémarrage du jeu. (par défaut: Utiliser la langue du jeu)"
+"TRN_SYS","Utiliser la langue du jeu"
+"KEY_KEY","Raccourci clavier en jeu"
+"KEY_KEY_TT","Définir un raccourci clavier pour l'interface utilisateur AVO."
+"KEY_PRS","Appuyez sur n'importe quelle touche"
+"AVO_OPT_GEN","Réglages généraux"
+"AVO_OPT_GEN_ASAVE","Activer la sauvegarde automatique des données de configuration des véhicules"
+"AVO_OPT_GEN_ASAVE_TT","Si activé, toutes les modifications sur les véhicules seront enregistrées immédiatement
+une fois que la saisie de données dans un champ sera finalisée. (Par défaut : activé)"
+"AVO_OPT_GEN_DEBUG","Activer le journal des messages de débogage"
+"AVO_OPT_GEN_DEBUG_TT","Si activé, les messages de débogage des mods seront enregistrés. (par défaut: activé)"
+"AVO_OPT_GEN_GUI","Masquer le bouton de la barre d'outils dans le jeu"
+"AVO_OPT_GEN_GUI_TT","Masquer le bouton UI de la barre d'outils principale. L'interface utilisateur AVO peut être
+accessible avec le raccourci clavier à tout moment. (par défaut: désactivé - afficher le bouton de l'interface utilisateur)"
+"AVO_OPT_GEN_SERVICE","Activer l'avertissement pour les indisponibilités des services lors du chargement de la carte"
+"AVO_OPT_GEN_SERVICE_TT","Un avertissement est affiché lorsque le jeu est démarré et que les services de la ville
+n'ont aucun véhicule assigné. (par défaut: activé)"
+"AVO_OPT_BAL","Gameplay et équilibrage"
+"AVO_OPT_BAL_UNITS","Afficher les Miles par Heure (mph) au lieu de Kilomètre par Heure (km/h)"
+"AVO_OPT_BAL_UNITS_TT","Change l'affichage de l'unité de vitesse de mph à km/h.
+(par défaut: désactivé - utilisation km/h)"
+"AVO_OPT_BAL_EXT","Activer différentes valeurs pour les véhicules non-cargo et non-passagers"
+"AVO_OPT_BAL_EXT_TT","Permet de modifier le taux de lutte contre les incendies et la capacité de sécurité contre les incendies, la capacité de 
+% de la criminalité pour les véhicules de police, le taux d'entretien et de pompage
+pour les véhicules d'entretien. (par défaut : désactivé)
+
+Peut dééquilibrer le gameplay. Les valeurs ne sont pas documentées."
+"AVO_OPT_COMP","Compatibilité"
+"AVO_OPT_COMP_MODS","Affiche les avertissements de compatibilité pour les mods"
+"AVO_OPT_COMP_MODS_TT","Si activée, les paramètres qui peuvent être modifiés dans l'Amélioration des transports publics (par BloodyPenguin)
+et TLM - le gestionnaire de lignes de transport (par Klyte) seront affichés avec la couleur d'avertissement rouge. Les valeurs doivent
+être modifiées dans ces mods seulement. Si désactivé, la coloration ne sera pas affichée. (par défaut: activé)"
+"AVO_OPT_COMP_VCX","Étendue de couleur du véhicule/Actif : Priorité par rapport au coloriage du véhicule AVO"
+"AVO_OPT_COMP_VCX_TT","Réglage permanent, si le mod Vehicle Color Expander (par Klyte) est activée. 
+La gestion des couleurs du véhicule est contrôlée par l'expansion de la couleur du véhicule. Les valeurs seront 
+configurées dans le mod Vehicle/Actif Color Expander. (par défaut : permanent activé)"
+"AVO_OPT_COMP_NBT","Pas de gros camions : classifiez les véhicules génériques de l'industrie comme gros véhicules"
+"AVO_OPT_COMP_NBT_TT","Si activé, les camions de livraison peuvent être marqués comme de gros véhicules. Les expéditions 
+seront bloquées par aucun gros camion (par MacSergey). (par défaut: activé)"
+"AVO_OPT_COMP_TRL","Dernière mise à jour des références de compatibilité du mod Vehicle Trailer :"
+"AVO_OPT_COMP_TRL_TT","Ce champ montre la date de révision de la liste des véhicules pour les Bus, 
+Trolley Bus, pompiers et remorques de police, qui sont dans la vie réelle 
+remorques de l'industrie, mais ont été re-catégorisés par AVO."
+"AVO_OPT_SUP","Assistance"
+"AVO_OPT_SUP_WIKI","Ouvrir le wiki des options avancées des véhicules d'AVO"
+"AVO_OPT_SUP_LOG","Ouvrir le dossier des journaux de Skylines (output_log.txt)"
+"AVO_OPT_SUP_SET","Ouvrir le dossier avec les fichiers de configuration des mods"
+"AVO_OPT_SUP_SET_TT","Vérifier pour ces fichiers de sauvegarde : 
+Paramètres de mod - Options AvancedVehicleOptions_Settings.xml   
+Données du mod du véhicule - AvancedVehicleOptions_VehicleData.xml"
+"AVO_MOD_CAPA","Capacité :"
+"AVO_MOD_BGUIDESC","Modifier les différentes propriétés du véhicule"
+"AVO_MOD_AV01","Votre configuration a été exportée. Le fichier de configuration peut être trouvé ici : "
+"AVO_MOD_AV02","Les services suivants peuvent ne pas fonctionner correctement car aucun véhicule n'est activé pour apparaître :"
+"AVO_MOD_VO01","Capacité des combattants de Feu : "
+"AVO_MOD_VO02","Capacité criminelle : "
+"AVO_MOD_VO03","Taux de pompage : "
+"AVO_MOD_VO04","Distance de déplacement : "
+"AVO_MOD_VO05","Taux de Pêche : "
+"AVO_MOD_VO06","Capacité non spécifiée : "
+"AVO_MOD_VO07","Capacité des passagers :"
+"AVO_MOD_VO08","Capacité des marchandises/cargos : "
+"AVO_MOD_VO09","Capacité des marchandises/cargos : "
+"AVO_MOD_VO10","Capacité d'entretien : "
+"AVO_MOD_VO11","Capacité des patients : "
+"AVO_MOD_VO12","Capacité des morts : "
+"AVO_MOD_VO13","Taux de capacité criminelle ： "
+"AVO_MOD_VO14","Taux de capacité des Pompiers : "
+"AVO_MOD_VO15","Taux d'efficacité : "
+"AVO_MOD_MP00","Tous les véhicules"
+"AVO_MOD_MP01","Citoyens - Voitures"
+"AVO_MOD_MP02","Citoyens - Bicyclettes"
+"AVO_MOD_MP03","Industrie - Silviculture"
+"AVO_MOD_MP04","Industrie - Agriculture"
+"AVO_MOD_MP05","Industrie - Minerai"
+"AVO_MOD_MP06","Industrie - Pétrole"
+"AVO_MOD_MP07","Industrie - Pêche"
+"AVO_MOD_MP08","Industrie - Livraison"
+"AVO_MOD_MP09","Industrie - Usines"
+"AVO_MOD_MP10","Police"
+"AVO_MOD_MP11","Prison"
+"AVO_MOD_MP12","Sécurité incendie"
+"AVO_MOD_MP13","Unités des catastrophes"
+"AVO_MOD_MP14","Soins de santé "
+"AVO_MOD_MP15","Morgue"
+"AVO_MOD_MP16","Déchets"
+"AVO_MOD_MP17","Transfert des déchets"
+"AVO_MOD_MP18","Entretien"
+"AVO_MOD_MP19","Services postaux"
+"AVO_MOD_MP20","Bus"
+"AVO_MOD_MP21","Bus Inter-Ville"
+"AVO_MOD_MP22","Bus à Trolley"
+"AVO_MOD_MP23","Taxi"
+"AVO_MOD_MP24","Métropolitain"
+"AVO_MOD_MP25","Tramway"
+"AVO_MOD_MP26","Monorail"
+"AVO_MOD_MP27","Téléphérique"
+"AVO_MOD_MP28","Train - Fret"
+"AVO_MOD_MP29","Train - Voyageur"
+"AVO_MOD_MP30","Navire - Cargo"
+"AVO_MOD_MP31","Navire - Croisière"
+"AVO_MOD_MP32","Navire - Ferry"
+"AVO_MOD_MP33","Avion - Cargo"
+"AVO_MOD_MP34","Avion - Passagers"
+"AVO_MOD_MP35","Trafic aérien local"
+"AVO_MOD_MP36","Tourisme + Visites"
+"AVO_MOD_MP37","Site de lancement"
+"AVO_MOD_MP38","Naturel"
+"AVO_MOD_MP39","Sélectionnez une catégorie vehcile à afficher - Astuce : Utilisez la molette de la souris
+pour basculer entre les catégories plus rapidement."
+"AVO_MOD_MP40","Tapez le nom d'un type de véhicule"
+"AVO_MOD_MP41","Actions pour la configuration du véhicule :"
+"AVO_MOD_MP42","Importer"
+"AVO_MOD_MP43","Charger une configuration de véhicule existante"
+"AVO_MOD_MP44","Export"
+"AVO_MOD_MP45","Enregistrez la configuration actuelle du véhicule"
+"AVO_MOD_MP46","Remettre tout à zéro"
+"AVO_MOD_MP47","Réinitialisation toute la configuration"
+"AVO_MOD_MP48","Données du véhicule -
+Sauvegarde automatique activée"
+"AVO_MOD_MP49","L'enregistrement automatique des données de configuration du véhicule est activé. Toutes les modifications
+seront enregistrées immédiatement dans le fichier de configuration externe."
+"AVO_MOD_MP50","Cliquez ici pour parcourir les véhicules existants de ce type.
+Maintenez la touche Maj enfoncée pour zoomer directement sur le véhicule."
+"AVO_MOD_MP51","Cliquez ici pour supprimer le véhicule sélectionné."
+"AVO_MOD_MP52","Confirmer la réinitialisation de la configuration"
+"AVO_MOD_MP53","Les paramètres personnalisés pour tous les véhicules seront réinitialisés. Procéder à la réinitialisation de la configuration ?"
+"AVO_MOD_MP54","Toutes les configurations du véhicule et les paramètres personnalisés ont été réinitialisés aux valeurs par défaut du jeu."
+"AVO_MOD_MP55","Rechercher :"
+"AVO_MOD_MP56","Catégorie :"
+"AVO_MOD_OP01","km/h"
+"AVO_MOD_OP02","mph"
+"AVO_MOD_OP03"," Attention : L'amélioration des transports publics (TLM) est active et peut remplacer ce paramètre."
+"AVO_MOD_OP04"," Attention : L'amélioration des transports publics (TLM) est active et peut remplacer ce paramètre."
+"AVO_MOD_OP05","Actions pour : "
+"AVO_MOD_OP06","Vitesse maximale : "
+"AVO_MOD_OP07","Changez la vitesse maximale du véhicule. Veuillez noter que les véhicules
+ne dépasseront pas les limites de vitesse du réseau qu'ils utilisent."
+"AVO_MOD_OP08","Accélération/Freinage/Tour: "
+"AVO_MOD_OP09","Change le facteur d'accélération du véhicule.
+Définit la vitesse d'accélération de la voiture."
+"AVO_MOD_OP10","Change le facteur de freinage du véhicule.
+Définit la rapidité avec laquelle la voiture freine."
+"AVO_MOD_OP11","Change le facteur de virage du véhicule.
+Définit la qualité des virages de la voiture."
+"AVO_MOD_OP12","Ressources/amortisseurs"
+"AVO_MOD_OP13","Change le facteur de virage du véhicule.
+Définit la qualité des virages de la voiture."
+"AVO_MOD_OP14","Change le facteur d'amortissement du véhicule.
+Définit la vitesse à laquelle la suspension retourne à l'état par défaut."
+"AVO_MOD_OP15","Multiplicateur de pendule/noeud : "
+"AVO_MOD_OP16","Change le facteur de multiplication du pendule du véhicule.
+Définit la quantité que le véhicule se penche sur les côtés lors du virage."
+"AVO_MOD_OP17","Changer le facteur de multiplication de la tête du véhicule.
+Définit combien le véhicule acquiesce en avant/en arrière lors du freinage ou de l'accélération."
+"AVO_MOD_OP18","Activer les variantes de couleurs :"
+"AVO_MOD_OP19","Activer les variations de couleurs du véhicule.
+Une couleur aléatoire est choisie entre les quatre couleurs suivantes."
+"AVO_MOD_OP20","Les couleurs sont gérées par le Véhicule/Actif Color Expander"
+"AVO_MOD_OP21","Permettre à ce véhicule d'apparaître"
+"AVO_MOD_OP22","Assurez-vous d'avoir au moins un véhicule
+autorisé à apparaître pour cette catégorie."
+"AVO_MOD_OP23","Remplacer la dernière voiture par une motrice"
+"AVO_MOD_OP24","Faites de la dernière voiture de ce train une motrice."
+"AVO_MOD_OP25","Marquez comme grand véhicule"
+"AVO_MOD_OP26","Empêcher les véhicules avec une remorque de livrer aux petits bâtiments.
+Cette fonctionnalité est contrôlée par le mod No Big Trucks."
+"AVO_MOD_OP27","Changez la capacité du véhicule."
+"AVO_MOD_OP28","Capacité spéciale : "
+"AVO_MOD_OP29","Changer les paramètres spéciaux du véhicule."
+"AVO_MOD_OP30","Si vous ne savez pas, quelle est cette valeur:
+Ne la touchez pas ! Cliquez sur le Guide d'utilisation : Capacité spéciale."
+"AVO_MOD_OP31","Gérer l'apparition dans l'aperçu des lignes de transport"
+"AVO_MOD_OP32","Ouvrez l'aperçu de la ligne de transport 
+et gérez l'apparition du véhicule."
+"AVO_MOD_OP33","Cliquez sur le guide d'utilisateur : Contrôle de spawn"
+"AVO_MOD_OP34","L'apparition des remorques de bus est contrôlée par le véhicule principal de bus.
+Les paramètres doivent être configurés à partir du panneau Aperçu de la ligne de transport."
+"AVO_MOD_OP35","Valeurs par défaut"
+"AVO_MOD_OP36","Restaurer toutes les valeurs par défaut"
+"AVO_MOD_OP37","Actions globales pour : "
+"AVO_MOD_OP38","Supprimer la conduite"
+"AVO_MOD_OP39","Retirer tous les véhicules de ce type.
+Maintenez la touche Maj enfoncée pour supprimer tous les types."
+"AVO_MOD_OP40","Enlever le stationnement"
+"AVO_MOD_OP41","Retirer tous les véhicules de ce type.
+Maintenez la touche Maj enfoncée pour supprimer tous les types."
+"AVO_MOD_OP42"," peut ne pas fonctionner correctement car aucun véhicule n'est autorisé à apparaître."
+"AVO_MOD_OP43","Taille standard :"
+"AVO_MOD_OP44","Petit"
+"AVO_MOD_OP45","Moyen"
+"AVO_MOD_OP46","Grand"
+"AVO_MOD_OP47","Fret"
+"AVO_MOD_OP48","Synchroniser la motrice
+avec la remorque"
+"AVO_MOD_OP49","Si activé, les propriétés de la motrice seront synchronisées à toutes les remorques."
+"AVO_MOD_OP50","La sélection définit la taille standard de la position."
+"AVO_MOD_WM01","Avertissement"
+"AVO_OPT_SYNC","Se souvenir des paramètres de synchronisation de la Motrice/Remorque"
+"AVO_OPT_SYNC_TT","Si activé, le paramètre de synchronisation entre la Motrice/Remorque sera
+mémorisé, sinon chaque synchronisation se fera en une seule fois uniquement. (par défaut: désactivée)"
