@@ -12,19 +12,20 @@ using ColossalFramework.IO;
 
 using AdvancedVehicleOptionsUID.Compatibility;
 using AdvancedVehicleOptionsUID.GUI;
+using System.Reflection;
 
 namespace AdvancedVehicleOptionsUID
 {
     public class AVOMod : IUserMod
 
     {
-    public static string ModName => "Advanced Vehicle Options";
-    //public static string Version => "1.9.12 b3 20052023 1.17.0-f3";
+        public static string ModName => "Advanced Vehicle Options";
+        //public static string Version => "1.9.12 b3 20052023 1.20.1-f1";
 
-    public static string Version => "1.9.12";
-    public string Name => ModName + " " + Version;
+        public static string Version => "1.9.12";
+        public string Name => ModName + " " + Version;
 
-    public AVOMod()
+        public AVOMod()
         {
             try
             {
@@ -283,6 +284,30 @@ namespace AdvancedVehicleOptionsUID
                     return;
                 }
 
+
+                try
+                {
+                    var additionalFreightTransporters = ModUtils.GetEnabledAssembly("AdditionalFreightTransporters");
+
+                    if (additionalFreightTransporters != null)
+                    {
+                        VehicleOptions.cargoFerryType = additionalFreightTransporters.GetType("AdditionalFreightTransporters.AI.CargoFerryAI");
+
+                        if (VehicleOptions.cargoFerryType != null)
+                        {
+                            VehicleOptions.cargoFerryCapacityField = VehicleOptions.cargoFerryType.GetField("m_cargoCapacity", BindingFlags.Public | BindingFlags.Instance);
+                        }
+
+                        VehicleOptions.cargoHelicopterType = additionalFreightTransporters.GetType("AdditionalFreightTransporters.AI.CargoHelicopterAI");
+
+                        if (VehicleOptions.cargoHelicopterType != null)
+                        {
+                            VehicleOptions.cargoHelicopterCapacityField = VehicleOptions.cargoHelicopterType.GetField("m_cargoCapacity", BindingFlags.Public | BindingFlags.Instance);
+                        }
+                    }
+                }
+                catch { }
+
                 // new EnumerableActionThread(BrokenAssetsFix);
             }
             catch (Exception e)
@@ -331,14 +356,16 @@ namespace AdvancedVehicleOptionsUID
         internal static bool OverrideVCX ;
         internal static bool OverrideCompatibilityWarnings;
         internal static bool ControlTruckDelivery;
-        internal static bool hasAirportDLC;
-        internal static bool hasFinancialDistricsDLC;
-        internal static bool hasIndustrialDLC;
-        internal static bool hasSunsetHarborDLC;
+
+        internal static bool hasAfterDarkDLC;
+        internal static bool hasSnowfallDLC;
+        internal static bool HasNaturalDisastersDLC;
         internal static bool hasMassTransitDLC;
         internal static bool hasParkLifeDLC;
-        internal static bool hasAfterDarkDLC;
-
+        internal static bool hasIndustriesDLC;
+        internal static bool hasSunsetHarborDLC;
+        internal static bool hasAirportDLC;
+        internal static bool hasFinancialDistricsDLC;
 
         internal static GUI.UIMainPanel m_mainPanel;
 
@@ -359,14 +386,15 @@ namespace AdvancedVehicleOptionsUID
         {
             try
             {
-                //Checking for Stand Type requirement: is AirportDLC installed
-                hasAirportDLC = (ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kAirportDLCAppID));
-                hasFinancialDistricsDLC = (ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kFinancialDistrictsDLCAppID));
-                hasIndustrialDLC = (ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kIndustryDLCAppID));
-                hasSunsetHarborDLC = (ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kUrbanDLCAppID));
-                hasMassTransitDLC = (ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kMotionDLCAppID));
-                hasParkLifeDLC = (ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kParksDLCAppID));
-                hasAfterDarkDLC = (ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kAfterDLCAppID));
+                hasAfterDarkDLC = ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kAfterDLCAppID);
+                hasSnowfallDLC = ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kWinterDLCAppID);
+                HasNaturalDisastersDLC = ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kNaturalDisastersDLCAppID);
+                hasMassTransitDLC = ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kMotionDLCAppID);
+                hasParkLifeDLC = ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kParksDLCAppID);
+                hasIndustriesDLC = ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kIndustryDLCAppID);
+                hasSunsetHarborDLC = ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kUrbanDLCAppID);
+                hasAirportDLC = ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kAirportDLCAppID); // Checking for Stand Type requirement: is AirportDLC installed
+                hasFinancialDistricsDLC = ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kFinancialDistrictsDLCAppID);
 
                 // Loading config
                 AdvancedVehicleOptions.InitVehicleDataConfig();
@@ -589,8 +617,14 @@ public static void InitVehicleDataConfig()
             string warning = "";
 
             for (int i = 0; i < (int)VehicleOptions.Category.Natural; i++)
-                if (!CheckServiceValidity((VehicleOptions.Category)i)) warning += "> " + GUI.UIMainPanel.categoryList[i + 1] + "\n";
-
+            {
+                if (!UIMainPanel.CategoryAvailability(UIMainPanel.categoryList[i]))
+                {
+                    continue;
+                }
+                if (!CheckServiceValidity((VehicleOptions.Category)i)) warning += "> " + UIMainPanel.categoryList[i + 1] + "\n";
+            }
+                
             if(warning != "")
             {
                  //GUI.UIWarningModal.message = "\n" + Translations.Translate("AVO_MOD_AV02") + "\n" + "\n" + warning + "\n";

@@ -3,6 +3,8 @@ using ColossalFramework.Globalization;
 using ColossalFramework.UI;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 using UIUtils = SamsamTS.UIUtils;
@@ -24,6 +26,8 @@ namespace AdvancedVehicleOptionsUID.GUI
         internal UISprite m_removeVehicle;
         internal UIOptionPanel m_optionPanel;
 
+        internal List<string> englishCategory = new List<string>();
+
         internal UIButton m_button;
         public ushort FollowVehicleInstanceID;
 
@@ -37,25 +41,23 @@ namespace AdvancedVehicleOptionsUID.GUI
         private const int WIDTHLEFT = 470;
         private const int WIDTHRIGHT = 390;
 
-        public static readonly string[] categoryList = { Translations.Translate("AVO_MOD_MP00"), Translations.Translate("AVO_MOD_MP01"), Translations.Translate("AVO_MOD_MP02"), Translations.Translate("AVO_MOD_MP03"), 
-                                                         Translations.Translate("AVO_MOD_MP04"), Translations.Translate("AVO_MOD_MP05"), Translations.Translate("AVO_MOD_MP06"), Translations.Translate("AVO_MOD_MP07"),
-                                                         Translations.Translate("AVO_MOD_MP08"), Translations.Translate("AVO_MOD_MP09"), Translations.Translate("AVO_MOD_MP10"), Translations.Translate("AVO_MOD_MP11"), 
-                                                         Translations.Translate("AVO_MOD_MP12"), Translations.Translate("AVO_MOD_MP13"), Translations.Translate("AVO_MOD_MP14"), Translations.Translate("AVO_MOD_MP15"), 
-                                                         Translations.Translate("AVO_MOD_MP16"), Translations.Translate("AVO_MOD_MP17"), Translations.Translate("AVO_MOD_MP18"), Translations.Translate("AVO_MOD_MP19"), Translations.Translate("AVO_MOD_MP57"),
-                                                         Translations.Translate("AVO_MOD_MP20"), Translations.Translate("AVO_MOD_MP21"), Translations.Translate("AVO_MOD_MP22"), Translations.Translate("AVO_MOD_MP23"),
-                                                         Translations.Translate("AVO_MOD_MP24"), Translations.Translate("AVO_MOD_MP25"), Translations.Translate("AVO_MOD_MP26"), Translations.Translate("AVO_MOD_MP27"),
-                                                         Translations.Translate("AVO_MOD_MP28"), Translations.Translate("AVO_MOD_MP29"), Translations.Translate("AVO_MOD_MP30"), Translations.Translate("AVO_MOD_MP31"),
-                                                         Translations.Translate("AVO_MOD_MP32"), Translations.Translate("AVO_MOD_MP33"), Translations.Translate("AVO_MOD_MP34"), Translations.Translate("AVO_MOD_MP35"), 
-                                                         Translations.Translate("AVO_MOD_MP36"), Translations.Translate("AVO_MOD_MP37"), Translations.Translate("AVO_MOD_MP38") };
 
-        public static readonly string[] vehicleIconList = { "IconCitizenVehicle", "IconCitizenBicycleVehicle",
-              "IconPolicyForest", "IconPolicyFarming", "IconPolicyOre", "IconPolicyOil", "SubBarIndustryFishing", "IconPolicyNone", "SubBarIndustryUniqueFactory",
-              "ToolbarIconPolice", "IconPolicyDoubleSentences", "InfoIconFireSafety", "ToolbarIconFireDepartmentHovered",
-              "ToolbarIconHealthcare", "ToolbarIconHealthcareHovered", "InfoIconGarbage", "InfoIconGarbage", "InfoIconMaintenance", "SubBarPublicTransportPost", "SubBarPoliceBank",
-              "SubBarPublicTransportBus", "SubBarPublicTransportBus", "SubBarPublicTransportTrolleybus", "SubBarPublicTransportTaxi", "SubBarPublicTransportMetro", "SubBarPublicTransportTram", "SubBarPublicTransportMonorail", "SubBarPublicTransportCableCar", 
-              "SubBarPublicTransportTrain", "SubBarPublicTransportTrain",
-              "IconCargoShip", "SubBarPublicTransportShip",  "IconPolicyPreferFerries", "SubBarPublicTransportPlane", "SubBarPublicTransportPlane", "IconPolicyEducationalBlimps", "SubBarPublicTransportTours",
-              "ToolbarIconMonuments", "SubBarFireDepartmentDisaster"};
+        public static readonly string[] categoryList = CategoryEnumToArray();
+
+
+        public static readonly string[] vehicleIconList = {
+                                                            "IconCitizenVehicle", "IconCitizenBicycleVehicle", "IconPolicyForest",
+                                                            "IconPolicyFarming", "IconPolicyOre", "IconPolicyOil", "SubBarIndustryFishing",
+                                                            "IconPolicyNone", "SubBarIndustryUniqueFactory", "ToolbarIconPolice", "IconPolicyDoubleSentences",
+                                                            "InfoIconFireSafety", "ToolbarIconFireDepartmentHovered", "ToolbarIconHealthcare", "ToolbarIconHealthcareHovered",
+                                                            "InfoIconGarbage", "InfoIconGarbage", "InfoIconMaintenance", "SubBarPublicTransportPost",
+                                                            "SubBarPoliceBank", "SubBarPublicTransportBus", "SubBarPublicTransportBus", "SubBarPublicTransportTrolleybus",
+                                                            "SubBarPublicTransportTaxi", "SubBarPublicTransportMetro", "SubBarPublicTransportTram", "SubBarPublicTransportMonorail",
+                                                            "SubBarPublicTransportCableCar", "SubBarPublicTransportTrain", "SubBarPublicTransportTrain", "IconCargoShip",
+                                                            "SubBarPublicTransportShip", "IconPolicyPreferFerries", "IconPolicyPreferFerries", "SubBarPublicTransportPlane",
+                                                            "SubBarPublicTransportPlane", "IconPolicyHelicopterPriority", "IconPolicyHelicopterPriority","IconPolicyEducationalBlimps",
+                                                            "IconPolicyAirplaneTours", "SubBarPublicTransportTours", "ToolbarIconMonuments", "SubBarFireDepartmentDisaster"
+                                                          };
 
         public UIOptionPanel optionPanel
         {
@@ -190,6 +192,81 @@ namespace AdvancedVehicleOptionsUID.GUI
             GameObject.Destroy(m_optionPanel.gameObject);
         }
 
+        public static string[] CategoryEnumToArray()
+        {
+           return  Enum.GetValues(typeof(VehicleOptions.Category))
+                    .Cast<VehicleOptions.Category>()
+                    .OrderBy(c => (int)c) // add the enum values in order the none is first
+                    .Select(c => c.ToString())
+                    .ToArray();
+        }
+
+        public static bool CategoryAvailability(string category)
+        {
+            switch (category)
+            {
+                case "Bicycle":
+                case "TransportTaxi":
+                case "Prison":
+                    if (!AdvancedVehicleOptions.hasAfterDarkDLC)
+                        return false;
+                    break;
+
+                case "TransportTram" when !AdvancedVehicleOptions.hasSnowfallDLC:
+                    return false;
+
+                case "Disaster":
+                case "Natural":
+                    if (!AdvancedVehicleOptions.HasNaturalDisastersDLC)
+                        return false;
+                    break;
+
+                case "TransportMonorail":
+                case "TransportCableCar":
+                case "TransportFerry":
+                case "TransportBlimp":
+                    if (!AdvancedVehicleOptions.hasMassTransitDLC)
+                        return false;
+                    break;
+
+                case "TransportTours" when !AdvancedVehicleOptions.hasParkLifeDLC:
+                    return false;
+
+                case "IndustryPlayer":
+                case "PostalService":
+                    if (!AdvancedVehicleOptions.hasIndustriesDLC)
+                        return false;
+                    break;
+
+                case "Maintenance" when !AdvancedVehicleOptions.hasSnowfallDLC && !AdvancedVehicleOptions.hasParkLifeDLC:
+                    return false;
+
+                case "CargoPlane" when !AdvancedVehicleOptions.hasIndustriesDLC && !AdvancedVehicleOptions.hasAirportDLC:
+                    return false;
+
+                case "BankService" when !AdvancedVehicleOptions.hasFinancialDistricsDLC:
+                    return false;
+
+                case "Fishing":
+                case "LocalAirTraffic":
+                case "TransportTrolleyBus":
+                case "TransportHelicopter":
+                case "TransportIntercityBus":
+                case "WasteTransfer":
+                    if (!AdvancedVehicleOptions.hasSunsetHarborDLC)
+                        return false;
+                    break;
+
+                case "CargoFerry" when !AdvancedVehicleOptions.hasMassTransitDLC || ModUtils.GetEnabledAssembly("AdditionalFreightTransporters") == null:
+                    return false;
+
+                case "CargoHelicopter" when !AdvancedVehicleOptions.hasSunsetHarborDLC || ModUtils.GetEnabledAssembly("AdditionalFreightTransporters") == null:
+                    return false;
+            }
+            return true;
+        }
+
+
         internal void SetupControls()
         {
             float offset = 40f;
@@ -204,16 +281,41 @@ namespace AdvancedVehicleOptionsUID.GUI
             label.textScale = 0.8f;
             label.padding = new RectOffset(0, 0, 8, 0);
             label.relativePosition = new Vector3(10f, offset);
-            label.text = Translations.Translate("AVO_MOD_MP56");
+            label.text = Translations.Translate("AVO_MOD_MP61");
 
             m_category = UIUtils.CreateDropDown(this);
             m_category.width = 175;
 
-            for (int i = 0; i < categoryList.Length; i++)
-                m_category.AddItem(categoryList[i]);
+            var additionalFreightTransporters = ModUtils.GetEnabledAssembly("AdditionalFreightTransporters");
 
+            for (int i = 0; i < categoryList.Length; i++)
+            {
+                if (!CategoryAvailability(categoryList[i]))
+                {
+                    continue;
+                }
+                string name = "";
+                if (i < 10)
+                {
+                    name = "AVO_MOD_MP0" + i;
+                }
+                else
+                {
+                    name = "AVO_MOD_MP" + i;
+                }
+                if(i == 0)
+                {
+                    englishCategory.Add("All");
+                }
+                else
+                {
+                    englishCategory.Add(categoryList[i]);
+                }
+                m_category.AddItem(Translations.Translate(name));
+            }
+                
             m_category.selectedIndex = 0;
-            m_category.tooltip = Translations.Translate("AVO_MOD_MP39");
+            m_category.tooltip = Translations.Translate("AVO_MOD_MP44");
             m_category.relativePosition = label.relativePosition + new Vector3(75f, 0f);
 
             m_category.eventSelectedIndexChanged += (c, t) =>
@@ -228,7 +330,7 @@ namespace AdvancedVehicleOptionsUID.GUI
             m_search.width = 145f;
             m_search.height = 30f;
             m_search.padding = new RectOffset(6, 6, 6, 6);
-            m_search.tooltip = Translations.Translate("AVO_MOD_MP40");
+            m_search.tooltip = Translations.Translate("AVO_MOD_MP45");
             m_search.relativePosition = new Vector3(WIDTHLEFT - m_search.width, offset);
 
             m_search.eventTextChanged += (c, t) => PopulateList();
@@ -237,7 +339,7 @@ namespace AdvancedVehicleOptionsUID.GUI
             label.textScale = 0.8f;
             label.padding = new RectOffset(0, 0, 8, 0);
             label.relativePosition = m_search.relativePosition - new Vector3(60f, 0f);
-            label.text = Translations.Translate("AVO_MOD_MP55");
+            label.text = Translations.Translate("AVO_MOD_MP60");
 
             // FastList
             m_fastList = UIFastList.Create<UIVehicleItem>(this);
@@ -249,36 +351,36 @@ namespace AdvancedVehicleOptionsUID.GUI
 
             // Configuration file buttons
             UILabel configLabel = this.AddUIComponent<UILabel>();
-            configLabel.text = Translations.Translate("AVO_MOD_MP41");
+            configLabel.text = Translations.Translate("AVO_MOD_MP46");
             configLabel.textScale = 0.8f;
             configLabel.relativePosition = new Vector3(16, height - 65);
 
             m_import = UIUtils.CreateButton(this);
-            m_import.text = Translations.Translate("AVO_MOD_MP42");
+            m_import.text = Translations.Translate("AVO_MOD_MP47");
             m_import.width = 80;
-            m_import.tooltip = Translations.Translate("AVO_MOD_MP43");
+            m_import.tooltip = Translations.Translate("AVO_MOD_MP48");
             m_import.relativePosition = new Vector3(10, height - 45);
 
             m_export = UIUtils.CreateButton(this);
-            m_export.text = Translations.Translate("AVO_MOD_MP44");
+            m_export.text = Translations.Translate("AVO_MOD_MP49");
             m_export.width = 80;
-            m_export.tooltip = Translations.Translate("AVO_MOD_MP45");
+            m_export.tooltip = Translations.Translate("AVO_MOD_MP50");
             m_export.relativePosition = new Vector3(95, height - 45);
 
             m_resetall = UIUtils.CreateButton(this);
-            m_resetall.text = Translations.Translate("AVO_MOD_MP46");
+            m_resetall.text = Translations.Translate("AVO_MOD_MP51");
             m_resetall.width = 80;
-            m_resetall.tooltip = Translations.Translate("AVO_MOD_MP47");
+            m_resetall.tooltip = Translations.Translate("AVO_MOD_MP52");
             m_resetall.relativePosition = new Vector3(180, height - 45);
 
             m_autosave = AddUIComponent<UILabel>();
             m_autosave.textScale = 0.6f;
-            m_autosave.text = Translations.Translate("AVO_MOD_MP48");
+            m_autosave.text = Translations.Translate("AVO_MOD_MP53");
             m_autosave.relativePosition = new Vector3(275, height - 40);
             m_autosave.autoSize = true;
             m_autosave.textAlignment = UIHorizontalAlignment.Center;
             m_autosave.textColor = Color.green;
-            m_autosave.tooltip = Translations.Translate("AVO_MOD_MP49");
+            m_autosave.tooltip = Translations.Translate("AVO_MOD_MP54");
             m_autosave.isVisible = AdvancedVehicleOptions.AutoSaveVehicleConfig;
 
             // Preview
@@ -304,7 +406,7 @@ namespace AdvancedVehicleOptionsUID.GUI
                 m_followVehicle.spriteName = "LocationMarkerFocused";
                 m_followVehicle.width = m_followVehicle.spriteInfo.width;
                 m_followVehicle.height = m_followVehicle.spriteInfo.height;
-                m_followVehicle.tooltip = Translations.Translate("AVO_MOD_MP50");
+                m_followVehicle.tooltip = Translations.Translate("AVO_MOD_MP55");
                 m_followVehicle.relativePosition = new Vector3(panel.relativePosition.x + panel.width - m_followVehicle.width - 5, panel.relativePosition.y + 5);
 
                 m_followVehicle.eventClick += (c, p) => FollowNextVehicle();
@@ -317,7 +419,7 @@ namespace AdvancedVehicleOptionsUID.GUI
                 m_removeVehicle.spriteName = "IconPolicyOldTown";
                 m_removeVehicle.width = m_removeVehicle.spriteInfo.width -12;
                 m_removeVehicle.height = m_removeVehicle.spriteInfo.height -12;
-                m_removeVehicle.tooltip = Translations.Translate("AVO_MOD_MP51");
+                m_removeVehicle.tooltip = Translations.Translate("AVO_MOD_MP56");
                 m_removeVehicle.relativePosition = new Vector3(panel.relativePosition.x + panel.width - m_removeVehicle.width - 33, panel.relativePosition.y + 7);
 
                 m_removeVehicle.eventClick += (c, p) => RemoveThisVehicle();
@@ -333,7 +435,7 @@ namespace AdvancedVehicleOptionsUID.GUI
 
             m_import.eventClick += (c, t) =>
             {
-                ConfirmPanel.ShowModal(Translations.Translate("AVO_MOD_MP52"), Translations.Translate("AVO_MOD_MP58"), (comp, ret) =>
+                ConfirmPanel.ShowModal(Translations.Translate("AVO_MOD_MP47"), Translations.Translate("AVO_MOD_MP62"), (comp, ret) =>
                 {
                     if (ret != 1)
                         return;
@@ -348,7 +450,7 @@ namespace AdvancedVehicleOptionsUID.GUI
 
             m_resetall.eventClick += (c, t) =>
             {
-                   ConfirmPanel.ShowModal(Translations.Translate("AVO_MOD_MP52"), Translations.Translate("AVO_MOD_MP53"), (comp, ret) =>
+                   ConfirmPanel.ShowModal(Translations.Translate("AVO_MOD_MP57"), Translations.Translate("AVO_MOD_MP58"), (comp, ret) =>
                    {
                     if (ret != 1)
                         return;
@@ -358,7 +460,7 @@ namespace AdvancedVehicleOptionsUID.GUI
                     optionList = AdvancedVehicleOptions.config.options;
 
                     ExceptionPanel resetpanel = UIView.library.ShowModal<ExceptionPanel>("ExceptionPanel");
-                    resetpanel.SetMessage("Advanced Vehicle Options", Translations.Translate("AVO_MOD_MP54"), false);
+                    resetpanel.SetMessage("Advanced Vehicle Options", Translations.Translate("AVO_MOD_MP59"), false);
                 });
 
             };
@@ -408,7 +510,7 @@ namespace AdvancedVehicleOptionsUID.GUI
             for (int i = 0; i < m_optionsList.Length; i++)
             {
                 if (m_optionsList[i] != null &&
-                    (m_category.selectedIndex == 0 || (int)m_optionsList[i].category == m_category.selectedIndex - 1) &&
+                    (m_category.selectedIndex == 0 || m_optionsList[i].category.ToString() == englishCategory[m_category.selectedIndex]) &&
                     (String.IsNullOrEmpty(m_search.text.Trim()) || m_optionsList[i].localizedName.ToLower().Contains(m_search.text.Trim().ToLower())))
                 {
                     m_fastList.rowsData.Add(m_optionsList[i]);
