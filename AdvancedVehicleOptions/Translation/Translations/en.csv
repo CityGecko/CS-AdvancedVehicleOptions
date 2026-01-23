@@ -1,6 +1,6 @@
 CODE,en
 NAME,English
-AVO_DESC,Customize your vehicles (supports Cities Skylines Airports 1.14.1-f2).
+AVO_DESC,Customize your vehicles (supports Cities Skylines 1.20.1-f1).
 TRN_CHOICE,Set Language
 TRN_TOOLTIP,"Select the Language to be used for this mod. Will require
 restart of the game. (default: Use Game Language)"
@@ -92,48 +92,52 @@ AVO_MOD_MP16,Garbage
 AVO_MOD_MP17,Waste Transfer
 AVO_MOD_MP18,Maintenance
 AVO_MOD_MP19,Postal Service
-AVO_MOD_MP20,Bus
-AVO_MOD_MP21,Intercity Bus
-AVO_MOD_MP22,Trolley Bus
-AVO_MOD_MP23,Taxi
-AVO_MOD_MP24,Metro
-AVO_MOD_MP25,Tram
-AVO_MOD_MP26,Monorail
-AVO_MOD_MP27,Cable Car
-AVO_MOD_MP28,Train - Cargo
-AVO_MOD_MP29,Train - Passenger
-AVO_MOD_MP30,Ship - Cargo
-AVO_MOD_MP31,Ship - Cruise
-AVO_MOD_MP32,Ship - Ferry
-AVO_MOD_MP33,Plane - Cargo
-AVO_MOD_MP34,Plane - Passenger
-AVO_MOD_MP35,Local Air Traffic
-AVO_MOD_MP36,Tourism + Tours
-AVO_MOD_MP37,Launch Site
-AVO_MOD_MP38,Natural
-AVO_MOD_MP39,"Select a vehcile category to display - Tipp: Use the
+AVO_MOD_MP20,Bank Service
+AVO_MOD_MP21,Bus
+AVO_MOD_MP22,Intercity Bus
+AVO_MOD_MP23,Trolley Bus
+AVO_MOD_MP24,Taxi
+AVO_MOD_MP25,Metro
+AVO_MOD_MP26,Tram
+AVO_MOD_MP27,Monorail
+AVO_MOD_MP28,Cable Car
+AVO_MOD_MP29,Train - Cargo
+AVO_MOD_MP30,Train - Passenger
+AVO_MOD_MP31,Ship - Cargo
+AVO_MOD_MP32,Ship - Cruise
+AVO_MOD_MP33,Ship - Cargo Ferry
+AVO_MOD_MP34,Ship - Passenger Ferry
+AVO_MOD_MP35,Plane - Cargo
+AVO_MOD_MP36,Plane - Passenger
+AVO_MOD_MP37,Helicopter - Cargo
+AVO_MOD_MP38,Helicopter - Passenger
+AVO_MOD_MP39,Blimp
+AVO_MOD_MP40,Local Air Traffic
+AVO_MOD_MP41,Tourism + Tours
+AVO_MOD_MP42,Launch Site
+AVO_MOD_MP43,Natural
+AVO_MOD_MP44,"Select a vehcile category to display - Tipp: Use the
 mouse wheel to switch between categories faster."
-AVO_MOD_MP40,Type the name of a vehicle type
-AVO_MOD_MP41,Actions for Vehicle Configuration:
-AVO_MOD_MP42,Import
-AVO_MOD_MP43,Load an existing vehicle configuration
-AVO_MOD_MP44,Export
-AVO_MOD_MP45,Save the current vehicle configuration
-AVO_MOD_MP46,Reset All
-AVO_MOD_MP47,Reset full configuration
-AVO_MOD_MP48,"Vehicle Data -
+AVO_MOD_MP45,Type the name of a vehicle type
+AVO_MOD_MP46,Actions for Vehicle Configuration:
+AVO_MOD_MP47,Import
+AVO_MOD_MP48,Load an existing vehicle configuration
+AVO_MOD_MP49,Export
+AVO_MOD_MP50,Save the current vehicle configuration
+AVO_MOD_MP51,Reset All
+AVO_MOD_MP52,Reset full configuration
+AVO_MOD_MP53,"Vehicle Data -
 Autosave active"
-AVO_MOD_MP49,"Autosave of Vehicle Config Data is enabled. All changes
+AVO_MOD_MP54,"Autosave of Vehicle Config Data is enabled. All changes
 will be saved immediately to external configuration file."
-AVO_MOD_MP50,"Click here to cycle through the existing vehicles of that type.
+AVO_MOD_MP55,"Click here to cycle through the existing vehicles of that type.
 Hold down Shift Key for zooming directly to vehicle."
-AVO_MOD_MP51,Click here to remove the selected vehicle.
-AVO_MOD_MP52,Confirm Reset Configuration
-AVO_MOD_MP53,Customized settings for all vehicles will be reset. Proceed with Configuration reset ?
-AVO_MOD_MP54,All vehicle configuration and customized settings have been reset to the Game Defaults.
-AVO_MOD_MP55,Search :
-AVO_MOD_MP56,Category :
-AVO_MOD_MP57,Bank Service
+AVO_MOD_MP56,Click here to remove the selected vehicle.
+AVO_MOD_MP57,Confirm Reset Configuration
+AVO_MOD_MP58,Customized settings for all vehicles will be reset. Proceed with Configuration reset ?
+AVO_MOD_MP59,All vehicle configuration and customized settings have been reset to the Game Defaults.
+AVO_MOD_MP60,Search :
+AVO_MOD_MP61,Category :
 AVO_MOD_OP01,km/h
 AVO_MOD_OP02,mph
 AVO_MOD_OP03, Warning: Improved Public Transport is active and may override this setting.
@@ -180,8 +184,9 @@ AVO_MOD_OP31,Manage Spawning in Transport Line Overview
 AVO_MOD_OP32,"Open the Transport Line Overview 
 and manage the vehicle spawning."
 AVO_MOD_OP33,Click for User Guide: Spawn Control
-AVO_MOD_OP34,"Bus trailers spawning is controlled by the main Bus vehicle.
-Settings must be configured from the Transport Line Overview panel."
+AVO_MOD_OP34,"Trailers spawning is controlled 
+by the main vehicle. Settings must be configured 
+from the Transport Line Overview panel."
 AVO_MOD_OP35,Default Values
 AVO_MOD_OP36,Restore all values to default
 AVO_MOD_OP37,Global Actions for: 
@@ -197,10 +202,10 @@ AVO_MOD_OP44,Small
 AVO_MOD_OP45,Medium
 AVO_MOD_OP46,Large
 AVO_MOD_OP47,Cargo
-"AVO_MOD_OP48","Synchronize Engine
-with Trailer"
-"AVO_MOD_OP49","If enabled, the engine properties are synchronize to all trailers."
-"AVO_MOD_OP50",Selection defines the stand position size.
+AVO_MOD_OP48,Synchronize Engine with Trailer
+AVO_MOD_OP49,If enabled, the engine properties are synchronize to all trailers.
+AVO_MOD_OP50,Selection defines the stand position size.
+AVO_MOD_OP51,Click for User Guide: City Service Buildings only spawn Vanilla vehicles
 AVO_MOD_WM01,Warning
 AVO_OPT_SYNC,Remember Engine/Trailer Synchronization setting
 AVO_OPT_SYNC_TT,"If enabled, the setting for synchronization between Engine/Trailer will be
