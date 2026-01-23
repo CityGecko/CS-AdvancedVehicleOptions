@@ -111,8 +111,10 @@
     <Content Include="Artwork\postauto.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Artwork\avo p0.pdn" />
-    <None Include="Artwork\logo mass transit.pdn" />
+	<None Include="Translation\Translations\**\*.*">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <Link>Translations\%(FileName)%(Extension)</Link>
+	</None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
