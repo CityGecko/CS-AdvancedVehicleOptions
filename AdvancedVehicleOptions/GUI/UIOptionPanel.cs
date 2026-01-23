@@ -49,7 +49,7 @@ namespace AdvancedVehicleOptionsUID.GUI
         private UIButton m_userguidecapacity;
         private UILabel specialcapacityLabel;
         private UIButton m_userguidespecialcapacity;
-        private UILabel bustrailerLabel;
+        private UILabel trailerLabel;
         private UICheckBox m_isLargeVehicle;
         private UILabel m_useColorsLabel;
         internal UILabel kmhLabel;
@@ -145,7 +145,7 @@ namespace AdvancedVehicleOptionsUID.GUI
             m_capacity.text = options.capacity.ToString();
             m_capacity.isVisible = options.hasCapacity;
             capacityLabel.isVisible = options.hasCapacity;
-            bustrailerLabel.isVisible = false;
+            trailerLabel.isVisible = false;
             
             m_userguidecapacity.isVisible = (!options.isPublicTransportGame && options.hasCapacity);
             m_specialcapacity.text = options.specialcapacity.ToString();
@@ -215,12 +215,12 @@ namespace AdvancedVehicleOptionsUID.GUI
                 m_userguidespawn.Show();
                 if (options.isTrailer)
                 {
-                    bustrailerLabel.Show();
+                    trailerLabel.Show();
                     m_lineoverview.Hide();
                 }
                 else
                 {
-                    bustrailerLabel.Hide();
+                    trailerLabel.Hide();
                     m_lineoverview.Show();
                 }
 
@@ -229,7 +229,7 @@ namespace AdvancedVehicleOptionsUID.GUI
             else
             {
                 m_enabled.Show();
-                bustrailerLabel.Hide();
+                trailerLabel.Hide();
                 m_lineoverview.Hide();
                 m_userguidespawn.Hide();
             }
@@ -581,11 +581,12 @@ namespace AdvancedVehicleOptionsUID.GUI
             m_userguidespawn.tooltip = Translations.Translate("AVO_MOD_OP33");
             m_userguidespawn.relativePosition = new Vector3(355, 192);
 
-            // Buslabel		
-            bustrailerLabel = panel.AddUIComponent<UILabel>();
-            bustrailerLabel.textScale = 0.8f;
-            bustrailerLabel.text = Translations.Translate("AVO_MOD_OP34");
-            bustrailerLabel.relativePosition = new Vector3(15, 194);
+            // trailerLabel		
+            trailerLabel = panel.AddUIComponent<UILabel>();
+            trailerLabel.textScale = 0.8f;
+            trailerLabel.text = Translations.Translate("AVO_MOD_OP34");
+            trailerLabel.relativePosition = new Vector3(15, 194);
+            trailerLabel.width = 360;
 
             // Restore default
             m_restore = UIUtils.CreateButton(panel);
@@ -1025,7 +1026,7 @@ namespace AdvancedVehicleOptionsUID.GUI
         protected void OnUserGuideBuildingClicked(UIComponent component, UIMouseEventParameter p)
         {
             SimulationManager.instance.SimulationPaused = true;
-            Application.OpenURL("https://github.com/CityGecko/CS-AdvancedVehicleOptions/wiki/00-FAQ-&-Troubleshooting#04-city-service-buildings-only-spawn-vanilla-vehicles");
+            Application.OpenURL("https://github.com/CityGecko/CS-AdvancedVehicleOptions/wiki/00-FAQ-and-Troubleshooting#04-city-service-buildings-only-spawn-vanilla-vehicles");
         }
 
         private void SyncTrailerDataToEngine()
