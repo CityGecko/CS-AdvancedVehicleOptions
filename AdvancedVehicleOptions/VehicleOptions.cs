@@ -1,16 +1,12 @@
 ﻿using UnityEngine;
-using ColossalFramework.Threading;
 using ColossalFramework.Globalization;
 
 using System;
 using System.Text;
 using System.Xml.Serialization;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
-
-using AdvancedVehicleOptionsUID.Compatibility;
 
 namespace AdvancedVehicleOptionsUID
 {
@@ -37,24 +33,28 @@ namespace AdvancedVehicleOptionsUID
             Garbage,
             WasteTransfer,
             Maintenance,
-            TransportPost,
-            TransportBank,
+            PostalService,
+            BankService,
             TransportBus,
             TransportIntercityBus,
-            TrolleyBus,
+            TransportTrolleyBus,
             TransportTaxi,
             TransportMetro,
-            Tram,
-            Monorail,
-            CableCar,
+            TransportTram,
+            TransportMonorail,
+            TransportCableCar,
             CargoTrain,
             TransportTrain,
             CargoShip,
             TransportShip,
+            CargoFerry,
             TransportFerry,
             CargoPlane,
             TransportPlane,
+            CargoHelicopter,
+            TransportHelicopter,
             TransportBlimp,
+            LocalAirTraffic,
             TransportTours,
             Monument,
             Natural
@@ -358,6 +358,22 @@ namespace AdvancedVehicleOptionsUID
             {
                 VehicleAI ai;
 
+                if (cargoFerryType != null && m_prefab.m_vehicleAI.GetType() == cargoFerryType)
+                {
+                    if (cargoFerryCapacityField != null)
+                    {
+                        return (int)cargoFerryCapacityField.GetValue(m_prefab.m_vehicleAI);
+                    }
+                }
+
+                if (cargoHelicopterType != null && m_prefab.m_vehicleAI.GetType() == cargoHelicopterType)
+                {
+                    if (cargoHelicopterCapacityField != null)
+                    {
+                        return (int)cargoHelicopterCapacityField.GetValue(m_prefab.m_vehicleAI);
+                    }
+                }
+
                 ai = m_prefab.m_vehicleAI as AmbulanceAI;
                 if (ai != null) return ((AmbulanceAI)ai).m_patientCapacity;
 
@@ -463,6 +479,24 @@ namespace AdvancedVehicleOptionsUID
 
                 VehicleAI ai;
 
+                if (cargoFerryType != null && m_prefab.m_vehicleAI.GetType() == cargoFerryType)
+                {
+                    if (cargoFerryCapacityField != null)
+                    {
+                        cargoFerryCapacityField.SetValue(m_prefab.m_vehicleAI, value);
+                        return;
+                    }
+                }
+
+                if (cargoHelicopterType != null && m_prefab.m_vehicleAI.GetType() == cargoHelicopterType)
+                {
+                    if (cargoHelicopterCapacityField != null)
+                    {
+                        cargoHelicopterCapacityField.SetValue(m_prefab.m_vehicleAI, value);
+                        return;
+                    }
+                }
+
                 ai = m_prefab.m_vehicleAI as AmbulanceAI;
                 if (ai != null) { ((AmbulanceAI)ai).m_patientCapacity = value; return; }
 
@@ -566,6 +600,11 @@ namespace AdvancedVehicleOptionsUID
         public static VehicleInfo prefabUpdateUnits = null;
         public static VehicleInfo prefabUpdateEngine = null;
 
+        public static Type cargoFerryType;
+        public static FieldInfo cargoFerryCapacityField;
+        public static Type cargoHelicopterType;
+        public static FieldInfo cargoHelicopterCapacityField;
+
         private VehicleInfo m_prefab = null;
         private VehicleInfo m_engine = null;
         private ItemClass.Placement m_placementStyle;
@@ -653,20 +692,20 @@ namespace AdvancedVehicleOptionsUID
                                                      || prefab.m_class.m_subService == ItemClass.SubService.PublicTransportMetro
                                                      || prefab.m_class.m_subService == ItemClass.SubService.PublicTransportPlane && prefab.m_vehicleType == VehicleInfo.VehicleType.Blimp
                                                      || prefab.m_class.m_subService == ItemClass.SubService.PublicTransportShip && prefab.m_class.m_level == ItemClass.Level.Level2
-                                                     || prefab.m_class.m_subService == ItemClass.SubService.PublicTransportPlane && prefab.m_vehicleType == VehicleInfo.VehicleType.Helicopter
+                                                     || prefab.m_class.m_subService == ItemClass.SubService.PublicTransportPlane && prefab.m_vehicleType == VehicleInfo.VehicleType.Helicopter && prefab.m_class.m_level != ItemClass.Level.Level5
                                                      || prefab.m_class.m_subService == ItemClass.SubService.PublicTransportMonorail; }
         }
 
 
-        // Class Intercity Bus, Cargo Train, Cargo Plane, Cargo Ship, Postal Service und Tours to be excluded as not in scope of IPT and TLM
+        // Class Intercity Bus, Cargo Train, Cargo Plane, Cargo Ship, Cargo Ferry, Cargo Helicopter, Postal Service and Tours to be excluded as not in scope of IPT and TLM
         public bool isNotPublicTransportMod
         {
             get {
                 return prefab.m_class.m_subService == ItemClass.SubService.PublicTransportBus && prefab.m_class.m_level == ItemClass.Level.Level3
                                                      || prefab.m_class.m_subService == ItemClass.SubService.PublicTransportTours
-                                                     || prefab.m_class.m_subService == ItemClass.SubService.PublicTransportShip && prefab.m_class.m_level == ItemClass.Level.Level4
+                                                     || prefab.m_class.m_subService == ItemClass.SubService.PublicTransportShip && (prefab.m_class.m_level == ItemClass.Level.Level4 || prefab.m_class.m_level == ItemClass.Level.Level5)
                                                      || prefab.m_class.m_subService == ItemClass.SubService.PublicTransportTrain && prefab.m_class.m_level == ItemClass.Level.Level4
-                                                     || prefab.m_class.m_subService == ItemClass.SubService.PublicTransportPlane && prefab.m_class.m_level == ItemClass.Level.Level4
+                                                     || prefab.m_class.m_subService == ItemClass.SubService.PublicTransportPlane && (prefab.m_class.m_level == ItemClass.Level.Level4 || prefab.m_class.m_level == ItemClass.Level.Level5)
                                                      || prefab.m_class.m_subService == ItemClass.SubService.PublicTransportPost; }
         }
 
@@ -734,8 +773,16 @@ namespace AdvancedVehicleOptionsUID
         {
             get
             {
+
+                if ((cargoFerryType != null && m_prefab.m_vehicleAI.GetType() == cargoFerryType) || 
+                    (cargoHelicopterType != null && m_prefab.m_vehicleAI.GetType() == cargoHelicopterType))
+                {
+                    return Translations.Translate("AVO_MOD_VO08");
+                }
+
                 switch (m_prefab.m_vehicleAI)
-                { case PassengerPlaneAI _:
+                { 
+                    case PassengerPlaneAI _:
                     case PassengerBlimpAI _:
                     case BusAI _:
                     case TrolleybusAI _:
@@ -821,7 +868,7 @@ namespace AdvancedVehicleOptionsUID
                             return Category.Prison;
                         else
                         if (prefab.m_class.m_subService == ItemClass.SubService.PoliceDepartmentBank)
-                            return Category.TransportBank;
+                            return Category.BankService;
                         else
                             return Category.Police;
 						
@@ -849,7 +896,7 @@ namespace AdvancedVehicleOptionsUID
 						
                     case ItemClass.Service.Monument:
                         if (prefab.m_class.m_level == ItemClass.Level.Level5) // Aviation Club Light Aircraft L5
-                            return Category.TransportBlimp;
+                            return Category.LocalAirTraffic;
                         else
 							return Category.Monument;
 						
@@ -889,7 +936,9 @@ namespace AdvancedVehicleOptionsUID
 						else
 						if (prefab.m_class.m_level == ItemClass.Level.Level1)
                             return Category.TransportShip;
-						else
+                        if (prefab.m_class.m_level == ItemClass.Level.Level5)
+                            return Category.CargoFerry;
+                        else
                             return Category.TransportFerry;
 						
                     case ItemClass.SubService.PublicTransportTaxi:
@@ -901,8 +950,10 @@ namespace AdvancedVehicleOptionsUID
                     case ItemClass.SubService.PublicTransportPlane:
                         if (prefab.m_class.m_level == ItemClass.Level.Level4)
                             return Category.CargoPlane;
+                        if (prefab.m_class.m_level == ItemClass.Level.Level5)
+                            return Category.CargoHelicopter;
                         if (prefab.m_vehicleType == VehicleInfo.VehicleType.Helicopter)
-                            return Category.TransportBlimp;
+                            return Category.TransportHelicopter;
                         if (prefab.m_vehicleType == VehicleInfo.VehicleType.Blimp)
                             return Category.TransportBlimp;
                         else
@@ -924,16 +975,16 @@ namespace AdvancedVehicleOptionsUID
                         return Category.IndustryGeneric;
 						
                     case ItemClass.SubService.PublicTransportTram:
-                        return Category.Tram;
+                        return Category.TransportTram;
 						
                     case ItemClass.SubService.PublicTransportMonorail:
-                        return Category.Monorail;
+                        return Category.TransportMonorail;
 						
                     case ItemClass.SubService.PublicTransportCableCar:
-                        return Category.CableCar;
+                        return Category.TransportCableCar;
 						
                     case ItemClass.SubService.PublicTransportTrolleybus:
-                        return Category.TrolleyBus;
+                        return Category.TransportTrolleyBus;
 						
                     case ItemClass.SubService.ResidentialHigh:
                         return Category.Bicycle;
@@ -942,7 +993,7 @@ namespace AdvancedVehicleOptionsUID
                         return Category.Maintenance;
 						
 					case ItemClass.SubService.PublicTransportPost:
-                        return Category.TransportPost;
+                        return Category.PostalService;
                 }
 		
                 return Category.Citizen;
