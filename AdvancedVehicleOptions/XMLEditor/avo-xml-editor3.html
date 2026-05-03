@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AdvancedVehicleOptions_VehicleData.xml — Bulk Editor</title>
+<style>
+  body{font-family:system-ui,Segoe UI,Roboto,Segoe,Arial;margin:18px;background:#f7f9fc;color:#111}
+  header{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+  input[type=text],select,button{padding:6px 8px;font-size:14px}
+  table{width:100%;border-collapse:collapse;margin-top:12px;background:#fff}
+  th,td{padding:6px 8px;border:1px solid #eee;text-align:left;font-size:13px}
+  th{background:#f0f4f8}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .mutate{display:flex;gap:8px;align-items:center;margin-top:12px}
+  .mutate input[type=text]{width:260px}
+  .small{font-size:12px;color:#666}
+  .preview{max-height:420px;overflow:auto;border:1px solid #eee;padding:8px;background:#fff;margin-top:12px}
+  label{display:flex;gap:6px;align-items:center}
+</style>
+</head>
+<body>
+<header>
+  <h2 style="margin:0">Cities: Skylines — Bulk vehicle editor</h2>
+</header>
+
+<div class="medium"><b><u>Instructions for using this XML Editor</u></b><br><b>Preconditions: </b>Check %LOCALAPPDATA%\Colossal Order\Cities_Skylines, if the XML Configuration file is existing (Filename: AdvancedVehicleOptions_VehicleData.xml). If the XML Configuration file does not exist, use the Export function in the AVO window to create it.<br><b>Basic Guidance: </b>Load your AdvancedVehicleOptions_VehicleData.xml, select vehicles, edit properties, and save.<br></div>
+
+<div class="controls">
+  <input id="fileInput" type="file" accept=".xml" />
+  <button id="btnLoad">Load XML</button>
+
+  <label><input id="chkSelectAll" type="checkbox" /> Select all (checkbox)</label>
+  <button id="btnDeselectAll">Deselect all</button>
+  <button id="btnInvert">Invert selection</button>
+
+  <label>Classname:
+    <select id="classSelect" multiple size="6"><option value="">(Select classname)</option></select>
+  </label>
+  <button id="btnSelectByClass">Select by classname</button>
+
+  <label><input id="chkProtectNonGround" type="checkbox" /> Protect Non-Ground (Recommended)</label>
+
+  <button id="btnSave" disabled>Save XML (download)</button>
+</div>
+
+<div class="mutate">
+  <label for="propSelect">Property:</label>
+  <select id="propSelect"><option value="">(Choose property to edit)</option></select>
+
+  <label for="setVal">New value:</label>
+  <input id="setVal" type="text" placeholder="value (string or number)" />
+
+  <label><input type="radio" name="op" value="set" checked /> Set</label>
+  <label><input type="radio" name="op" value="add" /> Add (numeric)</label>
+  <label><input type="radio" name="op" value="mul" /> Multiply (numeric)</label>
+
+  <button id="applyBtn">Apply to selected</button>
+  <label style="margin-left:12px"><input id="createIfMissing" type="checkbox" /> Create property if missing</label>
+</div>
+
+<div id="listWrap"></div>
+
+<h3 style="margin-top:12px">XML preview (serialized)</h3>
+<pre id="xmlPreview" class="preview"></pre>
+
+<script>
+let xmlDoc=null, rootNode=null, vehicleNodes=[];
+let originalFilename='AdvancedVehicleOptions_VehicleData.xml';
+const protectedKeywords=['Bicycle','Boat','Helicopter','Cable','Ship','Ferry','Airplane','Aircraft','Blimp','Plane','Balloon','Rocket','Meteor','Vortex'];
+
+// ----- DOM references -----
+const fileInput=document.getElementById('fileInput');
+const btnLoad=document.getElementById('btnLoad');
+const btnSave=document.getElementById('btnSave');
+const listWrap=document.getElementById('listWrap');
+const propSelect=document.getElementById('propSelect');
+const setVal=document.getElementById('setVal');
+const applyBtn=document.getElementById('applyBtn');
+const xmlPreview=document.getElementById('xmlPreview');
+const btnDeselectAll=document.getElementById('btnDeselectAll');
+const btnInvert=document.getElementById('btnInvert');
+const createIfMissing=document.getElementById('createIfMissing');
+const chkProtectNonGround=document.getElementById('chkProtectNonGround');
+const chkSelectAll=document.getElementById('chkSelectAll');
+const classSelect=document.getElementById('classSelect');
+const btnSelectByClass=document.getElementById('btnSelectByClass');
+
+// ----- Helper functions -----
+function reset(){
+  xmlDoc=null; rootNode=null; vehicleNodes=[];
+  listWrap.innerHTML='';
+  propSelect.innerHTML='<option value="">(Choose property to edit)</option>';
+  xmlPreview.textContent='';
+  classSelect.innerHTML='<option value="">(Select classname)</option>';
+  chkSelectAll.checked=false;
+  btnSave.disabled=true;
+  chkProtectNonGround.checked=false;
+}
+
+function getNodeClassname(node){
+  if(node.getAttribute && node.getAttribute('classname')) return node.getAttribute('classname').trim();
+  const child = Array.from(node.children).find(c=>c.tagName==='classname');
+  return child ? (child.textContent||'').trim() : '';
+}
+
+function getNodeIdentifier(node){
+  const idAttrs=['name','Name','m_prefabName','id'];
+  for(const a of idAttrs) if(node.getAttribute(a)) return node.getAttribute(a);
+  return '';
+}
+
+function computeNewValue(current,operandRaw,op){
+  if(op==='set') return operandRaw;
+  const curNum=Number(current), opNum=Number(operandRaw);
+  if(Number.isFinite(curNum)&&Number.isFinite(opNum)){
+    if(op==='add') return String(curNum+opNum);
+    if(op==='mul') return String(curNum*opNum);
+  }
+  return operandRaw;
+}
+
+function removeFalseIsLargeVehicle(){
+  if(!xmlDoc) return;
+  const nodes = Array.from(xmlDoc.getElementsByTagName('isLargeVehicle'));
+  nodes.forEach(n=>{
+    if(n.textContent.trim().toLowerCase()==='false') n.parentNode.removeChild(n);
+  });
+}
+
+function refreshPreview(){
+  if(!xmlDoc) return;
+  const serializer=new XMLSerializer();
+  xmlPreview.textContent=serializer.serializeToString(xmlDoc);
+}
+
+// ----- Build dropdowns -----
+function buildPropertyDropdown(){
+  const nameSet=new Set();
+  vehicleNodes.forEach(node=>{
+    if(node.attributes) for(const a of Array.from(node.attributes)) nameSet.add(a.name);
+    for(const c of Array.from(node.children)) nameSet.add(c.tagName);
+  });
+  [...nameSet].sort().forEach(n=>{
+    const opt=document.createElement('option'); opt.value=n; opt.textContent=n;
+    propSelect.appendChild(opt);
+  });
+}
+
+function buildClassnameDropdown(){
+  const classes=new Set();
+  vehicleNodes.forEach(n=>{
+    const cls=getNodeClassname(n);
+    if(cls) classes.add(cls);
+  });
+  classSelect.innerHTML='<option value="">(Select classname)</option>';
+  [...classes].sort().forEach(c=>{
+    const opt=document.createElement('option'); opt.value=c; opt.textContent=c;
+    classSelect.appendChild(opt);
+  });
+}
+
+// ----- Highlight selected and protected vehicles -----
+function highlightVehicles(){
+  document.querySelectorAll('.vsel').forEach(cb=>{
+    const tr = cb.closest('tr');
+    const node = vehicleNodes[parseInt(cb.dataset.index,10)];
+    const ident = getNodeIdentifier(node);
+
+    const isProtected = chkProtectNonGround.checked &&
+                        protectedKeywords.some(k => ident.toLowerCase().includes(k.toLowerCase()));
+
+    // Reset styles
+    tr.style.backgroundColor='';
+    tr.style.fontStyle='';
+
+    if(isProtected){
+      // Protected vehicles: gray & italic, checkbox disabled
+      tr.style.backgroundColor='#eee';
+      tr.style.fontStyle='italic';
+      cb.disabled=true;
+      cb.checked=false;
+    } else {
+      cb.disabled=false;
+      // Selected vehicles: light green
+      if(cb.checked){
+        tr.style.backgroundColor='#c7f0c7';
+      }
+    }
+  });
+}
+
+// ----- Table -----
+function normalizeIsLargeVehicleFlags(){
+  vehicleNodes.forEach(node=>{
+    if(/^isLargeVehicle$/i.test(node.tagName)) return;
+    const hasAttr = node.hasAttribute && node.hasAttribute('isLargeVehicle');
+    const hasChild = Array.from(node.children).some(c=>c.tagName==='isLargeVehicle');
+    if(hasAttr || hasChild) return;
+    const el = xmlDoc.createElement('isLargeVehicle'); el.textContent='false'; node.appendChild(el);
+  });
+}
+
+function buildList(){
+  const table=document.createElement('table');
+  const thead=document.createElement('thead');
+  thead.innerHTML='<tr><th style="width:36px"><input id="chkHeaderAll" type="checkbox"></th><th>#</th><th>Tag</th><th>Identifier</th><th>Classname</th><th>Properties</th></tr>';
+  table.appendChild(thead);
+  const tbody=document.createElement('tbody');
+
+  vehicleNodes.forEach((node,idx)=>{
+    const tr=document.createElement('tr');
+    const cb=document.createElement('input'); cb.type='checkbox'; cb.className='vsel'; cb.dataset.index=idx;
+    const cbTd=document.createElement('td'); cbTd.appendChild(cb); tr.appendChild(cbTd);
+
+    const idxTd=document.createElement('td'); idxTd.textContent=String(idx+1); tr.appendChild(idxTd);
+    const tagTd=document.createElement('td'); tagTd.textContent=node.tagName; tr.appendChild(tagTd);
+    const identTd=document.createElement('td'); identTd.textContent=getNodeIdentifier(node); tr.appendChild(identTd);
+    const clsTd=document.createElement('td'); clsTd.textContent=getNodeClassname(node); tr.appendChild(clsTd);
+
+    const props=[];
+    if(node.attributes) for(const a of Array.from(node.attributes)) props.push(a.name+'="'+a.value+'"');
+    for(const c of Array.from(node.children)){
+      let v=c.textContent.trim(); if(v.length>60) v=v.slice(0,57)+'...';
+      props.push(c.tagName+'='+JSON.stringify(v));
+    }
+    const propsTd=document.createElement('td'); propsTd.textContent=props.join(', '); tr.appendChild(propsTd);
+    tbody.appendChild(tr);
+  });
+
+  table.appendChild(tbody); listWrap.innerHTML=''; listWrap.appendChild(table);
+
+  document.getElementById('chkHeaderAll').addEventListener('change',e=>{
+    document.querySelectorAll('.vsel').forEach(c=>c.checked=e.target.checked);
+    chkSelectAll.checked=e.target.checked;
+    highlightVehicles();
+  });
+
+  highlightVehicles();
+}
+
+// ----- File load -----
+btnLoad.addEventListener('click',()=>{
+  const f=fileInput.files && fileInput.files[0];
+  if(!f){ alert('Please pick your XML file first.'); return; }
+  originalFilename=f.name || originalFilename;
+  const reader=new FileReader();
+  reader.onload=e=>loadXmlString(e.target.result);
+  reader.readAsText(f);
+});
+
+fileInput.addEventListener('change',()=>{if(fileInput.files?.length) btnLoad.click();});
+
+function loadXmlString(xmlString){
+  reset();
+  const parser=new DOMParser();
+  const doc=parser.parseFromString(xmlString,'application/xml');
+  if(doc.getElementsByTagName('parsererror')[0]){ alert('Error parsing XML'); return; }
+  xmlDoc=doc; rootNode=doc.documentElement;
+
+  // Vehicle detection
+  vehicleNodes = Array.from(rootNode.getElementsByTagName('*'))
+    .filter(n=>n.children.length || n.attributes.length)
+    .filter(n=>!/^isLargeVehicle$/i.test(n.tagName));
+  if(!vehicleNodes.length) vehicleNodes = Array.from(rootNode.children);
+
+  normalizeIsLargeVehicleFlags();
+  buildList();
+  buildPropertyDropdown();
+  buildClassnameDropdown();
+  refreshPreview();
+  btnSave.disabled=false;
+}
+
+// ----- Selection buttons -----
+chkSelectAll.addEventListener('change',()=>{
+  document.querySelectorAll('.vsel').forEach(c=>c.checked=chkSelectAll.checked);
+  const header=document.getElementById('chkHeaderAll'); if(header) header.checked=chkSelectAll.checked;
+  highlightVehicles();
+});
+btnDeselectAll.addEventListener('click',()=>{
+  document.querySelectorAll('.vsel').forEach(c=>c.checked=false);
+  chkSelectAll.checked=false; const header=document.getElementById('chkHeaderAll'); if(header) header.checked=false;
+  highlightVehicles();
+});
+btnInvert.addEventListener('click',()=>{
+  document.querySelectorAll('.vsel').forEach(c=>c.checked=!c.checked);
+  highlightVehicles();
+});
+
+// ----- Multiple classname selection -----
+btnSelectByClass.addEventListener('click', ()=>{
+  const selectedOptions = Array.from(classSelect.selectedOptions).map(opt => opt.value).filter(v=>v);
+  if (!selectedOptions.length) { alert('Choose at least one classname.'); return; }
+
+  document.querySelectorAll('.vsel').forEach(cb => {
+    const node = vehicleNodes[parseInt(cb.dataset.index, 10)];
+    cb.checked = selectedOptions.includes(getNodeClassname(node));
+  });
+
+  chkSelectAll.checked = false;
+  const header = document.getElementById('chkHeaderAll'); if(header) header.checked = false;
+  highlightVehicles();
+});
+
+// ----- Apply edits (selections preserved) -----
+applyBtn.addEventListener('click', ()=>{
+  const prop = propSelect.value.trim();
+  if (!prop) { alert('Pick a property'); return; }
+  const op = document.querySelector('input[name=op]:checked').value;
+  const newValueRaw = setVal.value;
+
+  // Remember currently selected vehicles
+  let sel = Array.from(document.querySelectorAll('.vsel'))
+                .filter(ch => ch.checked)
+                .map(ch => +ch.dataset.index);
+
+  if (!sel.length) { alert('Select at least one vehicle'); return; }
+
+  if (chkProtectNonGround.checked) {
+    sel = sel.filter(i => {
+      const ident = getNodeIdentifier(vehicleNodes[i]);
+      return !protectedKeywords.some(k => ident.toLowerCase().includes(k.toLowerCase()));
+    });
+    if (!sel.length) { alert('No vehicles selected after applying protection.'); return; }
+  }
+
+  // Apply changes
+  sel.forEach(i => {
+    const node = vehicleNodes[i];
+    if (node.hasAttribute(prop)) {
+      node.setAttribute(prop, computeNewValue(node.getAttribute(prop), newValueRaw, op));
+    } else {
+      const child = Array.from(node.children).find(c => c.tagName === prop);
+      if (child) {
+        child.textContent = computeNewValue(child.textContent, newValueRaw, op);
+      } else if (createIfMissing.checked) {
+        const c = xmlDoc.createElement(prop);
+        c.textContent = newValueRaw;
+        node.appendChild(c);
+      }
+    }
+  });
+
+  // Rebuild table but restore selections
+  buildList();
+  buildClassnameDropdown();
+  refreshPreview();
+
+  sel.forEach(i => {
+    const cb = document.querySelector(`.vsel[data-index="${i}"]`);
+    if (cb) cb.checked = true;
+  });
+  highlightVehicles();
+});
+
+// ----- Protect toggle -----
+chkProtectNonGround.addEventListener('change', highlightVehicles);
+
+// ----- Save XML -----
+btnSave.addEventListener('click',()=>{
+  if(!xmlDoc) return;
+  removeFalseIsLargeVehicle();
+  const serializer=new XMLSerializer();
+  const xmlStr=serializer.serializeToString(xmlDoc);
+  const blob=new Blob([xmlStr],{type:'application/xml'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=originalFilename; a.click();
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>
