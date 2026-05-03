@@ -1,6 +1,6 @@
 CODE,en
 NAME,English
-AVO_DESC,Customize your vehicles (supports Cities Skylines 1.20.1-f1).
+AVO_DESC,Customize your vehicles (supports Cities Skylines 1.21.1-f9).
 TRN_CHOICE,Set Language
 TRN_TOOLTIP,"Select the Language to be used for this mod. Will require
 restart of the game. (default: Use Game Language)"
@@ -48,11 +48,14 @@ Trolley Bus, Fire and Police trailers, which are in real life
 industry trailers, but have been re-categorized by AVO."
 AVO_OPT_SUP,Support
 AVO_OPT_SUP_WIKI,Open the Advanced Vehicle Options Wiki
+AVO_OPT_SUP_XMLEDIT,Bulk Update - Config XML Editor
+AVO_OPT_SUP_OPENXML,Open the Config XML Editor
 AVO_OPT_SUP_LOG,Open Cities:Skylines log folder (output_log.txt)
 AVO_OPT_SUP_SET,Open Folder with Mod Configuration Files
 AVO_OPT_SUP_SET_TT,"Check for these files for backup: 
 Mod Settings     - AdvancedVehicleOptions_Settings.xml   
 Mod Vehicle Data - AdvancedVehicleOptions_VehicleData.xml"
+AVO_OPT_SUP_CROWDIN,"Support/Correct translations on CrowdIn"
 AVO_MOD_CAPA,Capacity: 
 AVO_MOD_BGUIDESC,Modify various Vehicle properties
 AVO_MOD_AV01,Your configuration has been exported. The configuration file can be found here: 
@@ -72,52 +75,52 @@ AVO_MOD_VO12,Corpse Capacity:
 AVO_MOD_VO13,Crime Capacity Rate: 
 AVO_MOD_VO14,Fire Fighting Rate: 
 AVO_MOD_VO15,Efficency Rate: 
-AVO_MOD_MP00,All Vehicles
-AVO_MOD_MP01,Citizen - Cars
-AVO_MOD_MP02,Citizen - Bicycle
-AVO_MOD_MP03,Industry - Forestry
-AVO_MOD_MP04,Industry - Farming
-AVO_MOD_MP05,Industry - Ore
-AVO_MOD_MP06,Industry - Oil
-AVO_MOD_MP07,Industry - Fishing
-AVO_MOD_MP08,Industry - Delivery
-AVO_MOD_MP09,Industry - Factories
-AVO_MOD_MP10,Police
-AVO_MOD_MP11,Prison
-AVO_MOD_MP12,Fire Safety
-AVO_MOD_MP13,Disaster Response
-AVO_MOD_MP14,Healthcare
-AVO_MOD_MP15,Deathcare
-AVO_MOD_MP16,Garbage
-AVO_MOD_MP17,Waste Transfer
-AVO_MOD_MP18,Maintenance
-AVO_MOD_MP19,Postal Service
-AVO_MOD_MP20,Bank Service
-AVO_MOD_MP21,Bus
-AVO_MOD_MP22,Intercity Bus
-AVO_MOD_MP23,Trolley Bus
-AVO_MOD_MP24,Taxi
-AVO_MOD_MP25,Metro
-AVO_MOD_MP26,Tram
-AVO_MOD_MP27,Monorail
-AVO_MOD_MP28,Cable Car
-AVO_MOD_MP29,Train - Cargo
-AVO_MOD_MP30,Train - Passenger
-AVO_MOD_MP31,Ship - Cargo
-AVO_MOD_MP32,Ship - Cruise
-AVO_MOD_MP33,Ship - Cargo Ferry
-AVO_MOD_MP34,Ship - Passenger Ferry
-AVO_MOD_MP35,Plane - Cargo
-AVO_MOD_MP36,Plane - Passenger
-AVO_MOD_MP37,Helicopter - Cargo
-AVO_MOD_MP38,Helicopter - Passenger
-AVO_MOD_MP39,Blimp
-AVO_MOD_MP40,Local Air Traffic
-AVO_MOD_MP41,Tourism + Tours
-AVO_MOD_MP42,Launch Site
-AVO_MOD_MP43,Natural
-AVO_MOD_MP44,"Select a vehcile category to display - Tipp: Use the
-mouse wheel to switch between categories faster."
+AVO_MOD_CAT00,All Vehicles
+AVO_MOD_CAT01,Citizen - Cars
+AVO_MOD_CAT02,Citizen - Bicycle
+AVO_MOD_CAT03,Industry - Forestry
+AVO_MOD_CAT04,Industry - Farming
+AVO_MOD_CAT05,Industry - Ore
+AVO_MOD_CAT06,Industry - Oil
+AVO_MOD_CAT07,Industry - Fishing
+AVO_MOD_CAT08,Industry - Delivery
+AVO_MOD_CAT09,Industry - Factories
+AVO_MOD_CAT10,Police
+AVO_MOD_CAT11,Prison
+AVO_MOD_CAT12,Fire Safety
+AVO_MOD_CAT13,Disaster Response
+AVO_MOD_CAT14,Healthcare
+AVO_MOD_CAT15,Deathcare
+AVO_MOD_CAT16,Garbage
+AVO_MOD_CAT17,Waste Transfer
+AVO_MOD_CAT18,Maintenance
+AVO_MOD_CAT19,Postal Service
+AVO_MOD_CAT20,Bank Service
+AVO_MOD_CAT21,Bus
+AVO_MOD_CAT22,Intercity Bus
+AVO_MOD_CAT23,Trolley Bus
+AVO_MOD_CAT24,Taxi
+AVO_MOD_CAT25,Metro
+AVO_MOD_CAT26,Tram
+AVO_MOD_CAT27,Monorail
+AVO_MOD_CAT28,Cable Car
+AVO_MOD_CAT29,Train - Cargo
+AVO_MOD_CAT30,Train - Passenger
+AVO_MOD_CAT31,Ship - Cargo
+AVO_MOD_CAT32,Ship - Cruise
+AVO_MOD_CAT33,Ship - Cargo Ferry
+AVO_MOD_CAT34,Ship - Passenger Ferry
+AVO_MOD_CAT35,Plane - Cargo
+AVO_MOD_CAT36,Plane - Passenger
+AVO_MOD_CAT37,Helicopter - Cargo
+AVO_MOD_CAT38,Helicopter - Passenger
+AVO_MOD_CAT39,Blimp
+AVO_MOD_CAT40,Local Air Traffic
+AVO_MOD_CAT41,Tourism + Tours
+AVO_MOD_CAT42,Race Cars + Parades
+AVO_MOD_CAT43,Race Bicycles
+AVO_MOD_CAT44,Launch Site
+AVO_MOD_CAT45,Natural
 AVO_MOD_MP45,Type the name of a vehicle type
 AVO_MOD_MP46,Actions for Vehicle Configuration:
 AVO_MOD_MP47,Import
@@ -138,6 +141,8 @@ AVO_MOD_MP58,Customized settings for all vehicles will be reset. Proceed with Co
 AVO_MOD_MP59,All vehicle configuration and customized settings have been reset to the Game Defaults.
 AVO_MOD_MP60,Search :
 AVO_MOD_MP61,Category :
+AVO_MOD_MP62,"Select a vehcile category to display - Tipp: Use the
+mouse wheel to switch between categories faster."
 AVO_MOD_OP01,km/h
 AVO_MOD_OP02,mph
 AVO_MOD_OP03, Warning: Improved Public Transport is active and may override this setting.
