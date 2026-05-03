@@ -56,7 +56,8 @@ namespace AdvancedVehicleOptionsUID.GUI
                                                             "SubBarPublicTransportCableCar", "SubBarPublicTransportTrain", "SubBarPublicTransportTrain", "IconCargoShip",
                                                             "SubBarPublicTransportShip", "IconPolicyPreferFerries", "IconPolicyPreferFerries", "SubBarPublicTransportPlane",
                                                             "SubBarPublicTransportPlane", "IconPolicyHelicopterPriority", "IconPolicyHelicopterPriority","IconPolicyEducationalBlimps",
-                                                            "IconPolicyAirplaneTours", "SubBarPublicTransportTours", "ToolbarIconMonuments", "SubBarFireDepartmentDisaster"
+                                                            "IconPolicyAirplaneTours", "SubBarPublicTransportTours", "SubBarBeautificationRacesAndParades", "SubBarBeautificationRacesAndParades",
+                                                            "ToolbarIconMonuments", "SubBarFireDepartmentDisaster"
                                                           };
 
         public UIOptionPanel optionPanel
@@ -247,6 +248,12 @@ namespace AdvancedVehicleOptionsUID.GUI
                 case "BankService" when !AdvancedVehicleOptions.hasFinancialDistricsDLC:
                     return false;
 
+                case "RaceDayCars" when !AdvancedVehicleOptions.hasRaceDayDLC:
+                    return false;
+
+                case "RaceDayBicycles" when !AdvancedVehicleOptions.hasRaceDayDLC:
+                    return false;
+
                 case "Fishing":
                 case "LocalAirTraffic":
                 case "TransportTrolleyBus":
@@ -297,11 +304,11 @@ namespace AdvancedVehicleOptionsUID.GUI
                 string name = "";
                 if (i < 10)
                 {
-                    name = "AVO_MOD_MP0" + i;
+                    name = "AVO_MOD_CAT0" + i;
                 }
                 else
                 {
-                    name = "AVO_MOD_MP" + i;
+                    name = "AVO_MOD_CAT" + i;
                 }
                 if(i == 0)
                 {
@@ -315,7 +322,7 @@ namespace AdvancedVehicleOptionsUID.GUI
             }
                 
             m_category.selectedIndex = 0;
-            m_category.tooltip = Translations.Translate("AVO_MOD_MP44");
+            m_category.tooltip = Translations.Translate("AVO_MOD_MP62");
             m_category.relativePosition = label.relativePosition + new Vector3(75f, 0f);
 
             m_category.eventSelectedIndexChanged += (c, t) =>
