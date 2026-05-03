@@ -1,18 +1,19 @@
-﻿using ICities;
-using UnityEngine;
-
+﻿using AdvancedVehicleOptionsUID.Compatibility;
+using AdvancedVehicleOptionsUID.GUI;
+using ColossalFramework;
+using ColossalFramework.IO;
+using ColossalFramework.PlatformServices;
+using ColossalFramework.Plugins;
+using ColossalFramework.UI;
+using ICities;
 using System;
-using System.Text;
 using System.Collections.Generic;
 using System.IO;
-
-using ColossalFramework;
-using ColossalFramework.UI;
-using ColossalFramework.IO;
-
-using AdvancedVehicleOptionsUID.Compatibility;
-using AdvancedVehicleOptionsUID.GUI;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using UnityEngine;
+using static ColossalFramework.Plugins.PluginManager;
 
 namespace AdvancedVehicleOptionsUID
 {
@@ -20,9 +21,9 @@ namespace AdvancedVehicleOptionsUID
 
     {
         public static string ModName => "Advanced Vehicle Options";
-        //public static string Version => "1.9.12 b3 20052023 1.20.1-f1";
+        //public static string Version => "1.9.13beta6 05032026 0025 Patch 1.21.1-f9";
 
-        public static string Version => "1.9.12";
+        public static string Version => "1.9.13";
         public string Name => ModName + " " + Version;
 
         public AVOMod()
@@ -118,7 +119,7 @@ namespace AdvancedVehicleOptionsUID
 
                 // Checkbox for Language Option
 
-                UIDropDown Language_DropDown = (UIDropDown)Group_General.AddDropdown(Translations.Translate("TRN_CHOICE"), Translations.LanguageList, Translations.Index, (value) => 
+                UIDropDown Language_DropDown = (UIDropDown)Group_General.AddDropdown(Translations.Translate("TRN_CHOICE"), Translations.LanguageList, Translations.Index, (value) =>
                 {
                     Translations.Index = value;
                     ModSettings.Save();
@@ -198,18 +199,36 @@ namespace AdvancedVehicleOptionsUID
                 });
 
                 NoBigTrucks_Box.tooltip = Translations.Translate("AVO_OPT_COMP_NBT_TT");
-                //True, if AVO shall be enabled to classify Generic Industry vehicles as Large Vehicles, so No Big Trucks can suppress the dispatch to small buildings.
+                // True, if AVO shall be enabled to classify Generic Industry vehicles as Large Vehicles, so No Big Trucks can suppress the dispatch to small buildings.
 
                 if (!NoBigTruckCompatibilityPatch.IsNBTActive() | !NoBigTruckCompatibilityPatch.IsNBTBetaActive())
                 {
                     NoBigTrucks_Box.enabled = false;   //Do not show the option Checkbox, if No Big Trucks is not active.
                 }
 
- // Support Section with Wiki and Output-Log	
+                // XML Editor Section / XML created by Steam Workshop user @Testicle https://steamcommunity.com/profiles/76561198058010907
+
+                UIHelperBase Group_XMLEdit = helper.AddGroup(Translations.Translate("AVO_OPT_SUP_XMLEDIT"));
+
+                UIButton XMLEditor_Button = (UIButton)Group_XMLEdit.AddButton(Translations.Translate("AVO_OPT_SUP_OPENXML"), () =>
+                {
+                    var plugin = CitiesSkylinesPaths.GetCurrentPlugin();
+                    string AVOmodPath = plugin?.modPath;
+
+                    string XMLEditorFile = Path.Combine(Path.Combine(AVOmodPath, "XMLEditor"), "avo-xml-editor3.html");
+
+                    Logging.Message("Workshop XML Editor Path: " + XMLEditorFile);
+
+                    Application.OpenURL("file:///" + XMLEditorFile);
+
+                });
+                XMLEditor_Button.textScale = 0.8f;
+
+                // Support Section with Wiki and Output-Log	
 
                 UIHelperBase Group_Support = helper.AddGroup(Translations.Translate("AVO_OPT_SUP"));
-				
-				UIButton Wikipedia_Button = (UIButton)Group_Support.AddButton(Translations.Translate("AVO_OPT_SUP_WIKI"), () =>
+
+                UIButton Wikipedia_Button = (UIButton)Group_Support.AddButton(Translations.Translate("AVO_OPT_SUP_WIKI"), () =>
                 {
                     SimulationManager.instance.SimulationPaused = true;
                     Application.OpenURL("https://github.com/CityGecko/CS-AdvancedVehicleOptions/wiki");
@@ -226,16 +245,48 @@ namespace AdvancedVehicleOptionsUID
                 {
                     // Utils.OpenInFileBrowser(Application.streamingAssetsPath);
                     Utils.OpenInFileBrowser(DataLocation.localApplicationData);
-                  });
+                });
                 AVOLog_Button.textScale = 0.8f;
                 AVOLog_Button.tooltip = (Translations.Translate("AVO_OPT_SUP_SET_TT"));
-            }	
-			
+
+                UIButton Crowdin_Button = (UIButton)Group_Support.AddButton(Translations.Translate("AVO_OPT_SUP_CROWDIN"), () =>
+                {
+                    SimulationManager.instance.SimulationPaused = true;
+                    Application.OpenURL("https://crowdin.com/project/cs-advancedvehicleoptions");
+                });
+                Crowdin_Button.textScale = 0.8f;
+            }
             catch (Exception e)
             {
                 Logging.Error("OnSettingsUI failed");
                 Logging.LogException(e);
             }
+        }
+    }
+    public static class CitiesSkylinesPaths
+    {
+        public static PluginManager.PluginInfo GetCurrentPlugin()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+
+            foreach (var plugin in PluginManager.instance.GetPluginsInfo())
+            {
+                try
+                {
+                    var instances = plugin.GetInstances<IUserMod>();
+
+                    if (instances.Any(i => i.GetType().Assembly == assembly))
+                    {
+                        return plugin;
+                    }
+                }
+                catch
+                {
+                    // manche Plugins werfen hier Exceptions → ignorieren
+                }
+            }
+
+            return null;
         }
     }
 
@@ -366,6 +417,7 @@ namespace AdvancedVehicleOptionsUID
         internal static bool hasSunsetHarborDLC;
         internal static bool hasAirportDLC;
         internal static bool hasFinancialDistricsDLC;
+        internal static bool hasRaceDayDLC;
 
         internal static GUI.UIMainPanel m_mainPanel;
 
@@ -395,7 +447,8 @@ namespace AdvancedVehicleOptionsUID
                 hasSunsetHarborDLC = ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kUrbanDLCAppID);
                 hasAirportDLC = ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kAirportDLCAppID); // Checking for Stand Type requirement: is AirportDLC installed
                 hasFinancialDistricsDLC = ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kFinancialDistrictsDLCAppID);
-
+                hasRaceDayDLC = ColossalFramework.PlatformServices.PlatformService.IsDlcInstalled(SteamHelper.kRacesAndParadesDLCAppID);
+                   
                 // Loading config
                 AdvancedVehicleOptions.InitVehicleDataConfig();
 
@@ -825,5 +878,6 @@ public static void InitVehicleDataConfig()
                 type != typeof(BankVanAI) ;
 
         }
+
     }
 }

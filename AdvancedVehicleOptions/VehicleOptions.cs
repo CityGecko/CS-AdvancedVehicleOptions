@@ -1,12 +1,13 @@
-﻿using UnityEngine;
-using ColossalFramework.Globalization;
-
+﻿using ColossalFramework.Globalization;
 using System;
-using System.Text;
-using System.Xml.Serialization;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using System.Runtime.ConstrainedExecution;
+using System.Text;
+using System.Xml.Serialization;
+using UnityEngine;
+using static VehicleInfo;
 
 namespace AdvancedVehicleOptionsUID
 {
@@ -56,6 +57,8 @@ namespace AdvancedVehicleOptionsUID
             TransportBlimp,
             LocalAirTraffic,
             TransportTours,
+            RaceDayCars,
+            RaceDayBicycles,
             Monument,
             Natural
         }
@@ -899,7 +902,13 @@ namespace AdvancedVehicleOptionsUID
                             return Category.LocalAirTraffic;
                         else
 							return Category.Monument;
-						
+
+                    case ItemClass.Service.Race:
+                        if (prefab.m_vehicleType == VehicleType.Bicycle) // Raceday Bicycles will go for better overview to the Race Bicycle Category
+                            return Category.RaceDayBicycles;
+                        else
+                            return Category.RaceDayCars;
+
                     case ItemClass.Service.Natural:
                         return Category.Natural;
 						
