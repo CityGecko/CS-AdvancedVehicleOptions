@@ -2,7 +2,6 @@
 using AdvancedVehicleOptionsUID.GUI;
 using ColossalFramework;
 using ColossalFramework.IO;
-using ColossalFramework.PlatformServices;
 using ColossalFramework.Plugins;
 using ColossalFramework.UI;
 using ICities;
@@ -13,7 +12,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
-using static ColossalFramework.Plugins.PluginManager;
+using CitiesHarmony.API;
 
 namespace AdvancedVehicleOptionsUID
 {
@@ -31,7 +30,7 @@ namespace AdvancedVehicleOptionsUID
             try
             {
                 // Creating setting file
-                GameSettings.AddSettingsFile(new SettingsFile[] { new SettingsFile() { fileName = AdvancedVehicleOptions.settingsFileName } });
+                GameSettings.AddSettingsFile([new() { fileName = AdvancedVehicleOptions.settingsFileName }]);
             }
             catch (Exception e)
             {
@@ -49,6 +48,12 @@ namespace AdvancedVehicleOptionsUID
         {
             // Load the settings file.
             ModSettings.Load();
+            HarmonyHelper.DoOnHarmonyReady(() => Patcher.PatchAll());
+        }
+
+        public void OnDisabled()
+        {
+            if (HarmonyHelper.IsHarmonyInstalled) Patcher.UnpatchAll();
         }
 
         public void OnSettingsUI(UIHelperBase helper)
