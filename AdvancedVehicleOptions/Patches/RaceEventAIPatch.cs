@@ -7,11 +7,10 @@ namespace AdvancedVehicleOptionsUID.Patches
     public static class RaceEventAIPatch
     {
         [HarmonyPatch(typeof(MotorRaceAI), "SpawnRacer")]
+        [HarmonyPostfix]
         public static void SpawnRacerMotorPostfix(MotorRaceAI __instance, ushort eventID, ref EventData data, int index, bool __result)
         {
             if (!__result) return;
-
-            if(index == 0) return;
 
             ref var racer = ref data.m_raceEventData.m_racerData[index];
 
@@ -21,19 +20,18 @@ namespace AdvancedVehicleOptionsUID.Patches
 
                 if(race_vehicle.Info == null) return;
 
-                data.m_raceEventData.m_racerData[index].m_maxSpeed = race_vehicle.Info.m_maxSpeed;
-                data.m_raceEventData.m_racerData[index].m_acceleration = race_vehicle.Info.m_acceleration;
-                data.m_raceEventData.m_racerData[index].m_braking = race_vehicle.Info.m_braking;
-                data.m_raceEventData.m_racerData[index].m_turning = race_vehicle.Info.m_turning;
+                racer.m_maxSpeed = race_vehicle.Info.m_maxSpeed;
+                racer.m_acceleration = race_vehicle.Info.m_acceleration;
+                racer.m_braking = race_vehicle.Info.m_braking;
+                racer.m_turning = race_vehicle.Info.m_turning;
             }
         }
 
         [HarmonyPatch(typeof(BicycleRaceAI), "SpawnRacer")]
+        [HarmonyPostfix]
         public static void SpawnRacerBicyclePostfix(BicycleRaceAI __instance, ushort eventID, ref EventData data, int index, bool __result)
         {
             if (!__result) return;
-
-            if (index == 0) return;
 
             ref var racer = ref data.m_raceEventData.m_racerData[index];
 
@@ -50,8 +48,8 @@ namespace AdvancedVehicleOptionsUID.Patches
 
                 if (race_vehicle.Info == null) return;
 
-                data.m_raceEventData.m_racerData[index].m_maxSpeed = race_vehicle.Info.m_maxSpeed;
-                data.m_raceEventData.m_racerData[index].m_acceleration = race_vehicle.Info.m_acceleration;
+                racer.m_maxSpeed = race_vehicle.Info.m_maxSpeed;
+                racer.m_acceleration = race_vehicle.Info.m_acceleration;
             }
         }
     }
