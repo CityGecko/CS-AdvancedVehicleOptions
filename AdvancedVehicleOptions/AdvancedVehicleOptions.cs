@@ -20,10 +20,11 @@ namespace AdvancedVehicleOptionsUID
 
     {
         public static string ModName => "Advanced Vehicle Options";
-        //public static string Version => "1.9.13.1 beta5 "+ DateTime.Now +" Patch 1.21.1-f9";
-        //public static string Version => "1.9.13.1 beta5 16-02-2026 21:10 Patch 1.21.1-f9";
+        
+        //public static string Version => "1.9.13.2 beta2 "+ DateTime.Now +" Patch 1.21.1-f9";
+        //public static string Version => "1.9.13.2 beta2 22-05-2026 16:54 Patch 1.21.1-f9";
 
-        public static string Version => "1.9.13.1";
+        public static string Version => "1.9.13.2";
         public string Name => ModName + " " + Version;
 
         public AVOMod()

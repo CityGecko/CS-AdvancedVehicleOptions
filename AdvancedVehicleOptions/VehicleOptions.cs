@@ -1161,8 +1161,12 @@ namespace AdvancedVehicleOptionsUID
                             ushort newPrefabID = (ushort)prefab.m_trailers[prefab.m_trailers.Length - 1].m_info.m_prefabDataIndex;
                             if (oldPrefabID != newPrefabID)
                             {
-                                vehicles.m_buffer[last].m_infoIndex = newPrefabID;
-                                vehicles.m_buffer[last].m_flags = vehicles.m_buffer[vehicles.m_buffer[last].m_leadingVehicle].m_flags;
+                                // check if the back engine is already correct, to avoid unnecessary updates and potential desyncs with mods that change the back engine prefab (e.g. Improved Public Transport)
+                                if (vehicles.m_buffer[last].m_leadingVehicle != 0)
+                                {
+                                    vehicles.m_buffer[last].m_infoIndex = newPrefabID;
+                                    vehicles.m_buffer[last].m_flags = vehicles.m_buffer[vehicles.m_buffer[last].m_leadingVehicle].m_flags;
+                                }
 
                                 if (prefab.m_trailers[prefab.m_trailers.Length - 1].m_info == prefab)
                                     vehicles.m_buffer[last].m_flags |= Vehicle.Flags.Inverted;
