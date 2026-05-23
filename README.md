@@ -1,8 +1,13 @@
+# CS-AdvancedVehicleOptions 1.9.13.2
+* Enhanced Harmony patch to allow changes during Race Events for race cars and bicycles
+* Adressed a reported validation issue raised by Speedy
+* Updated entries Chinese language translation contributed by Wakamiya Eve.
+
 # CS-AdvancedVehicleOptions 1.9.13.1
 * Fixed/adding ability to take over the Race Cars and Bicycles properties properly - thanks again to t1a2l.
 * Change of asset properties - Race Cars and Race Bicycles have bogus properties, AVO intially corrects them now. Values can be any time overriden. If 125 km/h is entered for Race Cars, the value will be corrected again. No such effect on the Bicycles.
 * Fixed the Russion Language File not showing due to wrong "en" entry in the language file
-* Small wording change in Chinese Language file contributed by Eve.
+* Small wording change in Chinese Language file contributed by Wakamiya Eve.
 
 Please note:
 Racedays DLC: the race vehicles do good around 100 km/h, but above they will act weird. The standard value is 125 km/h. Due to this, AVO will set them automatically to the data, which are usually used in the race. This is a speed of 75 km/h. You can override this value, but the high you go, the more crazy the vehicles will drive. If you use 125 km/h, AVO will set the speed back to 75 km/h. The Race Bicycles are now doing 50 km/h instead like the City Bikes around 31 km/h. You can change to any speed, the faster the worse they act. Any change will be only applied, if a new event is started. You cannot change speed during an ongoing race event. This is due to game design.
