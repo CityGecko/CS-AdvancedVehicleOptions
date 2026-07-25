@@ -1,3 +1,10 @@
+# CS-AdvancedVehicleOptions 1.9.14
+* Updated the translation framework created by Algernon to recent version, which fixed an issue with the automated language detection. This will resolve an issue, where the "use game language" selection delivered back invalid values and not properly loading the existing language file.
+* Updated all language files, so they are compatible with the updated translation framework.
+* Added logic to translate the Mod Option panel once a new language is selected inside the Mod Option panel.
+* Fixed a bug, which did not translate the vehicle names when changing the language of the game (to do: change the language of AVO on-the-fly, when user changes language during a session).
+* Fixed a locale language issue with the value fields, which prevented to us dot or comma as decimal, depending on your country settings.
+
 # CS-AdvancedVehicleOptions 1.9.13.2
 * Enhanced Harmony patch to allow changes during Race Events for race cars and bicycles
 * Adressed a reported validation issue raised by Speedy
