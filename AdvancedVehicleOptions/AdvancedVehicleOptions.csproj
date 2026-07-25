@@ -4,7 +4,7 @@
 	<TargetFramework>net35</TargetFramework>
 	<Deterministic>false</Deterministic>
 	<AssemblyTitle>AdvancedVehicleOptions</AssemblyTitle>
-	<AssemblyVersion>1.9.13</AssemblyVersion>
+	<AssemblyVersion>1.9.14</AssemblyVersion>
 	<GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
 	<LangVersion>preview</LangVersion>
 	<AssemblyName>AdvancedVehicleOptions</AssemblyName>

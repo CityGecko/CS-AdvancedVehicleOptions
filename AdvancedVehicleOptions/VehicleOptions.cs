@@ -611,7 +611,6 @@ namespace AdvancedVehicleOptionsUID
         private VehicleInfo m_prefab = null;
         private VehicleInfo m_engine = null;
         private ItemClass.Placement m_placementStyle;
-        private string m_localizedName;
         private bool m_hasCapacity = false;
         private bool m_hasSpecialCapacity = false;
         private string m_steamID;
@@ -719,7 +718,26 @@ namespace AdvancedVehicleOptionsUID
 
         public string localizedName
         {
-            get { return m_localizedName; }
+            // Resolved live (not cached) so it reflects the current game language even if it was
+            // switched after this vehicle's data was loaded - the game's own locale reload for
+            // asset titles doesn't complete synchronously when a new game is started.
+            get
+            {
+                if (m_engine != null)
+                {
+                    return Locale.GetUnchecked("VEHICLE_TITLE", m_engine.name) + " (Trailer)";
+                }
+
+                string name = Locale.GetUnchecked("VEHICLE_TITLE", m_prefab.name);
+                if (name.StartsWith("VEHICLE_TITLE"))
+                {
+                    name = m_prefab.name;
+                    // Removes the steam ID and trailing _Data from the name
+                    name = name.Substring(name.IndexOf('.') + 1).Replace("_Data", "");
+                }
+
+                return name;
+            }
         }
 
         public int ReturnLineOverviewType
@@ -1161,12 +1179,8 @@ namespace AdvancedVehicleOptionsUID
                             ushort newPrefabID = (ushort)prefab.m_trailers[prefab.m_trailers.Length - 1].m_info.m_prefabDataIndex;
                             if (oldPrefabID != newPrefabID)
                             {
-                                // check if the back engine is already correct, to avoid unnecessary updates and potential desyncs with mods that change the back engine prefab (e.g. Improved Public Transport)
-                                if (vehicles.m_buffer[last].m_leadingVehicle != 0)
-                                {
-                                    vehicles.m_buffer[last].m_infoIndex = newPrefabID;
-                                    vehicles.m_buffer[last].m_flags = vehicles.m_buffer[vehicles.m_buffer[last].m_leadingVehicle].m_flags;
-                                }
+                                vehicles.m_buffer[last].m_infoIndex = newPrefabID;
+                                vehicles.m_buffer[last].m_flags = vehicles.m_buffer[vehicles.m_buffer[last].m_leadingVehicle].m_flags;
 
                                 if (prefab.m_trailers[prefab.m_trailers.Length - 1].m_info == prefab)
                                     vehicles.m_buffer[last].m_flags |= Vehicle.Flags.Inverted;
@@ -1209,20 +1223,6 @@ namespace AdvancedVehicleOptionsUID
             m_placementStyle = prefab.m_placementStyle;
 
             m_engine = GetEngine();
-            if (m_engine != null)
-            {
-                m_localizedName = Locale.GetUnchecked("VEHICLE_TITLE", m_engine.name) + " (Trailer)";
-            }
-            else
-            {
-                m_localizedName = Locale.GetUnchecked("VEHICLE_TITLE", prefab.name);
-                if (m_localizedName.StartsWith("VEHICLE_TITLE"))
-                {
-                    m_localizedName = prefab.name;
-                    // Removes the steam ID and trailing _Data from the name
-                    m_localizedName = m_localizedName.Substring(m_localizedName.IndexOf('.') + 1).Replace("_Data", "");
-                }
-            }
 
             m_hasCapacity = capacity != -1;
             m_hasSpecialCapacity = specialcapacity != -1;

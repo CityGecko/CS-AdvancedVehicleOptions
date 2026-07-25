@@ -1,6 +1,7 @@
 ﻿using AdvancedVehicleOptionsUID.Compatibility;
 using AdvancedVehicleOptionsUID.GUI;
 using ColossalFramework;
+using ColossalFramework.Globalization;
 using ColossalFramework.IO;
 using ColossalFramework.Plugins;
 using ColossalFramework.UI;
@@ -20,11 +21,12 @@ namespace AdvancedVehicleOptionsUID
 
     {
         public static string ModName => "Advanced Vehicle Options";
-        
-        //public static string Version => "1.9.13.2 beta2 "+ DateTime.Now +" Patch 1.21.1-f9";
-        //public static string Version => "1.9.13.2 beta2 22-05-2026 16:54 Patch 1.21.1-f9";
+        //public static string Version => "1.9.14 beta12 "+ DateTime.Now +" Patch 1.21.1-f9";
+        public static string Version => "1.9.14";
 
-        public static string Version => "1.9.13.2";
+        // Reflection handle for OptionsMainPanel's private OnLocaleChanged(), used to refresh the options panel after switching AVO's own language dropdown, without needing a game restart.
+        private static readonly MethodInfo OptionsPanelLocaleChanged = typeof(OptionsMainPanel).GetMethod("OnLocaleChanged", BindingFlags.NonPublic | BindingFlags.Instance);
+      
         public string Name => ModName + " " + Version;
 
         public AVOMod()
@@ -130,6 +132,20 @@ namespace AdvancedVehicleOptionsUID
                 {
                     Translations.Index = value;
                     ModSettings.Save();
+
+                    // Force the options panel to rebuild with the new language, same as when the game's own UI language changes.
+                    try
+                    {
+                        OptionsMainPanel optionsPanel = UIView.library.Get<OptionsMainPanel>("OptionsPanel");
+                        if (optionsPanel != null)
+                        {
+                            OptionsPanelLocaleChanged?.Invoke(optionsPanel, null);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.LogException(e, "exception refreshing options panel after language change");
+                    }
                 });
 
                 Language_DropDown.tooltip = Translations.Translate("TRN_TOOLTIP");
@@ -330,6 +346,16 @@ namespace AdvancedVehicleOptionsUID
 
                 try
                 {
+                    // Make sure the game's own locale data (used for vehicle titles) is current before we read vehicle names - the game doesn't always refresh this itself when starting a new game after a language change.
+                    try
+                    {
+                        LocaleManager.ForceReload();
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.LogException(e, "exception forcing locale reload");
+                    }
+
                     DefaultOptions.BuildVehicleInfoDictionary();
                     VehicleOptions.Clear();
                     Logging.Message("UIMainPanel created");
@@ -343,7 +369,6 @@ namespace AdvancedVehicleOptionsUID
 
                     return;
                 }
-
 
                 try
                 {
