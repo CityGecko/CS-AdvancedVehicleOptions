@@ -1,4 +1,3 @@
-"CODE","ko"
 "NAME","한국어"
 "AVO_DESC","차량을 사용자 지정하세요 (Cities: Skylines 1.21.1-f9 지원)"
 "TRN_CHOICE","언어 설정하기"
@@ -40,9 +39,6 @@ AVO 인터페이스는 언제든지 단축키를 통해 불러 올 수 있습니
 "AVO_OPT_COMP_NBT","No Big Trucks : 일반 산업 차량을 대형 차량으로 분류함"
 "AVO_OPT_COMP_NBT_TT","활성화시, 일반 배달 트럭을 대형 차량으로 태그 할 수 있습니다.
 No Big Trucks(MacSergey 모더)에 의해 배차가 차단됩니다. (기본값 : 활성화)"
-"AVO_OPT_COMP_TRL","차량 트레일러 호환성 업데이트 버전 :"
-"AVO_OPT_COMP_TRL_TT","해당 필드는 분류된 차량 목록 날짜를 보여줍니다.
-버스, 트롤리버스, 소방 및 경찰 트레일러, 산업 트레일러가 AVO에 의해 재 분류되었습니다."
 "AVO_OPT_SUP","지원"
 "AVO_OPT_SUP_WIKI","AVO 위키 열기"
 "AVO_OPT_SUP_XMLEDIT","일괄 업데이트 - XML 설정 편집기"
@@ -54,7 +50,6 @@ No Big Trucks(MacSergey 모더)에 의해 배차가 차단됩니다. (기본값 
 모드 차량 데이터 - AdvancedVehicleOptions_VehicleData.xml"
 "AVO_OPT_SUP_CROWDIN","지원 / Crowdin에서 번역 수정"
 "AVO_MOD_CAPA","수용량 :"
-"AVO_MOD_BGUIDESC","다양한 차량 속성 수정"
 "AVO_MOD_AV01","당신의 차량 설정값이 내보냈습니다. 차량 설정 파일은 여기서 찾을 수 있습니다 :"
 "AVO_MOD_AV02","소환할 차량이 없기 때문에 서비스가 제대로 작동하지 않을 수 있습니다 :"
 "AVO_MOD_VO01","물탱크 수용량 :"
@@ -72,6 +67,7 @@ No Big Trucks(MacSergey 모더)에 의해 배차가 차단됩니다. (기본값 
 "AVO_MOD_VO13","범죄 반경 :"
 "AVO_MOD_VO14","화재 반경 :"
 "AVO_MOD_VO15","효율 반경 :"
+"AVO_MOD_VO16","현금 수용량 :"
 "AVO_MOD_CAT00","모든 차량"
 "AVO_MOD_CAT01","시민 - 차량"
 "AVO_MOD_CAT02","시민 - 자전거"
@@ -199,7 +195,6 @@ No Big Trucks(MacSergey 모더)에 의해 배차가 차단됩니다. (기본값 
 "AVO_MOD_OP44","소형"
 "AVO_MOD_OP45","중형"
 "AVO_MOD_OP46","대형"
-"AVO_MOD_OP47","화물"
 "AVO_MOD_OP48","엔진 및 트레일러 동기화"
 "AVO_MOD_OP49","만약 활성화 된 경우"," the engine properties are synchronize to all trailers."
 "AVO_MOD_OP50","선택한 기종의 크기를 정의합니다."

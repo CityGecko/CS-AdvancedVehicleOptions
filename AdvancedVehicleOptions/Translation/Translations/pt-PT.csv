@@ -1,4 +1,3 @@
-"CODE","pt"
 "NAME","Portuguese"
 "AVO_DESC","Personalize seus veículos (suporta Cities Skylines 1.21.1-f9)."
 "TRN_CHOICE","Definir linguagem"
@@ -46,11 +45,6 @@ serão configurados no Vehicle/Asset Color Expander.
 "AVO_OPT_COMP_NBT_TT","Se ativado, os camiões de entrega podem ser classificados como veículos
 grandes. O envio será bloqueado pelo No Big Trucks (MacSergey). 
 (predefinição: ativado)"
-"AVO_OPT_COMP_TRL","Referências de compatibilidade de reboques de veículos atualizadas pela última vez:"
-"AVO_OPT_COMP_TRL_TT","Este campo mostra a data de revisão da lista de veículos para
-os autocarros, tróleis e reboques de bombeiros e polícia, que na 
-realidade são reboques industriais, mas foram recategorizados 
-pelo AVO."
 "AVO_OPT_SUP","Apoio"
 "AVO_OPT_SUP_WIKI","Abrir a wiki do Advanced Vehicle Options"
 "AVO_OPT_SUP_XMLEDIT","Atualização em massa - Editor de configuração XML"
@@ -62,7 +56,6 @@ Definições do mod               - AdvancedVehicleOptions_Settings.xml
 Dados de veículos do mod - AdvancedVehicleOptions_VehicleData.xml"
 "AVO_OPT_SUP_CROWDIN","Suporte / Correção de traduções no Crowdin"
 "AVO_MOD_CAPA","Capacidade: "
-"AVO_MOD_BGUIDESC","Modificar várias propriedades de Veículo"
 "AVO_MOD_AV01","Sua configuração foi exportada. O arquivo de configuração pode ser encontrado aqui: "
 "AVO_MOD_AV02","Os seguintes serviços podem não funcionar corretamente porque não há veículos habilitados a serem gerados:"
 "AVO_MOD_VO01","Capacidade de combate ao fogo: "
@@ -80,6 +73,7 @@ Dados de veículos do mod - AdvancedVehicleOptions_VehicleData.xml"
 "AVO_MOD_VO13","Taxa de Capacidade do Criminal: "
 "AVO_MOD_VO14","Taxa de Combate ao Fogo: "
 "AVO_MOD_VO15","Taxa de Eficácia: "
+"AVO_MOD_VO16","Capacidade de Dinheiro: "
 "AVO_MOD_CAT00","Todos os veículos"
 "AVO_MOD_CAT01","Cidadão - Carros"
 "AVO_MOD_CAT02","Cidadão - Bicicleta"
@@ -212,7 +206,6 @@ Mantenha a tecla SHIFT premida para remover todos os tipos."
 "AVO_MOD_OP44","Pequeno"
 "AVO_MOD_OP45","Médio"
 "AVO_MOD_OP46","Grande"
-"AVO_MOD_OP47","Carga"
 "AVO_MOD_OP48","Sincronizar Motor com Trailer"
 "AVO_MOD_OP49","Se ativo"," the engine properties are synchronize to all trailers."
 "AVO_MOD_OP50","A seleção define o tamanho da posição da paragem."
