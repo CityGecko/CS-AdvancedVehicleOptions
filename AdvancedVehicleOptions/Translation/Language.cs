@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 
 namespace AdvancedVehicleOptionsUID
@@ -8,18 +8,27 @@ namespace AdvancedVehicleOptionsUID
     /// </summary>
     public class Language
     {
-        // Translation file keywords - language code and readable name.
-        public static readonly string CodeKey = "CODE";
-        public static readonly string NameKey = "NAME";
+        // Private fields.
+        private Dictionary<string, string> _translationDictionary = new Dictionary<string, string>();
 
+        /// <summary>
+        /// Gets the translation key that identifies the file's readable language name.
+        /// </summary>
+        public static string NameKey => "NAME";
 
-        // Dictionary of translations for this language.
-        public Dictionary<string, string> translationDictionary = new Dictionary<string, string>();
+        /// <summary>
+        /// Gets or sets the language's language code.
+        /// </summary>
+        public string Code { get; set; } = null;
 
-        // Language unique name.
-        public string uniqueName = null;
+        /// <summary>
+        /// Gets or sets the language's human-readable name (in native language).
+        /// </summary>
+        public string Name { get; set; } = null;
 
-        // Language human-readable name.
-        public string readableName = null;
+        /// <summary>
+        /// Gets the dictionary of translations for this language.
+        /// </summary>
+        public Dictionary<string, string> TranslationDictionary => _translationDictionary;
     }
 }
