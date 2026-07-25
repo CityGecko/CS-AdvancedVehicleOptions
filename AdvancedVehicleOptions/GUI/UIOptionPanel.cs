@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Globalization;
 using ColossalFramework.UI;
 using ColossalFramework.Threading;
 
@@ -299,7 +300,7 @@ namespace AdvancedVehicleOptionsUID.GUI
                     m_parkpositionLabel.isVisible = false;
                     m_parkposition_size.isVisible = false;
                 }
-            }      
+            }
 
             string name = options.localizedName;
             if (name.Length > 40) name = name.Substring(0, 38) + "...";
@@ -330,6 +331,7 @@ namespace AdvancedVehicleOptionsUID.GUI
             maxSpeedLabel.relativePosition = new Vector3(15, 14);
 
             m_maxSpeed = UIUtils.CreateTextField(panel);
+            // Whole numbers only (no allowFloats) - no decimal separator involved, so no locale mismatch to worry about here.
             m_maxSpeed.numericalOnly = true;
             m_maxSpeed.width = 75;
             m_maxSpeed.tooltip = Translations.Translate("AVO_MOD_OP07");
@@ -347,24 +349,21 @@ namespace AdvancedVehicleOptionsUID.GUI
             accelerationLabel.relativePosition = new Vector3(160, 13);
 
             m_acceleration = UIUtils.CreateTextField(panel);
-            m_acceleration.numericalOnly = true;
-            m_acceleration.allowFloats = true;
+            m_acceleration.numericalOnly = false;
             m_acceleration.width = 60;
             m_acceleration.tooltip = Translations.Translate("AVO_MOD_OP09");
             m_acceleration.relativePosition = new Vector3(160, 33);
 
             // Braking
             m_braking = UIUtils.CreateTextField(panel);
-            m_braking.numericalOnly = true;
-            m_braking.allowFloats = true;
+            m_braking.numericalOnly = false;
             m_braking.width = 60;
             m_braking.tooltip = Translations.Translate("AVO_MOD_OP10");
             m_braking.relativePosition = new Vector3(230, 33);
 
             // Turning
             m_turning = UIUtils.CreateTextField(panel);
-            m_turning.numericalOnly = true;
-            m_turning.allowFloats = true;
+            m_turning.numericalOnly = false;
             m_turning.width = 60;
             m_turning.tooltip = Translations.Translate("AVO_MOD_OP11");
             m_turning.relativePosition = new Vector3(300, 33);
@@ -376,16 +375,14 @@ namespace AdvancedVehicleOptionsUID.GUI
             springsLabel.relativePosition = new Vector3(15, 66);
 
             m_springs = UIUtils.CreateTextField(panel);
-            m_springs.numericalOnly = true;
-            m_springs.allowFloats = true;
+            m_springs.numericalOnly = false;
             m_springs.width = 60;
             m_springs.tooltip = Translations.Translate("AVO_MOD_OP13");
             m_springs.relativePosition = new Vector3(15, 85);
 
             // Dampers
             m_dampers = UIUtils.CreateTextField(panel);
-            m_dampers.numericalOnly = true;
-            m_dampers.allowFloats = true;
+            m_dampers.numericalOnly = false;
             m_dampers.width = 60;
             m_dampers.tooltip = Translations.Translate("AVO_MOD_OP14");
             m_dampers.relativePosition = new Vector3(85, 85);
@@ -397,16 +394,14 @@ namespace AdvancedVehicleOptionsUID.GUI
             leanMultiplierLabel.relativePosition = new Vector3(160, 66);
 
             m_leanMultiplier = UIUtils.CreateTextField(panel);
-            m_leanMultiplier.numericalOnly = true;
-            m_leanMultiplier.allowFloats = true;
+            m_leanMultiplier.numericalOnly = false;
             m_leanMultiplier.width = 60;
             m_leanMultiplier.tooltip = Translations.Translate("AVO_MOD_OP16");
             m_leanMultiplier.relativePosition = new Vector3(160, 85);
 
             // NodMultiplier
             m_nodMultiplier = UIUtils.CreateTextField(panel);
-            m_nodMultiplier.numericalOnly = true;
-            m_nodMultiplier.allowFloats = true;
+            m_nodMultiplier.numericalOnly = false;
             m_nodMultiplier.width = 60;
             m_nodMultiplier.tooltip = Translations.Translate("AVO_MOD_OP17");
             m_nodMultiplier.relativePosition = new Vector3(230, 85);
@@ -799,29 +794,41 @@ namespace AdvancedVehicleOptionsUID.GUI
             m_initialized = true;
         }
 
+        /// <summary>
+        /// Parses a user-entered decimal number, accepting both '.' and ',' as the decimal separator
+        /// regardless of the player's Windows regional settings (float.Parse alone only accepts
+        /// whichever separator the current system culture expects, silently failing for the other).
+        /// </summary>
+        private static bool TryParseUserFloat(string text, out float result)
+        {
+            return float.TryParse(text.Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out result);
+        }
+
         protected void OnMaxSpeedSubmitted(UIComponent component, string text)
         {
             if (!m_initialized || m_options == null) return;
+            if (!TryParseUserFloat(text, out float value)) return;
             m_initialized = false;
 
             if (!AdvancedVehicleOptions.SpeedUnitOption)
             {
-                m_options.maxSpeed = float.Parse(text) / maxSpeedToKmhConversionFactor;
+                m_options.maxSpeed = value / maxSpeedToKmhConversionFactor;
             }
             else
-                m_options.maxSpeed = (float.Parse(text) * mphFactor) / maxSpeedToKmhConversionFactor;
+                m_options.maxSpeed = (value * mphFactor) / maxSpeedToKmhConversionFactor;
 
             AdvancedVehicleOptions.ExportVehicleDataConfig(m_initialized);
-            if (m_syncTrailers.isChecked) { SyncTrailerDataToEngine(); }    
+            if (m_syncTrailers.isChecked) { SyncTrailerDataToEngine(); }
             m_initialized = true;
         }
 
         protected void OnAccelerationSubmitted(UIComponent component, string text)
         {
             if (!m_initialized || m_options == null) return;
+            if (!TryParseUserFloat(text, out float value)) return;
             m_initialized = false;
 
-            m_options.acceleration = float.Parse(text);
+            m_options.acceleration = value;
 
             AdvancedVehicleOptions.ExportVehicleDataConfig(m_initialized);
             if (m_syncTrailers.isChecked) { SyncTrailerDataToEngine(); }
@@ -831,21 +838,23 @@ namespace AdvancedVehicleOptionsUID.GUI
         protected void OnBrakingSubmitted(UIComponent component, string text)
         {
             if (!m_initialized || m_options == null) return;
+            if (!TryParseUserFloat(text, out float value)) return;
             m_initialized = false;
 
-            m_options.braking = float.Parse(text);
+            m_options.braking = value;
 
             AdvancedVehicleOptions.ExportVehicleDataConfig(m_initialized);
             if (m_syncTrailers.isChecked) { SyncTrailerDataToEngine(); }
             m_initialized = true;
         }
-        
+
         protected void OnTurningSubmitted(UIComponent component, string text)
         {
             if (!m_initialized || m_options == null) return;
+            if (!TryParseUserFloat(text, out float value)) return;
             m_initialized = false;
 
-            m_options.turning = float.Parse(text);
+            m_options.turning = value;
 
             AdvancedVehicleOptions.ExportVehicleDataConfig(m_initialized);
             if (m_syncTrailers.isChecked) { SyncTrailerDataToEngine(); }
@@ -855,9 +864,10 @@ namespace AdvancedVehicleOptionsUID.GUI
         protected void OnSpringsSubmitted(UIComponent component, string text)
         {
             if (!m_initialized || m_options == null) return;
+            if (!TryParseUserFloat(text, out float value)) return;
             m_initialized = false;
 
-            m_options.springs = float.Parse(text);
+            m_options.springs = value;
 
             AdvancedVehicleOptions.ExportVehicleDataConfig(m_initialized);
             if (m_syncTrailers.isChecked) { SyncTrailerDataToEngine(); }
@@ -867,9 +877,10 @@ namespace AdvancedVehicleOptionsUID.GUI
         protected void OnDampersSubmitted(UIComponent component, string text)
         {
             if (!m_initialized || m_options == null) return;
+            if (!TryParseUserFloat(text, out float value)) return;
             m_initialized = false;
 
-            m_options.dampers = float.Parse(text);
+            m_options.dampers = value;
 
             AdvancedVehicleOptions.ExportVehicleDataConfig(m_initialized);
             if (m_syncTrailers.isChecked) { SyncTrailerDataToEngine(); }
@@ -879,9 +890,10 @@ namespace AdvancedVehicleOptionsUID.GUI
         protected void OnleanMultiplierSubmitted(UIComponent component, string text)
         {
             if (!m_initialized || m_options == null) return;
+            if (!TryParseUserFloat(text, out float value)) return;
             m_initialized = false;
 
-            m_options.leanMultiplier = float.Parse(text);
+            m_options.leanMultiplier = value;
 
             AdvancedVehicleOptions.ExportVehicleDataConfig(m_initialized);
             if (m_syncTrailers.isChecked) { SyncTrailerDataToEngine(); }
@@ -891,9 +903,10 @@ namespace AdvancedVehicleOptionsUID.GUI
         protected void OnnodMultiplierSubmitted(UIComponent component, string text)
         {
             if (!m_initialized || m_options == null) return;
+            if (!TryParseUserFloat(text, out float value)) return;
             m_initialized = false;
 
-            m_options.nodMultiplier = float.Parse(text);
+            m_options.nodMultiplier = value;
 
             AdvancedVehicleOptions.ExportVehicleDataConfig(m_initialized);
             if (m_syncTrailers.isChecked) { SyncTrailerDataToEngine(); }

@@ -1,12 +1,11 @@
-﻿using UnityEngine;
+﻿using ColossalFramework;
 using ColossalFramework.Globalization;
 using ColossalFramework.UI;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-
+using UnityEngine;
 using UIUtils = SamsamTS.UIUtils;
 
 namespace AdvancedVehicleOptionsUID.GUI
@@ -120,6 +119,9 @@ namespace AdvancedVehicleOptionsUID.GUI
                 {
                     if (s == UIButton.ButtonState.Focused)
                     {
+                        // Focusing a toolbar tab makes the game show its own tutorial adviser popup for it; AVO has no adviser content for this, so close it immediately.
+                        TutorialAdvisorPanel.instance?.Hide();
+
                         if (!isVisible)
                         {
                             isVisible = true;
@@ -132,11 +134,24 @@ namespace AdvancedVehicleOptionsUID.GUI
                     else
                     {
                         isVisible = false;
-                        m_button.Unfocus();                   
+                        m_button.Unfocus();
                     }
                 };
 
-                toolStrip.AddTab("Advanced Vehicle Options", m_button.gameObject, null, null);
+                UIComponent tab = toolStrip.AddTab("Advanced Vehicle Options", m_button.gameObject, null, null);
+
+                // Remove the tutorial adviser popup the game automatically attaches to toolbar tabs - AVO has no adviser text registered for it, so it would otherwise show raw untranslated locale keys.
+                TutorialUITag tutorialTag = tab.GetComponent<TutorialUITag>();
+                if (tutorialTag != null)
+                {
+                    Destroy(tutorialTag);
+                }
+
+                tutorialTag = m_button.GetComponent<TutorialUITag>();
+                if (tutorialTag != null)
+                {
+                    Destroy(tutorialTag);
+                }
 
                 FieldInfo m_ObjectIndex = typeof(MainToolbar).GetField("m_ObjectIndex", BindingFlags.Instance | BindingFlags.NonPublic);
                 m_ObjectIndex.SetValue(ToolsModifierControl.mainToolbar, (int)m_ObjectIndex.GetValue(ToolsModifierControl.mainToolbar) + 1);
@@ -169,6 +184,7 @@ namespace AdvancedVehicleOptionsUID.GUI
                 view.FindUIComponent<UITabContainer>("TSContainer").AddUIComponent<UIPanel>().color = new Color32(0, 0, 0, 0);
 
                 optionList = AdvancedVehicleOptions.config.options;
+
                 Logging.Message("UI initialized.");
             }
             catch (Exception e)
