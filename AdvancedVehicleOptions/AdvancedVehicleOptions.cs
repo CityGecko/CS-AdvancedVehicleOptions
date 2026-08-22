@@ -347,13 +347,19 @@ namespace AdvancedVehicleOptionsUID
                 try
                 {
                     // Make sure the game's own locale data (used for vehicle titles) is current before we read vehicle names - the game doesn't always refresh this itself when starting a new game after a language change.
-                    try
+                    // Gated to new games only: ForceReload rebuilds the game's entire locale tables,
+                    // which discards locale entries other mods may have injected earlier in the load
+                    // sequence, so it should not run on every level load.
+                    if (mode == LoadMode.NewGame || mode == LoadMode.NewGameFromScenario)
                     {
-                        LocaleManager.ForceReload();
-                    }
-                    catch (Exception e)
-                    {
-                        Logging.LogException(e, "exception forcing locale reload");
+                        try
+                        {
+                            LocaleManager.ForceReload();
+                        }
+                        catch (Exception e)
+                        {
+                            Logging.LogException(e, "exception forcing locale reload");
+                        }
                     }
 
                     DefaultOptions.BuildVehicleInfoDictionary();
@@ -469,6 +475,9 @@ namespace AdvancedVehicleOptionsUID
         public static bool isGameLoaded = false;
         public static Configuration config = new Configuration();
 
+        // One-shot bookkeeping for the toggle hotkey (reset when the combo is released).
+        private bool hotkeyProcessed;
+
         public void Start()
         {
             try
@@ -494,8 +503,6 @@ namespace AdvancedVehicleOptionsUID
 
                 m_mainPanel = GameObject.FindObjectOfType<GUI.UIMainPanel>();
                 UpdateGUI();
-
-                UIThreading.Operating = true;
             }
             catch (Exception e)
             {
@@ -504,6 +511,42 @@ namespace AdvancedVehicleOptionsUID
 
                 GameObject.Destroy(gameObject);
             }
+        }
+
+        /// <summary>
+        /// Toggle-hotkey polling. Runs on the Unity main thread every frame (including
+        /// while paused), which is the only thread Unity guarantees Input.GetKey on.
+        /// The old implementation polled from ThreadingExtensionBase.OnUpdate, i.e. the
+        /// simulation thread, was armed once and never disarmed.
+        /// </summary>
+        private void Update()
+        {
+            SavedInputKey savedKey = ModSettings.ToggleSavedKey;
+            if (savedKey.Key == KeyCode.None) return;
+
+            if (!Input.GetKey(savedKey.Key))
+            {
+                hotkeyProcessed = false;
+                return;
+            }
+
+            // Modifiers have to *exactly match* settings, e.g. "alt-O" must not trigger on "ctrl-alt-O".
+            bool altPressed = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt) || Input.GetKey(KeyCode.AltGr);
+            bool ctrlPressed = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
+            bool shiftPressed = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+
+            if (altPressed != savedKey.Alt || ctrlPressed != savedKey.Control || shiftPressed != savedKey.Shift)
+            {
+                hotkeyProcessed = false;
+                return;
+            }
+
+            if (hotkeyProcessed) return;
+            hotkeyProcessed = true;
+
+            GUI.UIMainPanel panel = m_mainPanel;
+            if (panel == null) return;
+            panel.TogglePanel();
         }
 
         public static void UpdateGUI()
