@@ -83,6 +83,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CitiesHarmony.API" Version="2.2.0" />
+    <!-- Provides the net35 reference assemblies so the project builds without the
+         .NET Framework 3.5 targeting pack installed (any modern SDK works). -->
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
   </ItemGroup>
   <Target Name="DeployToModDirectory" AfterTargets="Build">
 	<PropertyGroup>
