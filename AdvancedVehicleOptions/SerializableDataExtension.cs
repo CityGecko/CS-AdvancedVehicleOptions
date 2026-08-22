@@ -26,9 +26,23 @@ namespace AdvancedVehicleOptionsUID
             }
 
             var data = serializableDataManager.LoadData(ID);
-            using (var ms = new MemoryStream(data))
+            try
             {
-                AdvancedVehicleOptions.config.data = DataSerializer.Deserialize<Configuration>(ms, DataSerializer.Mode.Memory).data;
+                using (var ms = new MemoryStream(data))
+                {
+                    AdvancedVehicleOptions.config.data = DataSerializer.Deserialize<Configuration>(ms, DataSerializer.Mode.Memory).data;
+                }
+            }
+            catch (System.Exception e)
+            {
+                // A failed config load must not take the whole level down with a ModException.
+                // Known cause: two copies of this mod enabled at once (e.g. workshop + local
+                // build) - the save stores assembly-qualified type names and the deserializer
+                // then resolves Configuration in the wrong assembly, which surfaces as an
+                // InvalidCastException. Falling back to defaults keeps the game playable.
+                Logging.Error("Failed to deserialize AVO save data; continuing with default vehicle options. " +
+                              "If this repeats, check that only one copy of Advanced Vehicle Options is enabled.");
+                Logging.LogException(e);
             }
         }
 
