@@ -28,6 +28,13 @@ namespace AdvancedVehicleOptionsUID.GUI
         internal List<string> englishCategory = new List<string>();
 
         internal UIButton m_button;
+
+        // Shared game state touched by the toolbar-tab integration; every field here is
+        // undone again in OnDestroy so panel recreation cannot accumulate drift.
+        private UITabstrip m_toolStrip;
+        private UIPanel m_tsPlaceholder;
+        private bool m_objectIndexBumped;
+
         public ushort FollowVehicleInstanceID;
 
         internal VehicleOptions[] m_optionsList;
@@ -101,87 +108,92 @@ namespace AdvancedVehicleOptionsUID.GUI
                 // Setting up UI
                 SetupControls();
 
-                // Adding main button
+                // Adding main button - integrated into the main toolstrip as a tab, as before.
+                // Injecting a foreign tab requires compensating tweaks (tab-index shift,
+                // container placeholder, adviser suppression). The original mod applied them
+                // once and never undid them, so every panel recreation stacked another copy
+                // and desynced toolbar routing. Each tweak is now tracked and reverted in
+                // OnDestroy, and stale leftovers are cleaned up here.
                 UITabstrip toolStrip = view.FindUIComponent<UITabstrip>("MainToolstrip");
-                m_button = AddUIComponent<UIButton>();
-
-                m_button.normalBgSprite = "InfoIconTrafficCongestion";
-                m_button.focusedFgSprite = "ToolbarIconGroup6Focused";
-                m_button.hoveredFgSprite = "ToolbarIconGroup6Hovered";
-
-                m_button.size = new Vector2(43f, 47f);
-			    m_button.name = AVOMod.ModName;
-                m_button.tooltip = "Modify various vehicle properties";
-                m_button.relativePosition = new Vector3(0, 5);
-			   
-                // GUI Button is pressed in game
-                m_button.eventButtonStateChanged += (c, s) =>
+                if (toolStrip == null)
                 {
-                    if (s == UIButton.ButtonState.Focused)
+                    Logging.Error("Main toolstrip not found; AVO button not created (hotkey still works).");
+                    m_button = null;
+                }
+                else
+                {
+                    // Self-healing guard: a tab left over from a previous panel instance
+                    // would otherwise be duplicated, shifting MainToolbar.m_ObjectIndex twice.
+                    List<GameObject> leftovers = new List<GameObject>();
+                    foreach (UIButton child in toolStrip.GetComponentsInChildren<UIButton>(true))
                     {
-                        // Focusing a toolbar tab makes the game show its own tutorial adviser popup for it; AVO has no adviser content for this, so close it immediately.
-                        TutorialAdvisorPanel.instance?.Hide();
-
-                        if (!isVisible)
-                        {
-                            isVisible = true;
-                            m_fastList.DisplayAt(m_fastList.listPosition);
-                            m_optionPanel.Show(m_fastList.rowsData[m_fastList.selectedIndex] as VehicleOptions);
-                            m_followVehicle.isVisible = m_preview.parent.isVisible = true;
-                            AdvancedVehicleOptions.UpdateOptionPanelInfo();
-                        }
+                        if (child != null && child.name == AVOMod.ModName) leftovers.Add(child.gameObject);
                     }
-                    else
+                    foreach (GameObject leftover in leftovers) GameObject.Destroy(leftover);
+
+                    m_toolStrip = toolStrip;
+
+                    m_button = AddUIComponent<UIButton>();
+
+                    m_button.normalBgSprite = "InfoIconTrafficCongestion";
+                    m_button.focusedFgSprite = "ToolbarIconGroup6Focused";
+                    m_button.hoveredFgSprite = "ToolbarIconGroup6Hovered";
+
+                    m_button.size = new Vector2(43f, 47f);
+				    m_button.name = AVOMod.ModName;
+                    m_button.tooltip = "Modify various vehicle properties";
+                    m_button.relativePosition = new Vector3(0, 5);
+
+                    // GUI Button is pressed in game
+                    m_button.eventButtonStateChanged += OnButtonStateChanged;
+
+                    UIComponent tab = toolStrip.AddTab("Advanced Vehicle Options", m_button.gameObject, null, null);
+
+                    // Remove the tutorial adviser popup the game automatically attaches to toolbar tabs - AVO has no adviser text registered for it, so it would otherwise show raw untranslated locale keys.
+                    TutorialUITag tutorialTag = tab.GetComponent<TutorialUITag>();
+                    if (tutorialTag != null)
                     {
-                        isVisible = false;
-                        m_button.Unfocus();
+                        Destroy(tutorialTag);
                     }
-                };
 
-                UIComponent tab = toolStrip.AddTab("Advanced Vehicle Options", m_button.gameObject, null, null);
+                    tutorialTag = m_button.GetComponent<TutorialUITag>();
+                    if (tutorialTag != null)
+                    {
+                        Destroy(tutorialTag);
+                    }
 
-                // Remove the tutorial adviser popup the game automatically attaches to toolbar tabs - AVO has no adviser text registered for it, so it would otherwise show raw untranslated locale keys.
-                TutorialUITag tutorialTag = tab.GetComponent<TutorialUITag>();
-                if (tutorialTag != null)
-                {
-                    Destroy(tutorialTag);
+                    // Compensate for the extra tab so the game's tool routing stays aligned.
+                    FieldInfo m_ObjectIndex = typeof(MainToolbar).GetField("m_ObjectIndex", BindingFlags.Instance | BindingFlags.NonPublic);
+                    m_ObjectIndex.SetValue(ToolsModifierControl.mainToolbar, (int)m_ObjectIndex.GetValue(ToolsModifierControl.mainToolbar) + 1);
+                    m_objectIndexBumped = true;
+
+                    m_title.closeButton.eventClick += OnTitleCloseClicked;
+
+                    Locale locale = (Locale)typeof(LocaleManager).GetField("m_Locale", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(LocaleManager.instance);
+                    Locale.Key key = new Locale.Key
+                    {
+                        m_Identifier = "TUTORIAL_ADVISER_TITLE",
+                        m_Key = m_button.name
+                    };
+                    if (!locale.Exists(key))
+                    {
+                        locale.AddLocalizedString(key, m_button.name);
+                    }
+                    key = new Locale.Key
+                    {
+                        m_Identifier = "TUTORIAL_ADVISER",
+                        m_Key = m_button.name
+                    };
+                    if (!locale.Exists(key))
+                    {
+                        locale.AddLocalizedString(key, "");
+                    }
+
+                    // Selecting our tab makes the game look up a TSContainer child by index;
+                    // add an invisible placeholder so real tools keep their slots.
+                    m_tsPlaceholder = view.FindUIComponent<UITabContainer>("TSContainer").AddUIComponent<UIPanel>();
+                    m_tsPlaceholder.color = new Color32(0, 0, 0, 0);
                 }
-
-                tutorialTag = m_button.GetComponent<TutorialUITag>();
-                if (tutorialTag != null)
-                {
-                    Destroy(tutorialTag);
-                }
-
-                FieldInfo m_ObjectIndex = typeof(MainToolbar).GetField("m_ObjectIndex", BindingFlags.Instance | BindingFlags.NonPublic);
-                m_ObjectIndex.SetValue(ToolsModifierControl.mainToolbar, (int)m_ObjectIndex.GetValue(ToolsModifierControl.mainToolbar) + 1);
-
-                m_title.closeButton.eventClick += (component, param) =>
-                {
-                    toolStrip.closeButton.SimulateClick();
-                };
-
-                Locale locale = (Locale)typeof(LocaleManager).GetField("m_Locale", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(LocaleManager.instance);
-                Locale.Key key = new Locale.Key
-                {
-                    m_Identifier = "TUTORIAL_ADVISER_TITLE",
-                    m_Key = m_button.name
-                };
-                if (!locale.Exists(key))
-                {
-                    locale.AddLocalizedString(key, m_button.name);
-                }
-                key = new Locale.Key
-                {
-                    m_Identifier = "TUTORIAL_ADVISER",
-                    m_Key = m_button.name
-                };
-                if (!locale.Exists(key))
-                {
-                    locale.AddLocalizedString(key, "");
-                }
-
-                view.FindUIComponent<UITabContainer>("TSContainer").AddUIComponent<UIPanel>().color = new Color32(0, 0, 0, 0);
 
                 optionList = AdvancedVehicleOptions.config.options;
 
@@ -205,8 +217,90 @@ namespace AdvancedVehicleOptionsUID.GUI
 
             Logging.Message("Destroying UIMainPanel");
 
+            // Undo everything Start() did to shared game state. Every step is defensive:
+            // an exception here used to leave the compensation tweaks applied forever, and
+            // the next panel instance stacked ANOTHER copy on top (cumulative toolbar
+            // corruption). Uses only cached references - no UIView lookups, which are not
+            // safe during teardown.
+            try
+            {
+                if (m_title != null && m_title.closeButton != null)
+                {
+                    m_title.closeButton.eventClick -= OnTitleCloseClicked;
+                }
+
+                if (m_tsPlaceholder != null)
+                {
+                    GameObject.Destroy(m_tsPlaceholder.gameObject);
+                    m_tsPlaceholder = null;
+                }
+
+                if (m_objectIndexBumped && ToolsModifierControl.mainToolbar != null)
+                {
+                    FieldInfo m_ObjectIndex = typeof(MainToolbar).GetField("m_ObjectIndex", BindingFlags.Instance | BindingFlags.NonPublic);
+                    m_ObjectIndex.SetValue(ToolsModifierControl.mainToolbar, (int)m_ObjectIndex.GetValue(ToolsModifierControl.mainToolbar) - 1);
+                    m_objectIndexBumped = false;
+                }
+            }
+            catch (Exception e)
+            {
+                Logging.LogException(e, "exception reverting toolbar integration");
+            }
+
             if (m_button != null) GameObject.Destroy(m_button.gameObject);
             GameObject.Destroy(m_optionPanel.gameObject);
+
+            m_toolStrip = null;
+        }
+
+        private void OnButtonStateChanged(UIComponent c, UIButton.ButtonState s)
+        {
+            if (s == UIButton.ButtonState.Focused)
+            {
+                // Focusing a toolbar tab makes the game show its own tutorial adviser popup for it; AVO has no adviser content for this, so close it immediately.
+                TutorialAdvisorPanel.instance?.Hide();
+
+                if (!isVisible)
+                {
+                    isVisible = true;
+                    m_fastList.DisplayAt(m_fastList.listPosition);
+                    m_optionPanel.Show(m_fastList.rowsData[m_fastList.selectedIndex] as VehicleOptions);
+                    m_followVehicle.isVisible = m_preview.parent.isVisible = true;
+                    AdvancedVehicleOptions.UpdateOptionPanelInfo();
+                }
+            }
+            else
+            {
+                isVisible = false;
+                if (m_button != null) m_button.Unfocus();
+            }
+        }
+
+        private void OnTitleCloseClicked(UIComponent component, UIMouseEventParameter param)
+        {
+            // Closing via the panel's title bar also deselects the toolbar tab.
+            if (m_toolStrip != null && m_toolStrip.closeButton != null)
+            {
+                m_toolStrip.closeButton.SimulateClick();
+            }
+        }
+
+        /// <summary>
+        /// Toggle the main panel visibility; shared by the toolbar button and the hotkey.
+        /// </summary>
+        internal void TogglePanel()
+        {
+            if (isVisible)
+            {
+                isVisible = false;
+                return;
+            }
+
+            isVisible = true;
+            m_fastList.DisplayAt(m_fastList.listPosition);
+            m_optionPanel.Show(m_fastList.rowsData[m_fastList.selectedIndex] as VehicleOptions);
+            m_followVehicle.isVisible = m_preview.parent.isVisible = true;
+            AdvancedVehicleOptions.UpdateOptionPanelInfo();
         }
 
         public static string[] CategoryEnumToArray()
