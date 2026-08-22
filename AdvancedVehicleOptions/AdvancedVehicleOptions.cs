@@ -347,13 +347,19 @@ namespace AdvancedVehicleOptionsUID
                 try
                 {
                     // Make sure the game's own locale data (used for vehicle titles) is current before we read vehicle names - the game doesn't always refresh this itself when starting a new game after a language change.
-                    try
+                    // Gated to new games only: ForceReload rebuilds the game's entire locale tables,
+                    // which discards locale entries other mods may have injected earlier in the load
+                    // sequence, so it should not run on every level load.
+                    if (mode == LoadMode.NewGame || mode == LoadMode.NewGameFromScenario)
                     {
-                        LocaleManager.ForceReload();
-                    }
-                    catch (Exception e)
-                    {
-                        Logging.LogException(e, "exception forcing locale reload");
+                        try
+                        {
+                            LocaleManager.ForceReload();
+                        }
+                        catch (Exception e)
+                        {
+                            Logging.LogException(e, "exception forcing locale reload");
+                        }
                     }
 
                     DefaultOptions.BuildVehicleInfoDictionary();
