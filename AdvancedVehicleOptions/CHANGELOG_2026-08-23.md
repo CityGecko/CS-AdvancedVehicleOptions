@@ -1,5 +1,7 @@
 # Advanced Vehicle Options – Änderungen vom 23.08.2026
 
+> Hinweis: Die Änderungen dieser Session wurden mit Unterstützung eines KI-Coding-Assistenten (Claude Code von Anthropic) erarbeitet und vom Maintainer im Spiel geprüft und getestet.
+
 Fortsetzung der Session vom 24.–25.07.2026 (siehe [CHANGELOG_2026-07-25.md](CHANGELOG_2026-07-25.md)). Thema heute: ein von mehreren Spielern gemeldeter Bug, bei dem sich District-/Campus-Policies (z. B. an einer Universität) mit aktivem AVO nicht mehr auswählen ließen.
 
 ## Gemeldetes Problem

@@ -1,3 +1,10 @@
+## Note on AI assistance
+Since version 1.9.14, parts of the code were developed with the help of an AI coding assistant (Claude Code by Anthropic). All changes were reviewed and tested in-game by the maintainer, who decides what is included in a release. Commits with AI contributions are marked with a `Co-Authored-By: Claude` line.
+
+# CS-AdvancedVehicleOptions 1.9.15
+* Fixed an issue where district and campus policies (e.g. at universities) could no longer be selected while AVO was active.
+* Fixed the position of the AVO button in the main toolbar: it now always stays at the end, so the game's own toolbar tabs are no longer shifted.
+
 # CS-AdvancedVehicleOptions 1.9.14
 * Updated the translation framework created by Algernon to recent version, which fixed an issue with the automated language detection. This will resolve an issue, where the "use game language" selection delivered back invalid values and not properly loading the existing language file.
 * Updated all language files, so they are compatible with the updated translation framework.

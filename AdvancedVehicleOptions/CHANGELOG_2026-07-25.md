@@ -1,5 +1,7 @@
 # Advanced Vehicle Options – Änderungen vom 24.–25.07.2026
 
+> Hinweis: Die Änderungen dieser Session wurden mit Unterstützung eines KI-Coding-Assistenten (Claude Code von Anthropic) erarbeitet und vom Maintainer im Spiel geprüft und getestet.
+
 Zusammenfassung aller Fixes aus der heutigen Session, inklusive Root-Cause-Analyse. Betroffene Dateien sind jeweils verlinkt.
 
 ## 1. Übersetzungs-Framework komplett ersetzt
