@@ -103,5 +103,10 @@
 	<Copy SourceFiles="@(TranslationSourceFiles)"
         DestinationFiles="@(TranslationSourceFiles->'$(ModDirectory)Translations\%(RecursiveDir)%(Filename)%(Extension)')"
         SkipUnchangedFiles="true" />
+	<!-- XML bulk editor, opened from the mod options (AdvancedVehicleOptions.cs expects <mod folder>\XMLEditor\avo-xml-editor3.html); part of every release -->
+	<ItemGroup>
+		<XMLEditorFiles Include="$(ProjectDir)XMLEditor\*.html" />
+	</ItemGroup>
+	<Copy SourceFiles="@(XMLEditorFiles)" DestinationFolder="$(ModDirectory)XMLEditor\" />
   </Target>
 </Project>
