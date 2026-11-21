@@ -1,0 +1,4 @@
+files:
+  - source: /AdvancedVehicleOptions/Translation/Translations/en.csv
+    translation: /AdvancedVehicleOptions/Translation/Translations/%locale%.csv
+    scheme: 'identifier,source_or_translation'
