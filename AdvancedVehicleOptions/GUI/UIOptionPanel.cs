@@ -992,7 +992,9 @@ namespace AdvancedVehicleOptionsUID.GUI
             m_color2.selectedColor = m_options.color2;
             m_color3.selectedColor = m_options.color3;
 
-            (parent as UIMainPanel).ChangePreviewColor(color);
+            // Preview the colour that was just typed in (previously "color", i.e. this panel's own tint).
+            UIColorField edited = component == m_color1_hex ? m_color1 : component == m_color2_hex ? m_color2 : component == m_color3_hex ? m_color3 : m_color0;
+            (parent as UIMainPanel).ChangePreviewColor(edited.selectedColor);
 
             AdvancedVehicleOptions.ExportVehicleDataConfig(m_initialized);
             m_initialized = true;

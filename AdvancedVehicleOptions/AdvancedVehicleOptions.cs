@@ -21,7 +21,7 @@ namespace AdvancedVehicleOptionsUID
 
     {
         public static string ModName => "Advanced Vehicle Options";
-        public static string Version => "1.9.16 beta1 "+ DateTime.Now +" Patch 1.21.1-f9";
+        public static string Version => "1.9.16 beta2 "+ DateTime.Now +" Patch 1.21.1-f9";
         //public static string Version => "1.9.16";
 
         // Reflection handle for OptionsMainPanel's private OnLocaleChanged(), used to refresh the options panel after switching AVO's own language dropdown, without needing a game restart.
@@ -543,16 +543,18 @@ namespace AdvancedVehicleOptionsUID
         {
             if (!isGameLoaded) return;
 
-            if (!HideGUIbutton && m_mainPanel == null)
+            // The main panel always exists while a game is loaded - "Hide GUI button" only removes its toolbar
+            // tab, the panel stays reachable via the hotkey. When the option changes, the panel is rebuilt so the
+            // toolbar integration is added or removed cleanly (UIMainPanel.Start / OnDestroy).
+            if (m_mainPanel != null && m_mainPanel.withToolbarTab == HideGUIbutton)
             {
-                // Creating GUI
-                m_mainPanel = UIView.GetAView().AddUIComponent(typeof(GUI.UIMainPanel)) as GUI.UIMainPanel;
-            }
-            else if (HideGUIbutton && m_mainPanel != null)
-            {
-                // Removing GUI
                 GameObject.Destroy(m_mainPanel.gameObject);
                 m_mainPanel = null;
+            }
+
+            if (m_mainPanel == null)
+            {
+                m_mainPanel = UIView.GetAView().AddUIComponent(typeof(GUI.UIMainPanel)) as GUI.UIMainPanel;
             }
 
         }

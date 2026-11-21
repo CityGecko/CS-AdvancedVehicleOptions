@@ -136,7 +136,8 @@ AVO_MOD_MP58,Customized settings for all vehicles will be reset. Proceed with Co
 AVO_MOD_MP59,All vehicle configuration and customized settings have been reset to the Game Defaults.
 AVO_MOD_MP60,Search :
 AVO_MOD_MP61,Category :
-AVO_MOD_MP62,"Select a vehcile category to display - Tipp: Use the
+AVO_MOD_MP63,"The saved vehicle configuration will be loaded and replace the current settings of all vehicles. Proceed with import?"
+AVO_MOD_MP62,"Select a vehicle category to display - Tip: Use the
 mouse wheel to switch between categories faster."
 AVO_MOD_OP01,km/h
 AVO_MOD_OP02,mph

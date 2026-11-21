@@ -1354,9 +1354,12 @@ namespace AdvancedVehicleOptionsUID
         {
             StringBuilder s = new StringBuilder();
 
-            s.Append(((int)(255 * r)).ToString("X2"));
-            s.Append(((int)(255 * g)).ToString("X2"));
-            s.Append(((int)(255 * b)).ToString("X2"));
+            // Round to the nearest 0..255 step instead of truncating: (int)(255 * r) turned e.g. 0.784 (199.9)
+            // into 199 instead of 200, so every colour coming from a prefab or the colour picker lost up to one
+            // step per channel on export/import. Values read back from hex (n / 255f) still round-trip exactly.
+            s.Append(Mathf.Clamp(Mathf.RoundToInt(255f * r), 0, 255).ToString("X2"));
+            s.Append(Mathf.Clamp(Mathf.RoundToInt(255f * g), 0, 255).ToString("X2"));
+            s.Append(Mathf.Clamp(Mathf.RoundToInt(255f * b), 0, 255).ToString("X2"));
 
             return s.ToString();
         }

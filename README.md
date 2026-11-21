@@ -1,8 +1,11 @@
 ## Note on AI assistance
 Since version 1.9.14, parts of the code were developed with the help of an AI coding assistant (Claude Code by Anthropic). All changes were reviewed and tested in-game by the maintainer, who decides what is included in a release. Commits with AI contributions are marked with a `Co-Authored-By: Claude` line.
 
-# CS-AdvancedVehicleOptions 1.9.16 (Beta 1)
+# CS-AdvancedVehicleOptions 1.9.16 (Beta 2)
 Thanks to xingweixie for the detailed analysis and fixes in pull request #48.
+* Fixed the hotkey not opening AVO while "Hide the In-Game toolbar button" is enabled - the option now only hides the toolbar button, as described in its tooltip.
+* Fixed the confirmation text of the Import dialog (it showed the category selection tooltip), translated into all supported languages.
+* Fixed vehicle colours changing slightly (by one step per colour channel) after export/import, and the preview showing the wrong colour after typing a hex value.
 * Fixed leftovers when the AVO panel is rebuilt (e.g. when toggling "Hide GUI button"): the toolbar integration is now fully cleaned up, so no duplicate tabs or hidden placeholder panels pile up anymore.
 * The AVO hotkey (default Shift+Alt+O) is now checked on the game's main thread and also works while the game is paused.
 * If the AVO data stored in a savegame cannot be read (e.g. two copies of AVO enabled at the same time), AVO now logs a clear message and continues with default values instead of raising an error on every load.

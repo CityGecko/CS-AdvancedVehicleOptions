@@ -29,6 +29,12 @@ namespace AdvancedVehicleOptionsUID.GUI
 
         internal UIButton m_button;
 
+        // Decided once when the panel is created: with "Hide GUI button" the panel still exists (so the
+        // hotkey can open it, as the option's tooltip promises), it is just not integrated into the toolbar.
+        // Changing the option rebuilds the panel (AdvancedVehicleOptions.UpdateGUI).
+        private readonly bool m_withToolbarTab = !AdvancedVehicleOptions.HideGUIbutton;
+        internal bool withToolbarTab => m_withToolbarTab;
+
         // Shared game state touched by the toolbar-tab integration; every field here is
         // undone again in OnDestroy so panel recreation cannot accumulate drift.
         private UITabstrip m_toolStrip;
@@ -114,8 +120,13 @@ namespace AdvancedVehicleOptionsUID.GUI
                 // once and never undid them, so every panel recreation stacked another copy
                 // and desynced toolbar routing. Each tweak is now tracked and reverted in
                 // OnDestroy, and stale leftovers are cleaned up here.
-                UITabstrip toolStrip = view.FindUIComponent<UITabstrip>("MainToolstrip");
-                if (toolStrip == null)
+                UITabstrip toolStrip = m_withToolbarTab ? view.FindUIComponent<UITabstrip>("MainToolstrip") : null;
+                if (!m_withToolbarTab)
+                {
+                    Logging.Message("Toolbar button hidden by option; panel is reachable via hotkey.");
+                    m_button = null;
+                }
+                else if (toolStrip == null)
                 {
                     Logging.Error("Main toolstrip not found; AVO button not created (hotkey still works).");
                     m_button = null;
@@ -552,7 +563,7 @@ namespace AdvancedVehicleOptionsUID.GUI
 
             m_import.eventClick += (c, t) =>
             {
-                ConfirmPanel.ShowModal(Translations.Translate("AVO_MOD_MP47"), Translations.Translate("AVO_MOD_MP62"), (comp, ret) =>
+                ConfirmPanel.ShowModal(Translations.Translate("AVO_MOD_MP47"), Translations.Translate("AVO_MOD_MP63"), (comp, ret) =>
                 {
                     if (ret != 1)
                         return;
