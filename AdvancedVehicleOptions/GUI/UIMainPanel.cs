@@ -590,9 +590,11 @@ namespace AdvancedVehicleOptionsUID.GUI
 
             m_import.eventClick += (c, t) =>
             {
-                ConfirmPanel.ShowModal(Translations.Translate("AVO_MOD_MP47"), Translations.Translate("AVO_MOD_MP63"), (comp, ret) =>
+                // Same window style as the vehicle class warning; the file path is shown so it can be copied
+                UIConfirmModal.ShowQuestion(Translations.Translate("AVO_MOD_MP47"),
+                    Translations.Translate("AVO_MOD_MP63") + "\n\n" + AdvancedVehicleOptions.m_VehicleSettingsFile, yes =>
                 {
-                    if (ret != 1)
+                    if (!yes)
                         return;
 
                     DefaultOptions.RestoreAll();
@@ -605,18 +607,17 @@ namespace AdvancedVehicleOptionsUID.GUI
 
             m_resetall.eventClick += (c, t) =>
             {
-                   ConfirmPanel.ShowModal(Translations.Translate("AVO_MOD_MP57"), Translations.Translate("AVO_MOD_MP58"), (comp, ret) =>
-                   {
-                    if (ret != 1)
+                UIConfirmModal.ShowQuestion(Translations.Translate("AVO_MOD_MP57"), Translations.Translate("AVO_MOD_MP58"), yes =>
+                {
+                    if (!yes)
                         return;
 
                     DefaultOptions.RestoreAll();
                     AdvancedVehicleOptions.ResetVehicleDataConfig();
                     optionList = AdvancedVehicleOptions.config.options;
 
-                    ExceptionPanel resetpanel = UIView.library.ShowModal<ExceptionPanel>("ExceptionPanel");
-                    resetpanel.SetMessage("Advanced Vehicle Options", Translations.Translate("AVO_MOD_MP59"), false);
-                });
+                    UIConfirmModal.ShowMessage("Advanced Vehicle Options", Translations.Translate("AVO_MOD_MP59"), showCopy: false);
+                }, showCopy: false);
 
             };
 

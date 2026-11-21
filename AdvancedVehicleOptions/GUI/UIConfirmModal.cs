@@ -22,30 +22,34 @@ namespace AdvancedVehicleOptionsUID.GUI
         private string m_titleText;
         private string m_messageText;
         private bool m_yesNo;
+        private bool m_showCopy;
+        private bool m_modal;
         private Action<bool> m_callback;
         private bool m_closed;
 
         private UIButton m_copy;
 
-        /// <summary>Shows a question with Yes/No. The callback gets true for "Yes".</summary>
-        public static void ShowQuestion(string title, string message, Action<bool> callback)
+        /// <summary>Shows a modal question with Yes/No. The callback gets true for "Yes".</summary>
+        public static void ShowQuestion(string title, string message, Action<bool> callback, bool showCopy = true)
         {
-            Create(title, message, true, callback);
+            Create(title, message, true, showCopy, true, callback);
         }
 
-        /// <summary>Shows a message with OK.</summary>
-        public static void ShowMessage(string title, string message)
+        /// <summary>Shows a message with OK - by default not modal (information only, blocks nothing).</summary>
+        public static void ShowMessage(string title, string message, bool showCopy = true, bool modal = false)
         {
-            Create(title, message, false, null);
+            Create(title, message, false, showCopy, modal, null);
         }
 
-        private static void Create(string title, string message, bool yesNo, Action<bool> callback)
+        private static void Create(string title, string message, bool yesNo, bool showCopy, bool modal, Action<bool> callback)
         {
-            UIConfirmModal modal = UIView.GetAView().AddUIComponent(typeof(UIConfirmModal)) as UIConfirmModal;
-            modal.m_titleText = title;
-            modal.m_messageText = message;
-            modal.m_yesNo = yesNo;
-            modal.m_callback = callback;
+            UIConfirmModal window = UIView.GetAView().AddUIComponent(typeof(UIConfirmModal)) as UIConfirmModal;
+            window.m_titleText = title;
+            window.m_messageText = message;
+            window.m_yesNo = yesNo;
+            window.m_showCopy = showCopy;
+            window.m_modal = modal;
+            window.m_callback = callback;
         }
 
         public override void Start()
@@ -134,22 +138,25 @@ namespace AdvancedVehicleOptionsUID.GUI
                 ok.eventClick += (c, p) => Close(true);
             }
 
-            m_copy = UIUtils.CreateButton(this);
-            m_copy.width = 200f;
-            m_copy.text = Translations.Translate("AVO_MOD_OP57");
-            m_copy.relativePosition = new Vector3(WIDTH - MARGIN - m_copy.width, buttonsY);
-            m_copy.eventClick += (c, p) =>
+            if (m_showCopy)
             {
-                GUIUtility.systemCopyBuffer = m_titleText + "\n\n" + m_messageText;
-                m_copy.text = Translations.Translate("AVO_MOD_OP58");
-            };
+                m_copy = UIUtils.CreateButton(this);
+                m_copy.width = 200f;
+                m_copy.text = Translations.Translate("AVO_MOD_OP57");
+                m_copy.relativePosition = new Vector3(WIDTH - MARGIN - m_copy.width, buttonsY);
+                m_copy.eventClick += (c, p) =>
+                {
+                    GUIUtility.systemCopyBuffer = m_titleText + "\n\n" + m_messageText;
+                    m_copy.text = Translations.Translate("AVO_MOD_OP58");
+                };
+            }
 
             height = buttonsY + 30f + MARGIN;
             relativePosition = new Vector3(Mathf.Floor((GetUIView().fixedWidth - width) / 2), Mathf.Floor((GetUIView().fixedHeight - height) / 2));
 
-            // The question when disabling a vehicle is modal (it must be answered); the message on game load is not,
-            // so it does not block the game or other mods' windows.
-            if (m_yesNo) ShowModal();
+            // Questions are modal (they must be answered); information messages are not by default, so they do not
+            // block the game or other mods' windows.
+            if (m_modal) ShowModal();
             else
             {
                 Show(true);
