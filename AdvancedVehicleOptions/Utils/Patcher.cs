@@ -35,24 +35,4 @@ namespace AdvancedVehicleOptionsUID
             UnityEngine.Debug.Log("Advanced VehicleOptions: Reverted...");
         }
     }
-
-    // Random example patch
-    [HarmonyPatch(typeof(SimulationManager), "CreateRelay")]
-    public static class SimulationManagerCreateRelayPatch
-    {
-        public static void Prefix()
-        {
-            UnityEngine.Debug.Log("CreateRelay Prefix");
-        }
-    }
-
-    // Random example patch
-    [HarmonyPatch(typeof(LoadingManager), "MetaDataLoaded")]
-    public static class LoadingManagerMetaDataLoadedPatch
-    {
-        public static void Prefix()
-        {
-            UnityEngine.Debug.Log("MetaDataLoaded Prefix");
-        }
-    }
 }

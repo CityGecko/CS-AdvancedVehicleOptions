@@ -21,8 +21,8 @@ namespace AdvancedVehicleOptionsUID
 
     {
         public static string ModName => "Advanced Vehicle Options";
-        //public static string Version => "1.9.14 beta12 "+ DateTime.Now +" Patch 1.21.1-f9";
-        public static string Version => "1.9.14";
+        //public static string Version => "1.9.15 beta1 "+ DateTime.Now +" Patch 1.21.1-f9";
+        public static string Version => "1.9.15";
 
         // Reflection handle for OptionsMainPanel's private OnLocaleChanged(), used to refresh the options panel after switching AVO's own language dropdown, without needing a game restart.
         private static readonly MethodInfo OptionsPanelLocaleChanged = typeof(OptionsMainPanel).GetMethod("OnLocaleChanged", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -346,16 +346,12 @@ namespace AdvancedVehicleOptionsUID
 
                 try
                 {
-                    // Make sure the game's own locale data (used for vehicle titles) is current before we read vehicle names - the game doesn't always refresh this itself when starting a new game after a language change.
-                    try
-                    {
-                        LocaleManager.ForceReload();
-                    }
-                    catch (Exception e)
-                    {
-                        Logging.LogException(e, "exception forcing locale reload");
-                    }
-
+                    // Note: vehicle titles no longer need a locale reload here - VehicleOptions.localizedName
+                    // resolves them live on every read instead of caching them at load time (see VehicleOptions.cs),
+                    // which already picks up a language switch without this. ForceReload() was tried here
+                    // first but turned out to be unnecessary once that fix was in, and is a suspect for a
+                    // separate "Already in the same thread" exception seen when toggling district/campus
+                    // policies, so it's been removed rather than left in as a redundant no-op.
                     DefaultOptions.BuildVehicleInfoDictionary();
                     VehicleOptions.Clear();
                     Logging.Message("UIMainPanel created");

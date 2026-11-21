@@ -4,7 +4,8 @@
 	<TargetFramework>net35</TargetFramework>
 	<Deterministic>false</Deterministic>
 	<AssemblyTitle>AdvancedVehicleOptions</AssemblyTitle>
-	<AssemblyVersion>1.9.14</AssemblyVersion>
+	<!-- Single source of truth for the mod's version, in x.x.x format - AssemblyVersion/FileVersion/InformationalVersion are all derived from this by the SDK, so it only ever needs to be updated here. -->
+	<Version>1.9.15</Version>
 	<GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
 	<LangVersion>preview</LangVersion>
 	<AssemblyName>AdvancedVehicleOptions</AssemblyName>
