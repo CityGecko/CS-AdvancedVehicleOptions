@@ -57,11 +57,49 @@ namespace AdvancedVehicleOptionsUID
             return result;
         }
 
-        /// <summary>Readable class name for warnings and the log, e.g. "Residential / ResidentialLowEco / Level1".</summary>
+        /// <summary>Technical class name for the log, e.g. "Residential / ResidentialLowEco / Level1".</summary>
         internal static string GetClassLabel(ItemClass itemClass)
         {
             if (itemClass == null) return "?";
             return itemClass.m_service + " / " + itemClass.m_subService + " / " + itemClass.m_level;
+        }
+
+        /// <summary>
+        /// Player-facing description of a class: the vehicles that belong to it (as shown in the AVO list), followed by
+        /// the game's class name in brackets, e.g. "Electric Car Edison Model 5, ..., Personal Electric Transport Ride
+        /// (Low Residential Eco - Level1)". Players recognise the vehicles; the class name links to the wiki.
+        /// </summary>
+        internal static string DescribeClass(ItemClass itemClass)
+        {
+            List<string> names = new List<string>();
+            VehicleOptions[] options = AdvancedVehicleOptions.config?.options;
+            if (options != null)
+            {
+                foreach (VehicleOptions o in options)
+                {
+                    ItemClass c = o?.prefab?.m_class;
+                    if (c == null || c.m_service != itemClass.m_service || c.m_subService != itemClass.m_subService || c.m_level != itemClass.m_level) continue;
+                    string name = o.localizedName;
+                    if (!string.IsNullOrEmpty(name) && !names.Contains(name)) names.Add(name);
+                }
+            }
+
+            const int maxNames = 8;
+            string list = names.Count == 0 ? "?" : string.Join(", ", names.GetRange(0, System.Math.Min(maxNames, names.Count)).ToArray());
+            if (names.Count > maxNames) list += ", ... (+" + (names.Count - maxNames) + ")";
+
+            string className = string.IsNullOrEmpty(itemClass.name) ? GetClassLabel(itemClass) : itemClass.name;
+            return list + "\n(" + className + ")";
+        }
+
+        /// <summary>
+        /// The same message for disabling the last vehicle of a class and for the check on game load:
+        /// consequence text (citizen/tourist vehicles or service vehicles) plus the affected vehicles.
+        /// </summary>
+        internal static string GetEmptyClassMessage(ItemClass itemClass)
+        {
+            string key = IsCitizenClass(itemClass) ? "AVO_MOD_OP52" : "AVO_MOD_OP53";
+            return Translations.Translate(key) + "\n" + DescribeClass(itemClass);
         }
 
         /// <summary>Citizen and tourist vehicles (cars, bicycles, campers) belong to the Residential service.</summary>

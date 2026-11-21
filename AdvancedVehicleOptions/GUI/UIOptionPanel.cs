@@ -723,6 +723,31 @@ namespace AdvancedVehicleOptionsUID.GUI
             m_userguidebuilding.eventClick += OnUserGuideBuildingClicked;
         }
 
+        /// <summary>
+        /// Text for disabling the last vehicle of an AVO category and/or of a game vehicle class, or null if neither.
+        /// </summary>
+        private string BuildLastVehicleMessage(VehicleOptions changed)
+        {
+            string message = null;
+
+            if (!AdvancedVehicleOptions.CheckServiceValidity(m_options.category))
+            {
+                message = UIMainPanel.categoryList[(int)m_options.category + 1] + Translations.Translate("AVO_MOD_OP42");
+            }
+
+            // The AVO category may still have vehicles while the game's vehicle class of this vehicle is empty -
+            // the game picks vehicles by class (Service / SubService / Level), not by AVO category.
+            ItemClass itemClass = changed.prefab?.m_class;
+            if (itemClass != null && !VehicleClassCheck.HasUsableVehicle(itemClass))
+            {
+                Logging.KeyMessage("vehicle class ", VehicleClassCheck.GetClassLabel(itemClass), " has no enabled vehicle anymore");
+                string classMessage = VehicleClassCheck.GetEmptyClassMessage(itemClass);
+                message = message == null ? classMessage : message + "\n\n" + classMessage;
+            }
+
+            return message;
+        }
+
         protected void OnCheckChanged(UIComponent component, bool state)
         {
             if (!m_initialized || m_options == null) return;
@@ -730,45 +755,40 @@ namespace AdvancedVehicleOptionsUID.GUI
 
             if (component == m_enabled)
             {
-                if (m_options.isTrailer)
-                {
-                    VehicleOptions engine = m_options.engine;
+                // A trailer is switched together with its engine
+                VehicleOptions changed = m_options.isTrailer ? m_options.engine : m_options;
 
-                    if (engine.enabled != state)
-                    {
-                        engine.enabled = state;
-                        VehicleOptions.UpdateTransfertVehicles();
-                        eventEnableCheckChanged(this, state);
-                    }
-                }
-                else
+                if (changed != null && changed.enabled != state)
                 {
-                    if (m_options.enabled != state)
-                    {
-                        m_options.enabled = state;
-                        VehicleOptions.UpdateTransfertVehicles();
-                        eventEnableCheckChanged(this, state);
-                    }
-                }
+                    changed.enabled = state;
+                    VehicleOptions.UpdateTransfertVehicles();
+                    eventEnableCheckChanged(this, state);
 
-                if (!state && !AdvancedVehicleOptions.CheckServiceValidity(m_options.category))
-                {
-                    GUI.UIWarningModal.message = UIMainPanel.categoryList[(int)m_options.category + 1] + Translations.Translate("AVO_MOD_OP42");
-                    GUI.UIWarningModal.ShowWarning();
-                }
-                else if (!state)
-                {
-                    // The AVO category may still have vehicles while the game's vehicle class of this vehicle
-                    // (Service / SubService / Level) is now empty - the game picks by class, not by category.
-                    VehicleOptions changed = m_options.isTrailer ? m_options.engine : m_options;
-                    ItemClass itemClass = changed?.prefab?.m_class;
-                    if (itemClass != null && !VehicleClassCheck.HasUsableVehicle(itemClass))
+                    // Disabling the last vehicle of its AVO category or of its game vehicle class: ask first and
+                    // take the change back on "No" (same text as the check on game load).
+                    if (!state)
                     {
-                        string key = VehicleClassCheck.IsCitizenClass(itemClass) ? "AVO_MOD_OP52" : "AVO_MOD_OP53";
-                        string label = VehicleClassCheck.GetClassLabel(itemClass);
-                        Logging.KeyMessage("Advanced Vehicle Options: vehicle class ", label, " has no enabled vehicle anymore.");
-                        GUI.UIWarningModal.message = Translations.Translate(key) + "\n\n" + label;
-                        GUI.UIWarningModal.ShowWarning();
+                        string problem = BuildLastVehicleMessage(changed);
+                        if (problem != null)
+                        {
+                            ConfirmPanel.ShowModal(Translations.Translate("AVO_MOD_OP55"), problem + "\n\n" + Translations.Translate("AVO_MOD_OP54"), (comp, ret) =>
+                            {
+                                if (ret == 1) return;   // "Yes": keep the vehicle disabled
+
+                                changed.enabled = true;
+                                VehicleOptions.UpdateTransfertVehicles();
+
+                                if (m_options != null && (m_options == changed || m_options.engine == changed))
+                                {
+                                    bool wasInitialized = m_initialized;
+                                    m_initialized = false;
+                                    m_enabled.isChecked = true;
+                                    m_initialized = wasInitialized;
+                                }
+                                eventEnableCheckChanged(this, true);
+                                AdvancedVehicleOptions.ExportVehicleDataConfig(false);
+                            });
+                        }
                     }
                 }
             }

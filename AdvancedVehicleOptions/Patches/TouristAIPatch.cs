@@ -37,7 +37,7 @@ namespace AdvancedVehicleOptionsUID.Patches
                 Logging.Error("A tourist could not get a vehicle because a vehicle class has no enabled vehicle " +
                               "(typically all electric cars incl. \"Personal Electric Transport Ride\" disabled). " +
                               "The game's NullReferenceException in TouristAI.GetVehicleInfo was suppressed; the tourist travels without a car. " +
-                              "Reported once per session.");
+                              "Reported once per session");
                 Logging.LogException(__exception, "suppressed exception (for reference)");
             }
 

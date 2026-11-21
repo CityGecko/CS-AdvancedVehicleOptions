@@ -21,7 +21,7 @@ namespace AdvancedVehicleOptionsUID
 
     {
         public static string ModName => "Advanced Vehicle Options";
-        public static string Version => "1.9.16 beta4 "+ DateTime.Now +" Patch 1.21.1-f9";
+        public static string Version => "1.9.16 beta5 "+ DateTime.Now +" Patch 1.21.1-f9";
         //public static string Version => "1.9.16";
 
         // Reflection handle for OptionsMainPanel's private OnLocaleChanged(), used to refresh the options panel after switching AVO's own language dropdown, without needing a game restart.
@@ -489,8 +489,9 @@ namespace AdvancedVehicleOptionsUID
                 // Always log vehicle classes that have no enabled vehicle because of AVO settings - visible in player logs
                 foreach (ItemClass itemClass in VehicleClassCheck.GetClassesEmptiedByAVO())
                 {
-                    Logging.KeyMessage("Advanced Vehicle Options: vehicle class ", VehicleClassCheck.GetClassLabel(itemClass),
-                                       " has no enabled vehicle (disabled in AVO). Vehicles of this class cannot be used by the game.");
+                    Logging.KeyMessage("vehicle class ", VehicleClassCheck.GetClassLabel(itemClass),
+                                       " has no enabled vehicle (all disabled in AVO), the game cannot use vehicles of this class. Affected vehicles: ",
+                                       VehicleClassCheck.DescribeClass(itemClass).Replace("\n", " "));
                 }
 
                 if (AdvancedVehicleOptions.OnLoadValidateServices)
@@ -756,19 +757,19 @@ public static void InitVehicleDataConfig()
                 if (!CheckServiceValidity((VehicleOptions.Category)i)) warning += "> " + UIMainPanel.categoryList[i + 1] + "\n";
             }
 
-            // Game vehicle classes emptied by AVO (the game picks vehicles by class, not by AVO category)
+            string message = warning != "" ? "\n" + Translations.Translate("AVO_MOD_AV02") + "\n" + "\n" + warning : "";
+
+            // Game vehicle classes emptied by AVO (the game picks vehicles by class, not by AVO category) - same text
+            // as the question when disabling the last vehicle of a class
             foreach (ItemClass itemClass in VehicleClassCheck.GetClassesEmptiedByAVO())
             {
-                warning += "> " + VehicleClassCheck.GetClassLabel(itemClass) + "\n";
+                message += "\n" + VehicleClassCheck.GetEmptyClassMessage(itemClass) + "\n";
             }
 
-            if(warning != "")
+            if (message != "")
             {
-                 //GUI.UIWarningModal.message = "\n" + Translations.Translate("AVO_MOD_AV02") + "\n" + "\n" + warning + "\n";
-                 //GUI.UIWarningModal.ShowWarning();
-
                 ExceptionPanel panel = UIView.library.Show<ExceptionPanel>("ExceptionPanel");
-                panel.SetMessage("Advanced Vehicle Options", "\n" + Translations.Translate("AVO_MOD_AV02") + "\n" + "\n" + warning + "\n", false);
+                panel.SetMessage("Advanced Vehicle Options", message + "\n", false);
             }
         }
 
