@@ -25,9 +25,13 @@ namespace AdvancedVehicleOptionsUID
         [XmlIgnore]
         private static readonly string SettingsFile = Path.Combine(UserSettingsDir, SettingsFileName);
 
-        // SavedInputKey reference for communicating with UUI.
+        // Toggle hotkey as the game's SavedInputKey (used by the key-mapping UI and the hotkey polling).
+        // Its settings file must be the one registered via GameSettings.AddSettingsFile in the AVOMod constructor -
+        // the former file name "AdvancedVehicleOptions hotkey" was never registered and caused the log warning
+        // "GameSettings: 'AdvancedVehicleOptions hotkey' is not found". The value persisted for the user is still
+        // the ToggleKey element of AdvancedVehicleOptions_Settings.xml, which overrides this on load.
         [XmlIgnore]
-        private static readonly SavedInputKey uuiSavedKey = new SavedInputKey("AdvancedVehicleOptions hotkey", "AdvancedVehicleOptions hotkey", key: KeyCode.O, control: false, shift: true, alt: true, false);
+        private static readonly SavedInputKey uuiSavedKey = new SavedInputKey("AdvancedVehicleOptions hotkey", AdvancedVehicleOptions.settingsFileName, key: KeyCode.O, control: false, shift: true, alt: true, false);
 
         // Language.
         [XmlElement("Language")]
