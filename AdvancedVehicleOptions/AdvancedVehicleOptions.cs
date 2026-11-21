@@ -21,7 +21,7 @@ namespace AdvancedVehicleOptionsUID
 
     {
         public static string ModName => "Advanced Vehicle Options";
-        public static string Version => "1.9.16 beta3 "+ DateTime.Now +" Patch 1.21.1-f9";
+        public static string Version => "1.9.16 beta4 "+ DateTime.Now +" Patch 1.21.1-f9";
         //public static string Version => "1.9.16";
 
         // Reflection handle for OptionsMainPanel's private OnLocaleChanged(), used to refresh the options panel after switching AVO's own language dropdown, without needing a game restart.
@@ -486,6 +486,13 @@ namespace AdvancedVehicleOptionsUID
                 // Loading config
                 AdvancedVehicleOptions.InitVehicleDataConfig();
 
+                // Always log vehicle classes that have no enabled vehicle because of AVO settings - visible in player logs
+                foreach (ItemClass itemClass in VehicleClassCheck.GetClassesEmptiedByAVO())
+                {
+                    Logging.KeyMessage("Advanced Vehicle Options: vehicle class ", VehicleClassCheck.GetClassLabel(itemClass),
+                                       " has no enabled vehicle (disabled in AVO). Vehicles of this class cannot be used by the game.");
+                }
+
                 if (AdvancedVehicleOptions.OnLoadValidateServices)
                 {
                     AdvancedVehicleOptions.CheckAllServicesValidity();
@@ -748,7 +755,13 @@ public static void InitVehicleDataConfig()
                 }
                 if (!CheckServiceValidity((VehicleOptions.Category)i)) warning += "> " + UIMainPanel.categoryList[i + 1] + "\n";
             }
-                
+
+            // Game vehicle classes emptied by AVO (the game picks vehicles by class, not by AVO category)
+            foreach (ItemClass itemClass in VehicleClassCheck.GetClassesEmptiedByAVO())
+            {
+                warning += "> " + VehicleClassCheck.GetClassLabel(itemClass) + "\n";
+            }
+
             if(warning != "")
             {
                  //GUI.UIWarningModal.message = "\n" + Translations.Translate("AVO_MOD_AV02") + "\n" + "\n" + warning + "\n";

@@ -756,6 +756,21 @@ namespace AdvancedVehicleOptionsUID.GUI
                     GUI.UIWarningModal.message = UIMainPanel.categoryList[(int)m_options.category + 1] + Translations.Translate("AVO_MOD_OP42");
                     GUI.UIWarningModal.ShowWarning();
                 }
+                else if (!state)
+                {
+                    // The AVO category may still have vehicles while the game's vehicle class of this vehicle
+                    // (Service / SubService / Level) is now empty - the game picks by class, not by category.
+                    VehicleOptions changed = m_options.isTrailer ? m_options.engine : m_options;
+                    ItemClass itemClass = changed?.prefab?.m_class;
+                    if (itemClass != null && !VehicleClassCheck.HasUsableVehicle(itemClass))
+                    {
+                        string key = VehicleClassCheck.IsCitizenClass(itemClass) ? "AVO_MOD_OP52" : "AVO_MOD_OP53";
+                        string label = VehicleClassCheck.GetClassLabel(itemClass);
+                        Logging.KeyMessage("Advanced Vehicle Options: vehicle class ", label, " has no enabled vehicle anymore.");
+                        GUI.UIWarningModal.message = Translations.Translate(key) + "\n\n" + label;
+                        GUI.UIWarningModal.ShowWarning();
+                    }
+                }
             }
             else if (component == m_addBackEngine && m_options.addBackEngine != state)
             {

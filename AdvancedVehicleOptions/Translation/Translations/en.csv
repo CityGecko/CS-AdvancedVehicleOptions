@@ -206,6 +206,8 @@ AVO_MOD_OP48,Synchronize Engine with Trailer
 AVO_MOD_OP49,"If enabled, the engine properties are synchronize to all trailers."
 AVO_MOD_OP50,Selection defines the stand position size.
 AVO_MOD_OP51,Click for User Guide: City Service Buildings only spawn Vanilla vehicles
+AVO_MOD_OP52,"No vehicle of this vehicle class is enabled anymore. Citizens and tourists who would use it will walk or take public transport instead. To keep this vehicle type in your city, enable at least one vehicle of this class or subscribe to replacement assets. Vehicle class:"
+AVO_MOD_OP53,"No vehicle of this vehicle class is enabled anymore. Buildings and services that need it cannot send out vehicles of this type. Enable at least one vehicle of this class or subscribe to replacement assets. Vehicle class:"
 AVO_MOD_WM01,Warning
 AVO_OPT_SYNC,Remember Engine/Trailer Synchronization setting
 AVO_OPT_SYNC_TT,"If enabled, the setting for synchronization between Engine/Trailer will be

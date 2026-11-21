@@ -205,6 +205,8 @@ con trailer"
 "AVO_MOD_OP49","Si está habilitado"," the engine properties are synchronize to all trailers."
 "AVO_MOD_OP50","La selección define el tamaño de la posición del estacionamiento."
 "AVO_MOD_OP51","Clic para Guía de Usuario: Edificios de servicios de la ciudad sólo aparecen vehículos Vanilla"
+"AVO_MOD_OP52","Ya no hay ningún vehículo activado de esta clase. Los ciudadanos y turistas que lo usarían irán a pie o en transporte público. Para mantener este tipo de vehículo en tu ciudad, activa al menos un vehículo de esta clase o suscríbete a assets de reemplazo. Clase de vehículo:"
+"AVO_MOD_OP53","Ya no hay ningún vehículo activado de esta clase. Los edificios y servicios que lo necesitan no pueden enviar vehículos de este tipo. Activa al menos un vehículo de esta clase o suscríbete a assets de reemplazo. Clase de vehículo:"
 "AVO_MOD_WM01","Advertencia"
 "AVO_OPT_SYNC","Recuerde la configuración de sincronización de motor/remolque"
 "AVO_OPT_SYNC_TT","If enabled, the setting for synchronization between Engine/Trailer will be

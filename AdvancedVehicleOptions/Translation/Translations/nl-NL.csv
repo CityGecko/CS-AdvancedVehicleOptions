@@ -206,6 +206,8 @@ Trekker/aanhangwagen"
 "AVO_MOD_OP49","Indien ingeschakeld"," the engine properties are synchronize to all trailers."
 "AVO_MOD_OP50","De selectie bepaalt de grootte van de standpositie."
 "AVO_MOD_OP51","Klik voor Gebruikershandleiding: City Service Gebouwen spawnen alleen Vanilla voertuigen"
+"AVO_MOD_OP52","Er is geen voertuig van deze voertuigklasse meer ingeschakeld. Burgers en toeristen die het zouden gebruiken, gaan in plaats daarvan lopen of nemen het openbaar vervoer. Schakel minstens één voertuig van deze klasse in of abonneer je op vervangende assets om dit voertuigtype in je stad te houden. Voertuigklasse:"
+"AVO_MOD_OP53","Er is geen voertuig van deze voertuigklasse meer ingeschakeld. Gebouwen en diensten die het nodig hebben, kunnen geen voertuigen van dit type meer sturen. Schakel minstens één voertuig van deze klasse in of abonneer je op vervangende assets. Voertuigklasse:"
 "AVO_MOD_WM01","Waarschuwing"
 "AVO_OPT_SYNC","Onthoud trekker/aanhanger synchronisatie"
 "AVO_OPT_SYNC_TT","Indien ingeschakeld, wordt de synchronisatie tussen trekker/aanhangwagen
