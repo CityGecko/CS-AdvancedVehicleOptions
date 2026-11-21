@@ -152,7 +152,9 @@ namespace AdvancedVehicleOptionsUID.GUI
             }
 
             height = buttonsY + 30f + MARGIN;
-            relativePosition = new Vector3(Mathf.Floor((GetUIView().fixedWidth - width) / 2), Mathf.Floor((GetUIView().fixedHeight - height) / 2));
+            // Centre on the real UI area (fixedWidth/fixedHeight are always 1920x1080, wrong on 21:9)
+            Vector2 screen = GetUIView().GetScreenResolution();
+            relativePosition = new Vector3(Mathf.Floor((screen.x - width) / 2), Mathf.Floor((screen.y - height) / 2));
 
             // Questions are modal (they must be answered); information messages are not by default, so they do not
             // block the game or other mods' windows.

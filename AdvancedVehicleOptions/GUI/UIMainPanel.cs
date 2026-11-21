@@ -102,7 +102,10 @@ namespace AdvancedVehicleOptionsUID.GUI
                 isInteractive = true;
                 width = WIDTHLEFT + WIDTHRIGHT;
                 height = HEIGHT;
-                relativePosition = new Vector3(Mathf.Floor((view.fixedWidth - width) / 2), Mathf.Floor((view.fixedHeight - height) / 2));
+                // Centre on the real UI area: fixedWidth/fixedHeight are always 1920x1080, GetScreenResolution
+                // respects aspect ratio and UI scaling (otherwise left of centre on 21:9)
+                Vector2 screen = view.GetScreenResolution();
+                relativePosition = new Vector3(Mathf.Floor((screen.x - width) / 2), Mathf.Floor((screen.y - height) / 2));
 
                 // Get camera controller
                 GameObject go = GameObject.FindGameObjectWithTag("MainCamera");
