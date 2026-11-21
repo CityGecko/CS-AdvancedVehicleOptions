@@ -21,7 +21,7 @@ namespace AdvancedVehicleOptionsUID
 
     {
         public static string ModName => "Advanced Vehicle Options";
-        public static string Version => "1.9.16 beta5 "+ DateTime.Now +" Patch 1.21.1-f9";
+        public static string Version => "1.9.16 beta6 "+ DateTime.Now +" Patch 1.21.1-f9";
         //public static string Version => "1.9.16";
 
         // Reflection handle for OptionsMainPanel's private OnLocaleChanged(), used to refresh the options panel after switching AVO's own language dropdown, without needing a game restart.
@@ -770,8 +770,8 @@ public static void InitVehicleDataConfig()
 
             if (message != "")
             {
-                ExceptionPanel panel = UIView.library.Show<ExceptionPanel>("ExceptionPanel");
-                panel.SetMessage("Advanced Vehicle Options", message + "\n", false);
+                // Own scrollable window (with "Copy text") - the game's ExceptionPanel cuts off longer lists
+                GUI.UIConfirmModal.ShowMessage("Advanced Vehicle Options", message.Trim('\n'));
             }
         }
 

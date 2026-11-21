@@ -771,9 +771,9 @@ namespace AdvancedVehicleOptionsUID.GUI
                         string problem = BuildLastVehicleMessage(changed);
                         if (problem != null)
                         {
-                            ConfirmPanel.ShowModal(Translations.Translate("AVO_MOD_OP55"), problem + "\n\n" + Translations.Translate("AVO_MOD_OP54"), (comp, ret) =>
+                            UIConfirmModal.ShowQuestion(Translations.Translate("AVO_MOD_OP55"), problem + "\n\n" + Translations.Translate("AVO_MOD_OP54"), yes =>
                             {
-                                if (ret == 1) return;   // "Yes": keep the vehicle disabled
+                                if (yes) return;   // "Yes": keep the vehicle disabled
 
                                 changed.enabled = true;
                                 VehicleOptions.UpdateTransfertVehicles();

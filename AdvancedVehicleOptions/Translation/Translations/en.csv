@@ -211,6 +211,10 @@ AVO_MOD_OP53,"No vehicle of this vehicle class is enabled anymore. Buildings and
 AVO_MOD_OP54,"Disable this vehicle anyway?"
 AVO_MOD_OP55,"Warning: No vehicle of a vehicle class active"
 AVO_MOD_OP56,"Affected vehicles:"
+AVO_MOD_OP57,"Copy text"
+AVO_MOD_OP58,"Copied to clipboard"
+AVO_MOD_OP59,"Yes"
+AVO_MOD_OP60,"No"
 AVO_MOD_WM01,Warning
 AVO_OPT_SYNC,Remember Engine/Trailer Synchronization setting
 AVO_OPT_SYNC_TT,"If enabled, the setting for synchronization between Engine/Trailer will be
