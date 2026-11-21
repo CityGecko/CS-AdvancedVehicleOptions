@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 
 namespace AdvancedVehicleOptionsUID
 {
@@ -64,12 +65,17 @@ namespace AdvancedVehicleOptionsUID
             return itemClass.m_service + " / " + itemClass.m_subService + " / " + itemClass.m_level;
         }
 
+        /// <summary>The game's class name as players see it in the wiki, e.g. "Low Residential Eco - Level1".</summary>
+        internal static string GetClassName(ItemClass itemClass)
+        {
+            return string.IsNullOrEmpty(itemClass?.name) ? GetClassLabel(itemClass) : itemClass.name;
+        }
+
         /// <summary>
-        /// Player-facing description of a class: the vehicles that belong to it (as shown in the AVO list), followed by
-        /// the game's class name in brackets, e.g. "Electric Car Edison Model 5, ..., Personal Electric Transport Ride
-        /// (Low Residential Eco - Level1)". Players recognise the vehicles; the class name links to the wiki.
+        /// The vehicles that belong to a class, as shown in the AVO list, e.g.
+        /// "Electric Car Edison Model 5, ..., Personal Electric Transport Ride". Players recognise the vehicles.
         /// </summary>
-        internal static string DescribeClass(ItemClass itemClass)
+        internal static string GetVehicleNames(ItemClass itemClass)
         {
             List<string> names = new List<string>();
             VehicleOptions[] options = AdvancedVehicleOptions.config?.options;
@@ -87,19 +93,51 @@ namespace AdvancedVehicleOptionsUID
             const int maxNames = 8;
             string list = names.Count == 0 ? "?" : string.Join(", ", names.GetRange(0, System.Math.Min(maxNames, names.Count)).ToArray());
             if (names.Count > maxNames) list += ", ... (+" + (names.Count - maxNames) + ")";
-
-            string className = string.IsNullOrEmpty(itemClass.name) ? GetClassLabel(itemClass) : itemClass.name;
-            return list + "\n(" + className + ")";
+            return list;
         }
 
         /// <summary>
         /// The same message for disabling the last vehicle of a class and for the check on game load:
-        /// consequence text (citizen/tourist vehicles or service vehicles) plus the affected vehicles.
+        ///
+        ///   [consequence text: citizen/tourist vehicles (OP52) or service vehicles (OP53)]
+        ///
+        ///   Affected vehicles:
+        ///
+        ///   1 - (Low Residential Eco - Level1)
+        ///   Electric Car Edison Model 5, ..., Personal Electric Transport Ride
+        ///
+        /// Several classes are numbered; citizen and service classes each get their own consequence text.
+        /// The title ("Warning: No vehicle of a vehicle class active", OP55) is shown by the caller.
         /// </summary>
+        internal static string GetEmptyClassMessage(IList<ItemClass> classes)
+        {
+            StringBuilder message = new StringBuilder();
+            int number = 0;
+
+            foreach (bool citizen in new[] { true, false })
+            {
+                List<ItemClass> group = new List<ItemClass>();
+                foreach (ItemClass c in classes) if (IsCitizenClass(c) == citizen) group.Add(c);
+                if (group.Count == 0) continue;
+
+                if (message.Length > 0) message.Append("\n\n");
+                message.Append(Translations.Translate(citizen ? "AVO_MOD_OP52" : "AVO_MOD_OP53"));
+                message.Append("\n\n").Append(Translations.Translate("AVO_MOD_OP56")).Append("\n");
+
+                foreach (ItemClass c in group)
+                {
+                    number++;
+                    message.Append("\n").Append(number).Append(" - (").Append(GetClassName(c)).Append(")\n");
+                    message.Append(GetVehicleNames(c)).Append("\n");
+                }
+            }
+
+            return message.ToString().TrimEnd('\n');
+        }
+
         internal static string GetEmptyClassMessage(ItemClass itemClass)
         {
-            string key = IsCitizenClass(itemClass) ? "AVO_MOD_OP52" : "AVO_MOD_OP53";
-            return Translations.Translate(key) + "\n" + DescribeClass(itemClass);
+            return GetEmptyClassMessage(new List<ItemClass> { itemClass });
         }
 
         /// <summary>Citizen and tourist vehicles (cars, bicycles, campers) belong to the Residential service.</summary>

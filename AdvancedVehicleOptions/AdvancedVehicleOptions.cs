@@ -491,7 +491,7 @@ namespace AdvancedVehicleOptionsUID
                 {
                     Logging.KeyMessage("vehicle class ", VehicleClassCheck.GetClassLabel(itemClass),
                                        " has no enabled vehicle (all disabled in AVO), the game cannot use vehicles of this class. Affected vehicles: ",
-                                       VehicleClassCheck.DescribeClass(itemClass).Replace("\n", " "));
+                                       VehicleClassCheck.GetVehicleNames(itemClass), " (", VehicleClassCheck.GetClassName(itemClass), ")");
                 }
 
                 if (AdvancedVehicleOptions.OnLoadValidateServices)
@@ -761,9 +761,11 @@ public static void InitVehicleDataConfig()
 
             // Game vehicle classes emptied by AVO (the game picks vehicles by class, not by AVO category) - same text
             // as the question when disabling the last vehicle of a class
-            foreach (ItemClass itemClass in VehicleClassCheck.GetClassesEmptiedByAVO())
+            List<ItemClass> emptyClasses = VehicleClassCheck.GetClassesEmptiedByAVO();
+            if (emptyClasses.Count > 0)
             {
-                message += "\n" + VehicleClassCheck.GetEmptyClassMessage(itemClass) + "\n";
+                if (message != "") message += "\n";
+                message += "\n" + Translations.Translate("AVO_MOD_OP55") + "\n\n" + VehicleClassCheck.GetEmptyClassMessage(emptyClasses) + "\n";
             }
 
             if (message != "")
