@@ -1,12 +1,13 @@
 ## Note on AI assistance
 Since version 1.9.14, parts of the code were developed with the help of an AI coding assistant (Claude Code by Anthropic). All changes were reviewed and tested in-game by the maintainer, who decides what is included in a release. Commits with AI contributions are marked with a `Co-Authored-By: Claude` line.
 
-# CS-AdvancedVehicleOptions 1.9.16 (Beta 9)
+# CS-AdvancedVehicleOptions 1.9.16 (Beta 10)
 Thanks to xingweixie for the detailed analysis and fixes in pull request #48, and to roberto-naharro for the analysis in issue #49.
 * Fixed the "NullReferenceException" some players got after disabling vehicles such as the "Personal Electric Transport Ride": when all vehicles of a vehicle class (e.g. all electric cars) are disabled, tourists arriving by car could crash the game's vehicle selection. AVO now catches this case, the tourist simply travels without a car, and the log explains the reason.
 * New question when you disable the last vehicle of a vehicle class (e.g. the last electric car), even if the AVO category still has other vehicles: it names the affected vehicles and lets you keep the vehicle enabled. The same text is shown for such classes when a game is loaded (option "validate services"), and they are always listed in the log. See the wiki FAQ "Last vehicle of its kind - vehicle classes".
 * Fixed changing the capacity of public transport vehicles (issue #49): vehicles without seats (e.g. created while the game's citizen unit pool was full) now get their seats instead of leaking them, vehicles that are not on the road yet are updated as well, and a full unit pool is now reported in the log instead of failing silently.
 * The AVO hotkey and the toolbar button now always agree whether the AVO panel is open.
+* Vehicle colours set in AVO work again for passenger trains (and metros) that are not on a player line, e.g. trains of outside connections. Trains on your own lines keep their line colour; trains whose colours were not changed in AVO look as before. Not active together with Vehicle Color Expander / Asset Color Expander.
 * New message windows in the AVO style for Import, Export, Reset and the vehicle class warning: longer texts can be scrolled, and Import/Export messages offer a "Copy text" button (e.g. for the path of the configuration file).
 * Fixed the hotkey not opening AVO while "Hide the In-Game toolbar button" is enabled - the option now only hides the toolbar button, as described in its tooltip.
 * Fixed the confirmation text of the Import dialog (it showed the category selection tooltip), translated into all supported languages.

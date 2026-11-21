@@ -239,9 +239,10 @@ namespace AdvancedVehicleOptionsUID
             {
                 if (m_prefab == null) return;
                 m_prefab.m_useColorVariations = value;
+                Patches.PassengerTrainColorPatch.InvalidateCache();
             }
         }
-        // colors
+        // colors (every change clears the colour cache of the passenger train colour patch)
         public HexaColor color0
         {
             get { return m_prefab.m_color0; }
@@ -249,6 +250,7 @@ namespace AdvancedVehicleOptionsUID
             {
                 if (m_prefab == null) return;
                 m_prefab.m_color0 = value;
+                Patches.PassengerTrainColorPatch.InvalidateCache();
             }
         }
         public HexaColor color1
@@ -258,6 +260,7 @@ namespace AdvancedVehicleOptionsUID
             {
                 if (m_prefab == null) return;
                 m_prefab.m_color1 = value;
+                Patches.PassengerTrainColorPatch.InvalidateCache();
             }
         }
         public HexaColor color2
@@ -267,6 +270,7 @@ namespace AdvancedVehicleOptionsUID
             {
                 if (m_prefab == null) return;
                 m_prefab.m_color2 = value;
+                Patches.PassengerTrainColorPatch.InvalidateCache();
             }
         }
         public HexaColor color3
@@ -276,6 +280,7 @@ namespace AdvancedVehicleOptionsUID
             {
                 if (m_prefab == null) return;
                 m_prefab.m_color3 = value;
+                Patches.PassengerTrainColorPatch.InvalidateCache();
             }
         }
 
@@ -1455,7 +1460,28 @@ namespace AdvancedVehicleOptionsUID
             for (uint i = 0; i < PrefabCollection<VehicleInfo>.PrefabCount(); i++)
                 DefaultOptions.Store(PrefabCollection<VehicleInfo>.GetPrefab(i));
 
+            Patches.PassengerTrainColorPatch.InvalidateCache();
             Logging.Message("Default values stored");
+        }
+
+        /// <summary>
+        /// Whether the colours of a prefab (color0..3, colour variations) differ from the game defaults stored on load -
+        /// i.e. were changed in AVO. Compared as hex values (the precision AVO stores colours with).
+        /// </summary>
+        internal static bool HasCustomColors(VehicleInfo prefab)
+        {
+            if (prefab == null || !m_default.TryGetValue(prefab.name, out DefaultOptions stored)) return false;
+
+            return prefab.m_useColorVariations != stored.m_useColorVariations
+                || !SameColor(prefab.m_color0, stored.m_color0)
+                || !SameColor(prefab.m_color1, stored.m_color1)
+                || !SameColor(prefab.m_color2, stored.m_color2)
+                || !SameColor(prefab.m_color3, stored.m_color3);
+        }
+
+        private static bool SameColor(Color current, HexaColor stored)
+        {
+            return ((HexaColor)current).ToString() == stored.ToString();
         }
 
         public static void StoreAllModded()
