@@ -4,42 +4,71 @@ using System.Text;
 namespace AdvancedVehicleOptionsUID
 {
     /// <summary>
-    /// Checks whether a game vehicle class (Service + SubService + Level) still has a vehicle the game can pick.
+    /// A game vehicle class (Service + SubService + Level) together with the vehicle type the game asks for.
+    /// </summary>
+    internal struct VehicleClassKey
+    {
+        internal ItemClass itemClass;
+        internal VehicleInfo.VehicleType vehicleType;
+
+        internal VehicleClassKey(ItemClass itemClass, VehicleInfo.VehicleType vehicleType)
+        {
+            this.itemClass = itemClass;
+            this.vehicleType = vehicleType;
+        }
+    }
+
+    /// <summary>
+    /// Checks whether the game can still pick a vehicle of a given class and vehicle type.
     ///
-    /// The game does not pick vehicles by AVO category but by this class (VehicleManager.GetRandomVehicleInfo).
-    /// AVO's category check (CheckServiceValidity) can therefore pass while a single class is empty - e.g. the
-    /// "Citizen" category still has normal cars, but all electric cars (Residential / ResidentialLowEco / Level1) are
-    /// disabled. Game code that does not check for null then throws (see Patches/TouristAIPatch.cs).
+    /// The game does not pick vehicles by AVO category but by class (VehicleManager.GetRandomVehicleInfo), several
+    /// services additionally filter by vehicle type (e.g. a fire station asks for a Car, a helicopter depot for a
+    /// Helicopter of the same class). AVO's category check (CheckServiceValidity) can therefore pass while the game
+    /// gets nothing - e.g. "Citizen" still has normal cars but all electric cars are disabled, or the fire department
+    /// still has its helicopter but no fire truck. Game code without a null check then throws
+    /// (see Patches/TouristAIPatch.cs), services stop dispatching.
     ///
-    /// Mirrors VehicleManager.RefreshTransferVehicles: a vehicle counts if its class service is not None and its
-    /// placement style is Automatic (AVO disables vehicles by setting Manual). A level without own vehicles falls back
-    /// to the next lower level of the same service/subService, so a class is empty only if no level up to and including
-    /// its own has a usable vehicle.
+    /// Mirrors VehicleManager.RefreshTransferVehicles / GetRandomVehicleInfo: the list of a level contains every prefab
+    /// of that class whose service is not None and whose placement style is Automatic (AVO disables vehicles by setting
+    /// Manual). A level without any such prefab uses the list of the next lower level (same service/subService); the
+    /// type filter is applied to that list afterwards.
     /// </summary>
     internal static class VehicleClassCheck
     {
-        internal static bool HasUsableVehicle(ItemClass itemClass)
+        internal static bool HasUsableVehicle(ItemClass itemClass, VehicleInfo.VehicleType vehicleType)
         {
             if (itemClass == null || itemClass.m_service == ItemClass.Service.None) return true;
 
+            List<VehicleInfo> usable = new List<VehicleInfo>();
             int count = PrefabCollection<VehicleInfo>.PrefabCount();
             for (int i = 0; i < count; i++)
             {
                 VehicleInfo prefab = PrefabCollection<VehicleInfo>.GetPrefab((uint)i);
                 if (prefab == null || prefab.m_class == null) continue;
                 if (prefab.m_placementStyle != ItemClass.Placement.Automatic) continue;
-                if (IsSameOrLowerLevel(prefab.m_class, itemClass)) return true;
+                if (prefab.m_class.m_service != itemClass.m_service || prefab.m_class.m_subService != itemClass.m_subService) continue;
+                usable.Add(prefab);
+            }
+
+            // Effective list: own level, or - if that level has no usable prefab at all - the next lower one
+            if (itemClass.m_level == ItemClass.Level.None)
+            {
+                return HasType(usable, ItemClass.Level.None, vehicleType);
+            }
+            for (int level = (int)itemClass.m_level; level >= (int)ItemClass.Level.Level1; level--)
+            {
+                if (HasLevel(usable, (ItemClass.Level)level)) return HasType(usable, (ItemClass.Level)level, vehicleType);
             }
             return false;
         }
 
         /// <summary>
-        /// Classes that had at least one vehicle by default but have none usable now - i.e. emptied by disabling
-        /// vehicles in AVO. Classes the game never had vehicles for are not reported.
+        /// Class/type combinations that had at least one vehicle by default but have none usable now - i.e. emptied by
+        /// disabling vehicles in AVO. Combinations the game never had vehicles for are not reported.
         /// </summary>
-        internal static List<ItemClass> GetClassesEmptiedByAVO()
+        internal static List<VehicleClassKey> GetClassesEmptiedByAVO()
         {
-            List<ItemClass> result = new List<ItemClass>();
+            List<VehicleClassKey> result = new List<VehicleClassKey>();
             HashSet<string> seen = new HashSet<string>();
 
             int count = PrefabCollection<VehicleInfo>.PrefabCount();
@@ -52,8 +81,8 @@ namespace AdvancedVehicleOptionsUID
                 // Only vehicles AVO disabled: by default they were spawnable (Automatic)
                 if (DefaultOptions.GetPlacementStyle(prefab) != ItemClass.Placement.Automatic) continue;
 
-                if (!seen.Add(GetClassLabel(prefab.m_class))) continue;
-                if (!HasUsableVehicle(prefab.m_class)) result.Add(prefab.m_class);
+                if (!seen.Add(GetClassLabel(prefab.m_class) + " / " + prefab.m_vehicleType)) continue;
+                if (!HasUsableVehicle(prefab.m_class, prefab.m_vehicleType)) result.Add(new VehicleClassKey(prefab.m_class, prefab.m_vehicleType));
             }
             return result;
         }
@@ -65,17 +94,21 @@ namespace AdvancedVehicleOptionsUID
             return itemClass.m_service + " / " + itemClass.m_subService + " / " + itemClass.m_level;
         }
 
-        /// <summary>The game's class name as players see it in the wiki, e.g. "Low Residential Eco - Level1".</summary>
-        internal static string GetClassName(ItemClass itemClass)
+        /// <summary>
+        /// The game's class name as players see it in the wiki, e.g. "Low Residential Eco - Level1". If the class holds
+        /// vehicles of several types (e.g. fire trucks and fire helicopters), the type is added: "Fire Department Vehicle - Car".
+        /// </summary>
+        internal static string GetClassName(VehicleClassKey key)
         {
-            return string.IsNullOrEmpty(itemClass?.name) ? GetClassLabel(itemClass) : itemClass.name;
+            string name = string.IsNullOrEmpty(key.itemClass?.name) ? GetClassLabel(key.itemClass) : key.itemClass.name;
+            return HasSeveralTypes(key.itemClass) ? name + " - " + key.vehicleType : name;
         }
 
         /// <summary>
-        /// The vehicles that belong to a class, as shown in the AVO list, e.g.
+        /// The vehicles of a class and type, as shown in the AVO list (trailers left out), e.g.
         /// "Electric Car Edison Model 5, ..., Personal Electric Transport Ride". Players recognise the vehicles.
         /// </summary>
-        internal static string GetVehicleNames(ItemClass itemClass)
+        internal static string GetVehicleNames(VehicleClassKey key)
         {
             List<string> names = new List<string>();
             VehicleOptions[] options = AdvancedVehicleOptions.config?.options;
@@ -83,8 +116,10 @@ namespace AdvancedVehicleOptionsUID
             {
                 foreach (VehicleOptions o in options)
                 {
-                    ItemClass c = o?.prefab?.m_class;
-                    if (c == null || c.m_service != itemClass.m_service || c.m_subService != itemClass.m_subService || c.m_level != itemClass.m_level) continue;
+                    if (o == null || o.isTrailer) continue;
+                    VehicleInfo prefab = o.prefab;
+                    ItemClass c = prefab?.m_class;
+                    if (c == null || !SameClass(c, key.itemClass) || prefab.m_vehicleType != key.vehicleType) continue;
                     string name = o.localizedName;
                     if (!string.IsNullOrEmpty(name) && !names.Contains(name)) names.Add(name);
                 }
@@ -109,22 +144,22 @@ namespace AdvancedVehicleOptionsUID
         /// Several classes are numbered; citizen and service classes each get their own consequence text.
         /// The title ("Warning: No vehicle of a vehicle class active", OP55) is shown by the caller.
         /// </summary>
-        internal static string GetEmptyClassMessage(IList<ItemClass> classes)
+        internal static string GetEmptyClassMessage(IList<VehicleClassKey> classes)
         {
             StringBuilder message = new StringBuilder();
             int number = 0;
 
             foreach (bool citizen in new[] { true, false })
             {
-                List<ItemClass> group = new List<ItemClass>();
-                foreach (ItemClass c in classes) if (IsCitizenClass(c) == citizen) group.Add(c);
+                List<VehicleClassKey> group = new List<VehicleClassKey>();
+                foreach (VehicleClassKey c in classes) if (IsCitizenClass(c.itemClass) == citizen) group.Add(c);
                 if (group.Count == 0) continue;
 
                 if (message.Length > 0) message.Append("\n\n");
                 message.Append(Translations.Translate(citizen ? "AVO_MOD_OP52" : "AVO_MOD_OP53"));
                 message.Append("\n\n").Append(Translations.Translate("AVO_MOD_OP56")).Append("\n");
 
-                foreach (ItemClass c in group)
+                foreach (VehicleClassKey c in group)
                 {
                     number++;
                     message.Append("\n").Append(number).Append(" - (").Append(GetClassName(c)).Append(")\n");
@@ -135,9 +170,9 @@ namespace AdvancedVehicleOptionsUID
             return message.ToString().TrimEnd('\n');
         }
 
-        internal static string GetEmptyClassMessage(ItemClass itemClass)
+        internal static string GetEmptyClassMessage(VehicleClassKey key)
         {
-            return GetEmptyClassMessage(new List<ItemClass> { itemClass });
+            return GetEmptyClassMessage(new List<VehicleClassKey> { key });
         }
 
         /// <summary>Citizen and tourist vehicles (cars, bicycles, campers) belong to the Residential service.</summary>
@@ -146,11 +181,38 @@ namespace AdvancedVehicleOptionsUID
             return itemClass != null && itemClass.m_service == ItemClass.Service.Residential;
         }
 
-        private static bool IsSameOrLowerLevel(ItemClass candidate, ItemClass target)
+        private static bool SameClass(ItemClass a, ItemClass b)
         {
-            if (candidate.m_service != target.m_service || candidate.m_subService != target.m_subService) return false;
-            if (target.m_level == ItemClass.Level.None || candidate.m_level == ItemClass.Level.None) return candidate.m_level == target.m_level;
-            return candidate.m_level <= target.m_level;
+            return a.m_service == b.m_service && a.m_subService == b.m_subService && a.m_level == b.m_level;
+        }
+
+        private static bool HasLevel(List<VehicleInfo> prefabs, ItemClass.Level level)
+        {
+            foreach (VehicleInfo p in prefabs) if (p.m_class.m_level == level) return true;
+            return false;
+        }
+
+        private static bool HasType(List<VehicleInfo> prefabs, ItemClass.Level level, VehicleInfo.VehicleType type)
+        {
+            foreach (VehicleInfo p in prefabs) if (p.m_class.m_level == level && p.m_vehicleType == type) return true;
+            return false;
+        }
+
+        // Whether the class (any placement) contains vehicles of more than one type, e.g. trucks and helicopters
+        private static bool HasSeveralTypes(ItemClass itemClass)
+        {
+            if (itemClass == null) return false;
+            bool found = false;
+            VehicleInfo.VehicleType first = VehicleInfo.VehicleType.None;
+            int count = PrefabCollection<VehicleInfo>.PrefabCount();
+            for (int i = 0; i < count; i++)
+            {
+                VehicleInfo prefab = PrefabCollection<VehicleInfo>.GetPrefab((uint)i);
+                if (prefab == null || prefab.m_class == null || !SameClass(prefab.m_class, itemClass)) continue;
+                if (!found) { found = true; first = prefab.m_vehicleType; }
+                else if (prefab.m_vehicleType != first) return true;
+            }
+            return false;
         }
     }
 }

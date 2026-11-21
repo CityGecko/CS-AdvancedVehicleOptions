@@ -21,7 +21,7 @@ namespace AdvancedVehicleOptionsUID
 
     {
         public static string ModName => "Advanced Vehicle Options";
-        public static string Version => "1.9.16 beta6 "+ DateTime.Now +" Patch 1.21.1-f9";
+        public static string Version => "1.9.16 beta7 "+ DateTime.Now +" Patch 1.21.1-f9";
         //public static string Version => "1.9.16";
 
         // Reflection handle for OptionsMainPanel's private OnLocaleChanged(), used to refresh the options panel after switching AVO's own language dropdown, without needing a game restart.
@@ -487,11 +487,11 @@ namespace AdvancedVehicleOptionsUID
                 AdvancedVehicleOptions.InitVehicleDataConfig();
 
                 // Always log vehicle classes that have no enabled vehicle because of AVO settings - visible in player logs
-                foreach (ItemClass itemClass in VehicleClassCheck.GetClassesEmptiedByAVO())
+                foreach (VehicleClassKey key in VehicleClassCheck.GetClassesEmptiedByAVO())
                 {
-                    Logging.KeyMessage("vehicle class ", VehicleClassCheck.GetClassLabel(itemClass),
+                    Logging.KeyMessage("vehicle class ", VehicleClassCheck.GetClassLabel(key.itemClass), " / ", key.vehicleType.ToString(),
                                        " has no enabled vehicle (all disabled in AVO), the game cannot use vehicles of this class. Affected vehicles: ",
-                                       VehicleClassCheck.GetVehicleNames(itemClass), " (", VehicleClassCheck.GetClassName(itemClass), ")");
+                                       VehicleClassCheck.GetVehicleNames(key), " (", VehicleClassCheck.GetClassName(key), ")");
                 }
 
                 if (AdvancedVehicleOptions.OnLoadValidateServices)
@@ -761,7 +761,7 @@ public static void InitVehicleDataConfig()
 
             // Game vehicle classes emptied by AVO (the game picks vehicles by class, not by AVO category) - same text
             // as the question when disabling the last vehicle of a class
-            List<ItemClass> emptyClasses = VehicleClassCheck.GetClassesEmptiedByAVO();
+            List<VehicleClassKey> emptyClasses = VehicleClassCheck.GetClassesEmptiedByAVO();
             if (emptyClasses.Count > 0)
             {
                 if (message != "") message += "\n";

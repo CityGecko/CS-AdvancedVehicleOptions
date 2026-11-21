@@ -8,9 +8,10 @@ using UIUtils = SamsamTS.UIUtils;
 namespace AdvancedVehicleOptionsUID.GUI
 {
     /// <summary>
-    /// Modal message window for longer texts (the game's ConfirmPanel has a fixed height and cuts them off):
-    /// title, scrollable text in a smaller font, a "Copy text" button (clipboard) and either Yes/No or OK.
-    /// Escape counts as "No" (or OK). Used for the empty vehicle class question and the check on game load.
+    /// Message window for longer texts (the game's ConfirmPanel has a fixed height and cuts them off):
+    /// title, scrollable text in a smaller font, Yes/No or OK on the left and a "Copy text" button (clipboard) on the
+    /// right. Escape counts as "No" (or OK). The question (Yes/No) is modal, the message (OK) is not, so the check on
+    /// game load does not block the game or other mods.
     /// </summary>
     public class UIConfirmModal : UIPanel
     {
@@ -110,43 +111,51 @@ namespace AdvancedVehicleOptionsUID.GUI
                 scroll.verticalScrollbar = scrollbar;
             }
 
-            // Buttons
+            // Buttons: answer buttons on the left, "Copy text" on the right
             float buttonsY = 50f + scroll.height + MARGIN;
 
+            if (m_yesNo)
+            {
+                UIButton yes = UIUtils.CreateButton(this);
+                yes.text = Translations.Translate("AVO_MOD_OP59");
+                yes.relativePosition = new Vector3(MARGIN, buttonsY);
+                yes.eventClick += (c, p) => Close(true);
+
+                UIButton no = UIUtils.CreateButton(this);
+                no.text = Translations.Translate("AVO_MOD_OP60");
+                no.relativePosition = new Vector3(yes.relativePosition.x + yes.width + 10f, buttonsY);
+                no.eventClick += (c, p) => Close(false);
+            }
+            else
+            {
+                UIButton ok = UIUtils.CreateButton(this);
+                ok.text = "OK";
+                ok.relativePosition = new Vector3(MARGIN, buttonsY);
+                ok.eventClick += (c, p) => Close(true);
+            }
+
             m_copy = UIUtils.CreateButton(this);
-            m_copy.width = 150f;
+            m_copy.width = 200f;
             m_copy.text = Translations.Translate("AVO_MOD_OP57");
-            m_copy.relativePosition = new Vector3(MARGIN, buttonsY);
+            m_copy.relativePosition = new Vector3(WIDTH - MARGIN - m_copy.width, buttonsY);
             m_copy.eventClick += (c, p) =>
             {
                 GUIUtility.systemCopyBuffer = m_titleText + "\n\n" + m_messageText;
                 m_copy.text = Translations.Translate("AVO_MOD_OP58");
             };
 
-            if (m_yesNo)
-            {
-                UIButton no = UIUtils.CreateButton(this);
-                no.text = Translations.Translate("AVO_MOD_OP60");
-                no.relativePosition = new Vector3(WIDTH - MARGIN - no.width, buttonsY);
-                no.eventClick += (c, p) => Close(false);
-
-                UIButton yes = UIUtils.CreateButton(this);
-                yes.text = Translations.Translate("AVO_MOD_OP59");
-                yes.relativePosition = new Vector3(no.relativePosition.x - 10f - yes.width, buttonsY);
-                yes.eventClick += (c, p) => Close(true);
-            }
-            else
-            {
-                UIButton ok = UIUtils.CreateButton(this);
-                ok.text = "OK";
-                ok.relativePosition = new Vector3(WIDTH - MARGIN - ok.width, buttonsY);
-                ok.eventClick += (c, p) => Close(true);
-            }
-
             height = buttonsY + 30f + MARGIN;
             relativePosition = new Vector3(Mathf.Floor((GetUIView().fixedWidth - width) / 2), Mathf.Floor((GetUIView().fixedHeight - height) / 2));
 
-            ShowModal();
+            // The question when disabling a vehicle is modal (it must be answered); the message on game load is not,
+            // so it does not block the game or other mods' windows.
+            if (m_yesNo) ShowModal();
+            else
+            {
+                Show(true);
+                BringToFront();
+                Focus();
+            }
         }
 
         protected override void OnKeyDown(UIKeyEventParameter p)
@@ -183,9 +192,10 @@ namespace AdvancedVehicleOptionsUID.GUI
             if (m_closed) return;
             m_closed = true;
 
-            if (UIView.GetModalComponent() == this) UIView.PopModal();
+            bool wasModal = UIView.GetModalComponent() == this;
+            if (wasModal) UIView.PopModal();
 
-            if (UIView.GetAView().panelsLibraryModalEffect is UIComponent modalEffect)
+            if (wasModal && UIView.GetAView().panelsLibraryModalEffect is UIComponent modalEffect)
             {
                 if (!UIView.HasModalInput())
                 {

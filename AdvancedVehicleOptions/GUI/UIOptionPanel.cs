@@ -736,12 +736,13 @@ namespace AdvancedVehicleOptionsUID.GUI
             }
 
             // The AVO category may still have vehicles while the game's vehicle class of this vehicle is empty -
-            // the game picks vehicles by class (Service / SubService / Level), not by AVO category.
+            // the game picks vehicles by class (Service / SubService / Level) and, for some services, vehicle type.
             ItemClass itemClass = changed.prefab?.m_class;
-            if (itemClass != null && !VehicleClassCheck.HasUsableVehicle(itemClass))
+            if (itemClass != null && !VehicleClassCheck.HasUsableVehicle(itemClass, changed.prefab.m_vehicleType))
             {
-                Logging.KeyMessage("vehicle class ", VehicleClassCheck.GetClassLabel(itemClass), " has no enabled vehicle anymore");
-                string classMessage = VehicleClassCheck.GetEmptyClassMessage(itemClass);
+                VehicleClassKey key = new VehicleClassKey(itemClass, changed.prefab.m_vehicleType);
+                Logging.KeyMessage("vehicle class ", VehicleClassCheck.GetClassLabel(itemClass), " / ", key.vehicleType.ToString(), " has no enabled vehicle anymore");
+                string classMessage = VehicleClassCheck.GetEmptyClassMessage(key);
                 message = message == null ? classMessage : message + "\n\n" + classMessage;
             }
 
