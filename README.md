@@ -1,6 +1,13 @@
 ## Note on AI assistance
 Since version 1.9.14, parts of the code were developed with the help of an AI coding assistant (Claude Code by Anthropic). All changes were reviewed and tested in-game by the maintainer, who decides what is included in a release. Commits with AI contributions are marked with a `Co-Authored-By: Claude` line.
 
+# CS-AdvancedVehicleOptions 1.9.16 (Beta 1)
+Thanks to xingweixie for the detailed analysis and fixes in pull request #48.
+* Fixed leftovers when the AVO panel is rebuilt (e.g. when toggling "Hide GUI button"): the toolbar integration is now fully cleaned up, so no duplicate tabs or hidden placeholder panels pile up anymore.
+* The AVO hotkey (default Shift+Alt+O) is now checked on the game's main thread and also works while the game is paused.
+* If the AVO data stored in a savegame cannot be read (e.g. two copies of AVO enabled at the same time), AVO now logs a clear message and continues with default values instead of raising an error on every load.
+* Build: the project now builds with any current .NET SDK without installing the .NET Framework 3.5 targeting pack.
+
 # CS-AdvancedVehicleOptions 1.9.15
 * Fixed an issue where district and campus policies (e.g. at universities) could no longer be selected while AVO was active.
 * Fixed the position of the AVO button in the main toolbar: it now always stays at the end, so the game's own toolbar tabs are no longer shifted.

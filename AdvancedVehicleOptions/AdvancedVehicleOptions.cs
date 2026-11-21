@@ -21,8 +21,8 @@ namespace AdvancedVehicleOptionsUID
 
     {
         public static string ModName => "Advanced Vehicle Options";
-        //public static string Version => "1.9.15 beta1 "+ DateTime.Now +" Patch 1.21.1-f9";
-        public static string Version => "1.9.15";
+        public static string Version => "1.9.16 beta1 "+ DateTime.Now +" Patch 1.21.1-f9";
+        //public static string Version => "1.9.16";
 
         // Reflection handle for OptionsMainPanel's private OnLocaleChanged(), used to refresh the options panel after switching AVO's own language dropdown, without needing a game restart.
         private static readonly MethodInfo OptionsPanelLocaleChanged = typeof(OptionsMainPanel).GetMethod("OnLocaleChanged", BindingFlags.NonPublic | BindingFlags.Instance);
