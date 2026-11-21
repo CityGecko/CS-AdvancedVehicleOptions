@@ -95,8 +95,8 @@ namespace AdvancedVehicleOptionsUID
         }
 
         /// <summary>
-        /// The game's class name as players see it in the wiki, e.g. "Low Residential Eco - Level1". If the class holds
-        /// vehicles of several types (e.g. fire trucks and fire helicopters), the type is added: "Fire Department Vehicle - Car".
+        /// The game's class name as players see it in the wiki, e.g. "Low Residential Eco - Level1". Only if vehicles of
+        /// several types share the same class and class name, the type is added, e.g. "... - Car" / "... - Helicopter".
         /// </summary>
         internal static string GetClassName(VehicleClassKey key)
         {
@@ -198,7 +198,10 @@ namespace AdvancedVehicleOptionsUID
             return false;
         }
 
-        // Whether the class (any placement) contains vehicles of more than one type, e.g. trucks and helicopters
+        // Whether the type has to be added to the class name to tell two entries apart: only if vehicles of more than one
+        // type share the same class AND the same class name (e.g. fire trucks "Fire Department Vehicle" and fire
+        // helicopters "Fire Helicopter" share service/sub-service/level but already have different names - no suffix).
+        // Trailers are ignored: they are not spawned on their own (not Automatic by default).
         private static bool HasSeveralTypes(ItemClass itemClass)
         {
             if (itemClass == null) return false;
@@ -209,6 +212,12 @@ namespace AdvancedVehicleOptionsUID
             {
                 VehicleInfo prefab = PrefabCollection<VehicleInfo>.GetPrefab((uint)i);
                 if (prefab == null || prefab.m_class == null || !SameClass(prefab.m_class, itemClass)) continue;
+                if (prefab.m_class.name != itemClass.name) continue;
+
+                ItemClass.Placement defaultPlacement = DefaultOptions.GetPlacementStyle(prefab);
+                ItemClass.Placement placement = (int)defaultPlacement != -1 ? defaultPlacement : prefab.m_placementStyle;
+                if (placement != ItemClass.Placement.Automatic) continue;
+
                 if (!found) { found = true; first = prefab.m_vehicleType; }
                 else if (prefab.m_vehicleType != first) return true;
             }

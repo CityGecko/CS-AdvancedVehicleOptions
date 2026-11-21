@@ -1,7 +1,7 @@
 ## Note on AI assistance
 Since version 1.9.14, parts of the code were developed with the help of an AI coding assistant (Claude Code by Anthropic). All changes were reviewed and tested in-game by the maintainer, who decides what is included in a release. Commits with AI contributions are marked with a `Co-Authored-By: Claude` line.
 
-# CS-AdvancedVehicleOptions 1.9.16 (Beta 7)
+# CS-AdvancedVehicleOptions 1.9.16 (Beta 8)
 Thanks to xingweixie for the detailed analysis and fixes in pull request #48, and to roberto-naharro for the analysis in issue #49.
 * Fixed the "NullReferenceException" some players got after disabling vehicles such as the "Personal Electric Transport Ride": when all vehicles of a vehicle class (e.g. all electric cars) are disabled, tourists arriving by car could crash the game's vehicle selection. AVO now catches this case, the tourist simply travels without a car, and the log explains the reason.
 * New question when you disable the last vehicle of a vehicle class (e.g. the last electric car), even if the AVO category still has other vehicles: it names the affected vehicles and lets you keep the vehicle enabled. The same text is shown for such classes when a game is loaded (option "validate services"), and they are always listed in the log. See the wiki FAQ "Last vehicle of its kind - vehicle classes".
