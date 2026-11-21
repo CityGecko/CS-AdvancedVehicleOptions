@@ -289,22 +289,49 @@ namespace AdvancedVehicleOptionsUID.GUI
 
         private void OnTitleCloseClicked(UIComponent component, UIMouseEventParameter param)
         {
-            // Closing via the panel's title bar also deselects the toolbar tab.
-            if (m_toolStrip != null && m_toolStrip.closeButton != null)
+            // The title bar itself hides the panel (UITitleBar). Deselect AVO's toolbar tab too, but only if it is
+            // actually selected - simulating a click on the toolstrip's own close button while no tab was open
+            // reached the game's toolbar logic for no reason.
+            if (IsToolbarTabSelected()) m_toolStrip.selectedIndex = -1;
+        }
+
+        // Index of AVO's tab in the main toolstrip, or -1 (no tab, e.g. "Hide GUI button").
+        private int GetToolbarTabIndex()
+        {
+            if (m_toolStrip == null || m_button == null) return -1;
+            for (int i = 0; i < m_toolStrip.tabCount; i++)
             {
-                m_toolStrip.closeButton.SimulateClick();
+                if (m_toolStrip.tabs[i] == m_button) return i;
             }
+            return -1;
+        }
+
+        private bool IsToolbarTabSelected()
+        {
+            int index = GetToolbarTabIndex();
+            return index >= 0 && m_toolStrip.selectedIndex == index;
         }
 
         /// <summary>
-        /// Toggle the main panel visibility; shared by the toolbar button and the hotkey.
+        /// Toggle the main panel visibility; used by the hotkey. With a toolbar tab, the tab selection is driven
+        /// as well, so panel and tab never disagree (before, a hotkey-opened panel left the tab unselected: the
+        /// next tab click seemingly did nothing and closing went through the toolstrip's close button).
         /// </summary>
         internal void TogglePanel()
         {
+            int tabIndex = GetToolbarTabIndex();
+
             if (isVisible)
             {
+                if (IsToolbarTabSelected()) m_toolStrip.selectedIndex = -1;   // -> OnButtonStateChanged hides the panel
                 isVisible = false;
                 return;
+            }
+
+            if (tabIndex >= 0)
+            {
+                m_toolStrip.selectedIndex = tabIndex;                         // -> OnButtonStateChanged shows the panel
+                if (isVisible) return;
             }
 
             isVisible = true;
