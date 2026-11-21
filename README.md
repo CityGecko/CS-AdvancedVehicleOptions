@@ -1,8 +1,10 @@
 ## Note on AI assistance
 Since version 1.9.14, parts of the code were developed with the help of an AI coding assistant (Claude Code by Anthropic). All changes were reviewed and tested in-game by the maintainer, who decides what is included in a release. Commits with AI contributions are marked with a `Co-Authored-By: Claude` line.
 
-# CS-AdvancedVehicleOptions 1.9.16 (Beta 2)
-Thanks to xingweixie for the detailed analysis and fixes in pull request #48.
+# CS-AdvancedVehicleOptions 1.9.16 (Beta 3)
+Thanks to xingweixie for the detailed analysis and fixes in pull request #48, and to roberto-naharro for the analysis in issue #49.
+* Fixed changing the capacity of public transport vehicles (issue #49): vehicles without seats (e.g. created while the game's citizen unit pool was full) now get their seats instead of leaking them, vehicles that are not on the road yet are updated as well, and a full unit pool is now reported in the log instead of failing silently.
+* The AVO hotkey and the toolbar button now always agree whether the AVO panel is open.
 * Fixed the hotkey not opening AVO while "Hide the In-Game toolbar button" is enabled - the option now only hides the toolbar button, as described in its tooltip.
 * Fixed the confirmation text of the Import dialog (it showed the category selection tooltip), translated into all supported languages.
 * Fixed vehicle colours changing slightly (by one step per colour channel) after export/import, and the preview showing the wrong colour after typing a hex value.

@@ -21,7 +21,7 @@ namespace AdvancedVehicleOptionsUID
 
     {
         public static string ModName => "Advanced Vehicle Options";
-        public static string Version => "1.9.16 beta2 "+ DateTime.Now +" Patch 1.21.1-f9";
+        public static string Version => "1.9.16 beta3 "+ DateTime.Now +" Patch 1.21.1-f9";
         //public static string Version => "1.9.16";
 
         // Reflection handle for OptionsMainPanel's private OnLocaleChanged(), used to refresh the options panel after switching AVO's own language dropdown, without needing a game restart.
@@ -652,8 +652,8 @@ public static void InitVehicleDataConfig()
             DefaultOptions.CheckForConflicts();
 
             // Update existing vehicles
-            SimulationManager.instance.AddAction(VehicleOptions.UpdateCapacityUnits);
-            SimulationManager.instance.AddAction(VehicleOptions.UpdateBackEngines);
+            SimulationManager.instance.AddAction(() => VehicleOptions.UpdateCapacityUnits(null));
+            SimulationManager.instance.AddAction(() => VehicleOptions.UpdateBackEngines(null));
 
             Logging.Message("Vehicle Configuration initialized");
             LogVehicleListSteamID();
@@ -695,8 +695,8 @@ public static void InitVehicleDataConfig()
             DefaultOptions.CheckForConflicts();
 
             // Update existing vehicles
-            SimulationManager.instance.AddAction(VehicleOptions.UpdateCapacityUnits);
-            SimulationManager.instance.AddAction(VehicleOptions.UpdateBackEngines);
+            SimulationManager.instance.AddAction(() => VehicleOptions.UpdateCapacityUnits(null));
+            SimulationManager.instance.AddAction(() => VehicleOptions.UpdateBackEngines(null));
 
             Logging.Message("Vehicle Configuration imported from Filename: " + m_VehicleSettingsFile);
             LogVehicleListSteamID();
@@ -708,8 +708,8 @@ public static void InitVehicleDataConfig()
             DefaultOptions.CheckForConflicts();
 
             // Update existing vehicles
-            SimulationManager.instance.AddAction(VehicleOptions.UpdateCapacityUnits);
-            SimulationManager.instance.AddAction(VehicleOptions.UpdateBackEngines);
+            SimulationManager.instance.AddAction(() => VehicleOptions.UpdateCapacityUnits(null));
+            SimulationManager.instance.AddAction(() => VehicleOptions.UpdateBackEngines(null));
 
             Logging.Message("Vehicle Configuration reset");
         }

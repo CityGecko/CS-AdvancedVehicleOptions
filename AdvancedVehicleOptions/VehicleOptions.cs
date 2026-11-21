@@ -600,9 +600,6 @@ namespace AdvancedVehicleOptionsUID
 
         #endregion
 
-        public static VehicleInfo prefabUpdateUnits = null;
-        public static VehicleInfo prefabUpdateEngine = null;
-
         public static Type cargoFerryType;
         public static FieldInfo cargoFerryCapacityField;
         public static Type cargoHelicopterType;
@@ -1101,70 +1098,108 @@ namespace AdvancedVehicleOptionsUID
             return count;
         }
 
-        public static void UpdateCapacityUnits()
+        /// <summary>
+        /// Applies changed passenger capacities to vehicles that already exist by adding or releasing citizen units
+        /// (groups of 5 seats). <paramref name="onlyPrefab"/> = null updates all vehicles. Runs on the simulation
+        /// thread (SimulationManager.AddAction); the prefab is passed in by the caller instead of a static field,
+        /// so two quick edits can no longer swap or clear each other's prefab (Issue #49, point 4).
+        /// </summary>
+        public static void UpdateCapacityUnits(VehicleInfo onlyPrefab)
         {
-            int count = 0;
+            int changed = 0;
+            int failed = 0;
+            CitizenManager citizenManager = CitizenManager.instance;
             Array16<Vehicle> vehicles = VehicleManager.instance.m_vehicles;
-            for (uint i = 0; i < vehicles.m_buffer.Length; i++)
+            for (uint i = 1; i < vehicles.m_buffer.Length; i++)
             {
-                if ((vehicles.m_buffer[i].m_flags & Vehicle.Flags.Spawned) == Vehicle.Flags.Spawned)
+                // Every existing vehicle, not only spawned ones - vehicles still waiting for a path or for space to
+                // spawn used to keep their old unit count (Issue #49, point 3).
+                Vehicle.Flags flags = vehicles.m_buffer[i].m_flags;
+                if ((flags & Vehicle.Flags.Created) == 0 || (flags & Vehicle.Flags.Deleted) != 0) continue;
+
+                VehicleInfo info = vehicles.m_buffer[i].Info;
+                if (info == null || (onlyPrefab != null && info != onlyPrefab)) continue;
+
+                int capacity = GetUnitsCapacity(info.m_vehicleAI);
+                if (capacity == -1) continue;
+
+                CitizenUnit[] units = citizenManager.m_units.m_buffer;
+                uint firstUnit = vehicles.m_buffer[i].m_citizenUnits;
+
+                int currentUnitCount = GetTotalUnitGroups(firstUnit);
+                int newUnitCount = Mathf.CeilToInt(capacity / 5f);
+
+                // Capacity reduced
+                if (newUnitCount < currentUnitCount)
                 {
-                    if (prefabUpdateUnits == null || vehicles.m_buffer[i].Info == prefabUpdateUnits)
+                    if (newUnitCount <= 0)
                     {
-                        int capacity = GetUnitsCapacity(vehicles.m_buffer[i].Info.m_vehicleAI);
-
-                        if (capacity != -1)
-                        {
-                            CitizenUnit[] units = CitizenManager.instance.m_units.m_buffer;
-                            uint unit = vehicles.m_buffer[i].m_citizenUnits;
-
-                            int currentUnitCount = GetTotalUnitGroups(unit);
-                            int newUnitCount = Mathf.CeilToInt(capacity / 5f);
-
-                            // Capacity reduced
-                            if (newUnitCount < currentUnitCount)
-                            {
-                                // Get the first unit to remove
-                                uint n = unit;
-                                for (int j = 1; j < newUnitCount; j++)
-                                    n = units[n].m_nextUnit;
-                                // Releasing units excess
-                                CitizenManager.instance.ReleaseUnits(units[n].m_nextUnit);
-                                units[n].m_nextUnit = 0;
-
-                                count++;
-                            }
-                            // Capacity increased
-                            else if (newUnitCount > currentUnitCount)
-                            {
-                                // Get the last unit
-                                uint n = unit;
-                                while (units[n].m_nextUnit != 0)
-                                    n = units[n].m_nextUnit;
-
-                                // Creating missing units
-                                int newCapacity = capacity - currentUnitCount * 5;
-                                CitizenManager.instance.CreateUnits(out units[n].m_nextUnit, ref SimulationManager.instance.m_randomizer, 0, (ushort)i, 0, 0, 0, newCapacity, 0);
-
-                                count++;
-                            }
-                        }
+                        citizenManager.ReleaseUnits(firstUnit);
+                        vehicles.m_buffer[i].m_citizenUnits = 0;
                     }
+                    else
+                    {
+                        // Keep the first newUnitCount units, release the rest
+                        uint n = firstUnit;
+                        for (int j = 1; j < newUnitCount; j++)
+                            n = units[n].m_nextUnit;
+                        citizenManager.ReleaseUnits(units[n].m_nextUnit);
+                        units[n].m_nextUnit = 0;
+                    }
+
+                    changed++;
+                }
+                // Capacity increased
+                else if (newUnitCount > currentUnitCount)
+                {
+                    int missingCapacity = capacity - currentUnitCount * 5;
+                    bool created;
+
+                    if (firstUnit == 0)
+                    {
+                        // The vehicle has no units at all (e.g. it was created while the unit pool was full). Give it
+                        // its own chain - appending to units[0], the game's "null" unit, leaked the new units and left
+                        // the vehicle without seats ("0 / 840") (Issue #49, point 1).
+                        created = citizenManager.CreateUnits(out vehicles.m_buffer[i].m_citizenUnits, ref SimulationManager.instance.m_randomizer, 0, (ushort)i, 0, 0, 0, missingCapacity, 0);
+                    }
+                    else
+                    {
+                        // Append the missing units to the end of the vehicle's chain
+                        uint n = firstUnit;
+                        while (units[n].m_nextUnit != 0)
+                            n = units[n].m_nextUnit;
+                        created = citizenManager.CreateUnits(out units[n].m_nextUnit, ref SimulationManager.instance.m_randomizer, 0, (ushort)i, 0, 0, 0, missingCapacity, 0);
+                    }
+
+                    // CreateUnits returns false when the unit pool is full; the vehicle then keeps its old capacity
+                    // (Issue #49, point 2 - previously ignored without any log entry).
+                    if (created) changed++;
+                    else failed++;
                 }
             }
-            prefabUpdateUnits = null;
 
-            if (count > 0)
+            if (changed > 0)
             {
-                Logging.Message("Modified capacity of " + count + " vehicle(s). Total unit count: " + CitizenManager.instance.m_unitCount + "/" + CitizenManager.MAX_UNIT_COUNT);
+                Logging.Message("Modified capacity of " + changed + " vehicle(s). Total unit count: " + citizenManager.m_unitCount + "/" + CitizenManager.MAX_UNIT_COUNT);
+            }
+            if (failed > 0)
+            {
+                Logging.Error("Could not add seats for " + failed + " vehicle(s): the citizen unit pool is full (" + citizenManager.m_unitCount + "/" + CitizenManager.MAX_UNIT_COUNT + "). These vehicles keep their previous capacity.");
             }
         }
 
-        public static void UpdateBackEngines()
+        /// <summary>
+        /// Re-applies the "back engine" setting to existing trains. <paramref name="onlyPrefab"/> = null updates all.
+        /// Runs on the simulation thread; prefab passed in by the caller (see UpdateCapacityUnits).
+        /// </summary>
+        public static void UpdateBackEngines(VehicleInfo onlyPrefab)
         {
             Array16<Vehicle> vehicles = VehicleManager.instance.m_vehicles;
-            for (uint i = 0; i < vehicles.m_buffer.Length; i++)
+            for (uint i = 1; i < vehicles.m_buffer.Length; i++)
             {
+                // Only existing vehicles - free slots of the vehicle buffer still carry an old prefab index
+                if ((vehicles.m_buffer[i].m_flags & Vehicle.Flags.Created) == 0) continue;
+
                 try
                 {
                     VehicleInfo prefab = vehicles.m_buffer[i].Info;
@@ -1172,7 +1207,7 @@ namespace AdvancedVehicleOptionsUID
                     {
                         bool isTrain = prefab.m_vehicleType == VehicleInfo.VehicleType.Train || prefab.m_vehicleType == VehicleInfo.VehicleType.Tram || prefab.m_vehicleType == VehicleInfo.VehicleType.Metro || prefab.m_vehicleType == VehicleInfo.VehicleType.Monorail;
                         bool isLeading = vehicles.m_buffer[i].m_leadingVehicle == 0 && prefab.m_trailers != null && prefab.m_trailers.Length > 0;
-                        if ((prefabUpdateEngine == null || prefab == prefabUpdateEngine) && isTrain && isLeading && prefab.m_trailers[prefab.m_trailers.Length - 1].m_info != null)
+                        if ((onlyPrefab == null || prefab == onlyPrefab) && isTrain && isLeading && prefab.m_trailers[prefab.m_trailers.Length - 1].m_info != null)
                         {
                             ushort last = vehicles.m_buffer[i].GetLastVehicle((ushort)i);
                             ushort oldPrefabID = vehicles.m_buffer[last].m_infoIndex;
@@ -1195,8 +1230,6 @@ namespace AdvancedVehicleOptionsUID
                     Logging.LogException(e);
                 }
             }
-
-            prefabUpdateEngine = null;
         }
 
         public static void UpdateTransfertVehicles()

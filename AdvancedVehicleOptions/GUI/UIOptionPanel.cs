@@ -659,10 +659,9 @@ namespace AdvancedVehicleOptionsUID.GUI
                 DefaultOptions.Restore(m_options.prefab);
                 VehicleOptions.UpdateTransfertVehicles();
 
-                VehicleOptions.prefabUpdateEngine = m_options.prefab;
-                VehicleOptions.prefabUpdateUnits = m_options.prefab;
-                SimulationManager.instance.AddAction(VehicleOptions.UpdateBackEngines);
-                SimulationManager.instance.AddAction(VehicleOptions.UpdateCapacityUnits);
+                VehicleInfo restoredPrefab = m_options.prefab;
+                SimulationManager.instance.AddAction(() => VehicleOptions.UpdateBackEngines(restoredPrefab));
+                SimulationManager.instance.AddAction(() => VehicleOptions.UpdateCapacityUnits(restoredPrefab));
 
                 Show(m_options);
 
@@ -763,8 +762,8 @@ namespace AdvancedVehicleOptionsUID.GUI
                 m_options.addBackEngine = state;
                 if (m_options.addBackEngine == state)
                 {
-                    VehicleOptions.prefabUpdateEngine = m_options.prefab;
-                    SimulationManager.instance.AddAction(VehicleOptions.UpdateBackEngines);
+                    VehicleInfo enginePrefab = m_options.prefab;
+                    SimulationManager.instance.AddAction(() => VehicleOptions.UpdateBackEngines(enginePrefab));
                 }
             }
             else if (component == m_useColors && m_options.useColorVariations != state)
@@ -919,8 +918,8 @@ namespace AdvancedVehicleOptionsUID.GUI
             m_initialized = false;
 
             m_options.capacity = int.Parse(text);
-            VehicleOptions.prefabUpdateUnits = m_options.prefab;
-            SimulationManager.instance.AddAction(VehicleOptions.UpdateCapacityUnits);
+            VehicleInfo capacityPrefab = m_options.prefab;
+            SimulationManager.instance.AddAction(() => VehicleOptions.UpdateCapacityUnits(capacityPrefab));
 
             AdvancedVehicleOptions.ExportVehicleDataConfig(m_initialized);
             m_initialized = true;
@@ -932,8 +931,8 @@ namespace AdvancedVehicleOptionsUID.GUI
             m_initialized = false;
 
             m_options.specialcapacity = int.Parse(text);
-            VehicleOptions.prefabUpdateUnits = m_options.prefab;
-            SimulationManager.instance.AddAction(VehicleOptions.UpdateCapacityUnits);
+            VehicleInfo specialCapacityPrefab = m_options.prefab;
+            SimulationManager.instance.AddAction(() => VehicleOptions.UpdateCapacityUnits(specialCapacityPrefab));
 
             AdvancedVehicleOptions.ExportVehicleDataConfig(m_initialized);
             m_initialized = true;
