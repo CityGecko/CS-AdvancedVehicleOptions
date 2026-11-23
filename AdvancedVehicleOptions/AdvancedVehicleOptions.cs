@@ -750,7 +750,8 @@ public static void InitVehicleDataConfig()
 
             for (int i = 0; i < (int)VehicleOptions.Category.Natural; i++)
             {
-                if (!UIMainPanel.CategoryAvailability(UIMainPanel.categoryList[i]))
+                // categoryList[0] is "None" (enum value -1), so category i is categoryList[i + 1]
+                if (!UIMainPanel.CategoryAvailability(UIMainPanel.categoryList[i + 1]))
                 {
                     continue;
                 }
