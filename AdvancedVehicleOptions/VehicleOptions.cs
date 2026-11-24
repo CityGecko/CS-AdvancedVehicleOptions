@@ -1016,7 +1016,11 @@ namespace AdvancedVehicleOptionsUID
                         return Category.TransportTrolleyBus;
 						
                     case ItemClass.SubService.ResidentialHigh:
-                        return Category.Bicycle;
+                        // The game's bicycles use the High Residential classes, but a car (asset or future DLC)
+                        // with such a class must not end up among the bicycles -> falls through to Citizen
+                        if (prefab.m_vehicleType == VehicleInfo.VehicleType.Bicycle)
+                            return Category.Bicycle;
+                        break;
 						
                     case ItemClass.SubService.BeautificationParks:
                         return Category.Maintenance;
