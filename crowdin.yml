@@ -1,4 +1,14 @@
+# Crowdin configuration for Advanced Vehicle Options (used by the Crowdin GitHub integration and the Crowdin CLI).
+# Source: English texts in en.csv (KEY,text per line). Translations: one file per language, same format,
+# named by the Crowdin locale code (de-DE.csv, uk-UA.csv, zh-TW.csv, ...).
 files:
   - source: /AdvancedVehicleOptions/Translation/Translations/en.csv
     translation: /AdvancedVehicleOptions/Translation/Translations/%locale%.csv
+    # Column 1 = key, column 2 = text: the English text in en.csv, the translation in the language files.
+    # Crowdin needs both a source and a translation column; "source_or_translation" is one column for both.
     scheme: 'identifier,source_or_translation'
+    # The first line (NAME,<language name>) is a normal key: the language name shown in the language selection.
+    first_line_contains_header: false
+    # Untranslated texts are left out, so the mod falls back to English for them.
+    skip_untranslated_strings: true
+    update_option: update_as_unapproved
