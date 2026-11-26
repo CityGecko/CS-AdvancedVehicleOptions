@@ -26,6 +26,23 @@ namespace AdvancedVehicleOptionsUID
 
         // Reflection handle for OptionsMainPanel's private OnLocaleChanged(), used to refresh the options panel after switching AVO's own language dropdown, without needing a game restart.
         private static readonly MethodInfo OptionsPanelLocaleChanged = typeof(OptionsMainPanel).GetMethod("OnLocaleChanged", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        // Rebuilds the options panel after the language dropdown has finished its selection event.
+        private static System.Collections.IEnumerator RebuildOptionsPanelNextFrame(OptionsMainPanel optionsPanel)
+        {
+            yield return null;
+            try
+            {
+                if (optionsPanel != null)
+                {
+                    OptionsPanelLocaleChanged.Invoke(optionsPanel, null);
+                }
+            }
+            catch (Exception e)
+            {
+                Logging.LogException(e, "exception refreshing options panel after language change");
+            }
+        }
       
         public string Name => ModName + " " + Version;
 
@@ -134,12 +151,14 @@ namespace AdvancedVehicleOptionsUID
                     ModSettings.Save();
 
                     // Force the options panel to rebuild with the new language, same as when the game's own UI language changes.
+                    // Done one frame later: rebuilding here would destroy this dropdown while it is still handling
+                    // its own selection event (NullReferenceException in UIDropDown.OnSelectedIndexChanged).
                     try
                     {
                         OptionsMainPanel optionsPanel = UIView.library.Get<OptionsMainPanel>("OptionsPanel");
-                        if (optionsPanel != null)
+                        if (optionsPanel != null && OptionsPanelLocaleChanged != null)
                         {
-                            OptionsPanelLocaleChanged?.Invoke(optionsPanel, null);
+                            optionsPanel.StartCoroutine(RebuildOptionsPanelNextFrame(optionsPanel));
                         }
                     }
                     catch (Exception e)
