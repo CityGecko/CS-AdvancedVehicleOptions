@@ -21,7 +21,7 @@ namespace AdvancedVehicleOptionsUID
 
     {
         public static string ModName => "Advanced Vehicle Options";
-        public static string Version => "1.9.16 beta12 "+ DateTime.Now +" Patch 1.21.2-f5";
+        public static string Version => "1.9.16 beta13 "+ DateTime.Now +" Patch 1.21.2-f5";
         //public static string Version => "1.9.16";
 
         // Reflection handle for OptionsMainPanel's private OnLocaleChanged(), used to refresh the options panel after switching AVO's own language dropdown, without needing a game restart.
@@ -224,7 +224,9 @@ namespace AdvancedVehicleOptionsUID
                 NoBigTrucks_Box.tooltip = Translations.Translate("AVO_OPT_COMP_NBT_TT");
                 // True, if AVO shall be enabled to classify Generic Industry vehicles as Large Vehicles, so No Big Trucks can suppress the dispatch to small buildings.
 
-                if (!NoBigTruckCompatibilityPatch.IsNBTActive() | !NoBigTruckCompatibilityPatch.IsNBTBetaActive())
+                // Grey out only if NO version of No Big Truck is active (before: unless the original AND the beta
+                // were active at the same time, so the option could never be changed)
+                if (!NoBigTruckCompatibilityPatch.IsNBTActive() && !NoBigTruckCompatibilityPatch.IsNBTBetaActive())
                 {
                     NoBigTrucks_Box.enabled = false;   //Do not show the option Checkbox, if No Big Trucks is not active.
                 }
