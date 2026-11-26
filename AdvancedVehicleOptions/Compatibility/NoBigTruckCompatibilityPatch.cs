@@ -7,9 +7,8 @@ namespace AdvancedVehicleOptionsUID.Compatibility
 {
     public class NoBigTruckCompatibilityPatch
     {
-        // Workshop IDs of No Big Truck: original (2069057130) and beta (2513186434).
-        // No Big Truck Revisited gets a new ID after its upload - add it here when known.
-        private static readonly ulong[] NBTWorkshopIDs = { 2069057130UL, 2513186434UL };
+        // Workshop IDs of No Big Truck: original (2069057130), beta (2513186434) and No Big Truck Revisited (3846463309)
+        private static readonly ulong[] NBTWorkshopIDs = { 2069057130UL, 2513186434UL, 3846463309UL };
 
         // All No Big Truck variants (original, beta, Revisited, local copies without Workshop ID) ship NoBigTruck.dll
         private const string NBTAssemblyName = "NoBigTruck";
