@@ -197,7 +197,7 @@ No Big Trucks(MacSergey 모더)에 의해 배차가 차단됩니다. (기본값 
 "AVO_MOD_OP45","중형"
 "AVO_MOD_OP46","대형"
 "AVO_MOD_OP48","엔진 및 트레일러 동기화"
-"AVO_MOD_OP49","만약 활성화 된 경우"," the engine properties are synchronize to all trailers."
+"AVO_MOD_OP49","만약 활성화 된 경우"
 "AVO_MOD_OP50","선택한 기종의 크기를 정의합니다."
 "AVO_MOD_OP51","사용자 가이드 클릭: 시 서비스 건물은 바닐라 차량만 생성합니다"
 "AVO_MOD_OP52","이 차량 등급에 활성화된 차량이 더 이상 없습니다. 이 차량을 이용하려던 시민과 관광객은 대신 걷거나 대중교통을 이용합니다. 이 차량 유형을 도시에 유지하려면 이 등급의 차량을 하나 이상 활성화하거나 대체 에셋을 구독하세요."
